@@ -8,6 +8,8 @@
 require_once __DIR__ . '/../src/Helpers/NguoiChoiHelper.php';
 use TuTaTuTien\Helpers as Helpers;
 
+$nguoiChoi = Helpers\layThongTinNguoiChoi($sid, $dblj);
+
 if (isset($canshu)){
     if ($canshu=="deim"){
         $sql="delete from im WHERE imuid = $uid AND sid='$sid'";
@@ -17,7 +19,7 @@ if (isset($canshu)){
 $sql="select * from im WHERE sid='$sid'";
 $ret = $dblj->query($sql);
 $imitem = $ret->fetchAll(PDO::FETCH_ASSOC);
-$gonowmid = $encode->encode("cmd=gomid&newmid=$player->nowmid&sid=$sid");
+$gonowmid = $encode->encode("cmd=gomid&newmid=$nguoiChoi->idBanDoHienTai&sid=$sid");
 $imlist = '';
 foreach ($imitem as $im){
     $imuid = $im['imuid'];

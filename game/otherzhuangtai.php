@@ -6,11 +6,11 @@ require_once __DIR__ . '/../src/Helpers/DuocPhamHelper.php';
 require_once __DIR__ . '/../src/Helpers/ClubHelper.php';
 use TuTaTuTien\Helpers as Helpers;
 
-$player = Helpers\layThongTinNguoiChoi($sid,$dblj);
+$nguoiChoi = Helpers\layThongTinNguoiChoi($sid,$dblj);
 $player1 = Helpers\layThongTinNguoiChoiTheoUid($uid,$dblj);
 $immenu='';
 
-$gonowmid = $encode->encode("cmd=gomid&newmid=$player->idBanDoHienTai&sid=$sid");
+$gonowmid = $encode->encode("cmd=gomid&newmid=$nguoiChoi->idBanDoHienTai&sid=$sid");
 $pkcmd = $encode->encode("cmd=pvp&uid=$uid&sid=$sid");
 $clubplayer = Helpers\layThongTinClubPlayer($player1->sid,$dblj);
 if (isset($canshu)){
@@ -26,7 +26,7 @@ if ($clubplayer){
 }else{
     $clubname = "Không môn không phái";
 }
-if ($player->sid != $player1->sid){
+if ($nguoiChoi->sid != $player1->sid){
     $immenu = "<a href='?cmd=$pkcmd' style='color:#ff0000'>Công kích</a>";
     $ret = Helpers\kiemTraLaBanBe($uid,$sid,$dblj);
     if (!$ret){
@@ -126,11 +126,11 @@ if ($player1->viTriTrangBi7!=0){
     $tool7 = "Ám khí:<a href='?cmd=$zbcmd'><font color='$zhuangbei->phamChat'>{$zhuangbei->tenTrangBi}</font>{$qhs}</a><br/>";;
 }
 //Dẫn vào võ công, mượn gió bẻ măng
-$wgid = $player->wugong;
+$wgid = $nguoiChoi->wugong;
 $cxwg = Helpers\layThongTinVoCong($wgid,$sid,$dblj);
 $wglx = $cxwg->wglx;
 $wgys = $cxwg->wgys;
-if ($player->wugong!=0&&$wglx==0){
+if ($nguoiChoi->wugong!=0&&$wglx==0){
 	$tishi = "<a href='?cmd=$gonowmid' style='color:$wgys'>$cxwg->wgname</a>";
 }
 

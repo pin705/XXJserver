@@ -6,8 +6,8 @@ require_once __DIR__ . '/../src/Helpers/DuocPhamHelper.php';
 require_once __DIR__ . '/../src/Helpers/ClubHelper.php';
 use TuTaTuTien\Helpers as Helpers;
 
-$player = Helpers\layThongTinNguoiChoi($sid,$dblj);//Thu hoạch ngươi ID
-$gonowmid = $encode->encode("cmd=gomid&newmid=$player->idBanDoHienTai&sid=$sid");
+$nguoiChoi = Helpers\layThongTinNguoiChoi($sid,$dblj);//Thu hoạch ngươi ID
+$gonowmid = $encode->encode("cmd=gomid&newmid=$nguoiChoi->idBanDoHienTai&sid=$sid");
 
 $shangdian = $encode->encode("cmd=shangdian&canshu=gogoumai&sid=$sid");//  PHP ，Lựa chọn văn bản , tăng thêm dấu hiệu , thân phận của ngươi
 
@@ -219,7 +219,7 @@ HTML;
         $shangdian = $encode->encode("cmd=shangdian&canshu=gogoumai&sid=$sid");
 		$shangdian1 = $encode->encode("cmd=shangdian&canshu1=gogoumai1&sid=$sid");
 		$beibaocmd = $encode->encode("cmd=getbagyd&sid=$sid");
-		$player = Helpers\layThongTinNguoiChoi($sid,$dblj);
+		$nguoiChoi = Helpers\layThongTinNguoiChoi($sid,$dblj);
 
 $gnhtml =<<<HTML
               <IMG width='280' height='140' src='./images/shangdian.png'src="./images/rw.png" style="border-radius: 8px;">
@@ -233,7 +233,7 @@ $gnhtml =<<<HTML
 			<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=1.0" />
             <link rel="stylesheet" type="text/css" href="./chajian/tishikuang/style/dialog.css">
             Đang có <br/>
-			Linh thạch: $player->tienTroChoi<br/>Ma thạch: $player->tienNap<hr>
+			Linh thạch: $nguoiChoi->tienTroChoi<br/>Ma thạch: $nguoiChoi->tienNap<hr>
              $gnhtml<br/>
 		<a href="#" onClick="javascript:history.back(-1);">Trở lại</a>
         <a href="game.php?cmd=$gonowmid" style="float:right;background-color:#cff3d2;color: #755d5d;" >Trở về trò chơi</a>

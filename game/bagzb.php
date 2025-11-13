@@ -75,7 +75,7 @@ $('#error').click(function(){
 HTML;
 
 
-$player = Helpers\layThongTinNguoiChoi($sid,$dblj);
+$nguoiChoi = Helpers\layThongTinNguoiChoi($sid,$dblj);
 $tishi = '';
 if (isset($canshu)){
     if ($canshu=='maichu'){
@@ -132,7 +132,7 @@ $sql = "select count(*) from playerzhuangbei where sid = '$sid'";
 $cxjg = $dblj->query($sql);
 $zbcount = $cxjg->fetchColumn();
 
-$gonowmid = $encode->encode("cmd=gomid&newmid=$player->idBanDoHienTai&sid=$sid");
+$gonowmid = $encode->encode("cmd=gomid&newmid=$nguoiChoi->idBanDoHienTai&sid=$sid");
 $zbhtml = '';
 $fanye='';
 if ($yeshu!=0){
@@ -151,7 +151,7 @@ if ($fanye!=''){
 $hangshu = 0;
 for ($i=0;$i<count($retzb);$i++){
     $zbnowid = $retzb[$i]['zbnowid'];
-    $arr = array($player->viTriTrangBi1,$player->viTriTrangBi2,$player->viTriTrangBi3,$player->viTriTrangBi4,$player->viTriTrangBi5,$player->viTriTrangBi6,$player->viTriTrangBi7);
+    $arr = array($nguoiChoi->viTriTrangBi1,$nguoiChoi->viTriTrangBi2,$nguoiChoi->viTriTrangBi3,$nguoiChoi->viTriTrangBi4,$nguoiChoi->viTriTrangBi5,$nguoiChoi->viTriTrangBi6,$nguoiChoi->viTriTrangBi7);
     $hangshu = $hangshu + 1;
 
     $zbname = $retzb[$i]['zbname'];
@@ -161,7 +161,7 @@ for ($i=0;$i<count($retzb);$i++){
     if($zbqh>0){
         $qhhtml="+".$zbqh;
     }
-    $chakanzb = $encode->encode("cmd=chakanzb&zbnowid=$zbnowid&uid=$player->idNguoiDung&sid=$sid");
+    $chakanzb = $encode->encode("cmd=chakanzb&zbnowid=$zbnowid&uid=$nguoiChoi->idNguoiDung&sid=$sid");
     if (!in_array($zbnowid,$arr)){
         $mczb = $encode->encode("cmd=getbagzb&canshu=maichu&yeshu=$yeshu&zbnowid=$zbnowid&sid=$sid");
 		$zhuangbei = Helpers\layThongTinTrangBiTheoId($zbnowid,$dblj);

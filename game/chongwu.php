@@ -8,8 +8,8 @@ require_once __DIR__ . '/../src/Helpers/NhiemVuHelper.php';
 use TuTaTuTien\Helpers as Helpers;
 
 
-$player = \Helpers\layThongTinNguoiChoi($sid,$dblj);
-$gonowmid = $encode->encode("cmd=gomid&newmid=$player->idBanDoHienTai&sid=$sid");
+$nguoiChoi = \Helpers\layThongTinNguoiChoi($sid,$dblj);
+$gonowmid = $encode->encode("cmd=gomid&newmid=$nguoiChoi->idBanDoHienTai&sid=$sid");
 $cwhtml='';
 $cwnamehtml= '';
 $chouqucmd = $encode->encode("cmd=chongwu&canshu=chouqu&sid=$sid");
@@ -114,11 +114,11 @@ if (isset($canshu)){
             break;
         case 'chuzhan':
             Helpers\thayDoiThuocTinhNguoiChoi('cw',$cwid,$sid,$dblj);
-            $player = \Helpers\layThongTinNguoiChoi($sid,$dblj);
+            $nguoiChoi = \Helpers\layThongTinNguoiChoi($sid,$dblj);
             break;
         case 'shouhui':
             Helpers\thayDoiThuocTinhNguoiChoi('cw',0,$sid,$dblj);
-            $player = \Helpers\layThongTinNguoiChoi($sid,$dblj);
+            $nguoiChoi = \Helpers\layThongTinNguoiChoi($sid,$dblj);
             break;
         case 'fangsheng':
             Helpers\xoaSungVat($cwid,$sid,$dblj);
@@ -129,7 +129,7 @@ if (isset($canshu)){
             $cwpz = $pzarr[$chongwu->cwpz];
             $chongwu->cwpz = $chongwu->cwpz * 10;
 			$ztcmd = $encode->encode("cmd=zhuangtai&sid=$sid");
-            $cwinfo = $encode->encode("cmd=chongwu&cwid=$player->cw&canshu=cwinfo&sid=$sid");
+            $cwinfo = $encode->encode("cmd=chongwu&cwid=$nguoiChoi->cw&canshu=cwinfo&sid=$sid");
             $cwid = $cw['cwid'];
             $gm =  $encode->encode("cmd=czbgm&canshu2=gaiming2&sid=$sid");
 			$sz =  $encode->encode("cmd=taozhuang&sid=$sid");
@@ -165,7 +165,7 @@ if ($allcw){
     foreach ($allcw as $cw){
         $cwid = $cw['cwid'];
         $czcmd='';
-        if ($cwid!=$player->cw){
+        if ($cwid!=$nguoiChoi->cw){
             $czcmd = $encode->encode("cmd=chongwu&canshu=chuzhan&cwid=$cwid&sid=$sid");
             $fscmd = $encode->encode("cmd=chongwu&canshu=fangsheng&cwid=$cwid&sid=$sid");
             $czcmd = '<a href="?cmd='.$czcmd.'">Xuất chiến</a>';

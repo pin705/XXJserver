@@ -1,8 +1,10 @@
 <?php
 require_once __DIR__ . '/../src/Helpers/KyNangHelper.php';
+require_once __DIR__ . '/../src/Helpers/NguoiChoiHelper.php';
 use TuTaTuTien\Helpers as Helpers;
 
-$gonowmid = $encode->encode("cmd=gomid&newmid=$player->nowmid&sid=$sid");
+$nguoiChoi = Helpers\layThongTinNguoiChoi($sid, $dblj);
+$gonowmid = $encode->encode("cmd=gomid&newmid=$nguoiChoi->idBanDoHienTai&sid=$sid");
 $getbagzbcmd = $encode->encode("cmd=getbagzb&sid=$sid");
 $getbagdjcmd = $encode->encode("cmd=getbagdj&sid=$sid");
 $getbagypcmd = $encode->encode("cmd=getbagyp&sid=$sid");

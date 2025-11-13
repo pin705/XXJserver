@@ -1,13 +1,16 @@
 <?php
 require_once __DIR__ . '/../src/Helpers/NhiemVuHelper.php';
+require_once __DIR__ . '/../src/Helpers/NguoiChoiHelper.php';
 use TuTaTuTien\Helpers as Helpers;
+
+$nguoiChoi = Helpers\layThongTinNguoiChoi($sid, $dblj);
 
 $rwhtml .= <<<HTML
 <IMG width='280' height='140' src='./images/rw.png'src="./images/rw.png" style="border-radius: 8px;">
 HTML;
 
 $playertask = Helpers\layTatCaNhiemVuCuaNguoiChoi($sid, $dblj);
-$gonowmid = $encode->encode("cmd=gomid&newmid=$player->nowmid&sid=$sid");
+$gonowmid = $encode->encode("cmd=gomid&newmid=$nguoiChoi->idBanDoHienTai&sid=$sid");
 $mytaskinfo = '';
 $taskhtml='';
 $rwzt='';

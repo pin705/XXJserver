@@ -13,19 +13,19 @@ require_once __DIR__ . '/../src/Helpers/ClubHelper.php';
 use TuTaTuTien\Helpers as Helpers;
 
 
-$player = Helpers\layThongTinNguoiChoi($sid,$dblj);//Thu hoạch người chơi tin tức
-$lastmid = $player->idBanDoHienTai;
+$nguoiChoi = Helpers\layThongTinNguoiChoi($sid,$dblj);//Thu hoạch người chơi tin tức
+$lastmid = $nguoiChoi->idBanDoHienTai;
 
 if (isset($newmid)){
-    if ($player->idBanDoHienTai!=$newmid){
+    if ($nguoiChoi->idBanDoHienTai!=$newmid){
         $clmid = Helpers\layThongTinBanDo($newmid,$dblj); //Thu hoạch sắp đi địa đồ tin tức
-	$playerinfo = $player->tenNhanVat."Hướng$clmid->mname.Đi đến";
+	$playerinfo = $nguoiChoi->tenNhanVat."Hướng$clmid->mname.Đi đến";
         if ($playerinfo != $clmid->playerinfo){
             $sql = "update mid set playerinfo='$playerinfo' WHERE mid='$lastmid'";
             $dblj->exec($sql);
         }
-        if ($player->sinhMenh<=0){
-            $retmid = Helpers\layThongTinBanDo($player->idBanDoHienTai,$dblj);
+        if ($nguoiChoi->sinhMenh<=0){
+            $retmid = Helpers\layThongTinBanDo($nguoiChoi->idBanDoHienTai,$dblj);
             $retqy = Helpers\layThongTinKhuVuc($retmid->mqy,$dblj);
             $gonowmid = $encode->encode("cmd=gomid&newmid=$retqy->mid&sid=$sid");
             if ($newmid != $retqy->mid){
@@ -34,8 +34,8 @@ if (isset($newmid)){
 
         }
 		//Nghĩ tại cái này tăng thêm quái vật dây dưa, hoặc là ngẫu nhiên sự kiện
-		// if ($player->sinhMenh<=0){
-            // $retmid = Helpers\layThongTinBanDo($player->idBanDoHienTai,$dblj);
+		// if ($nguoiChoi->sinhMenh<=0){
+            // $retmid = Helpers\layThongTinBanDo($nguoiChoi->idBanDoHienTai,$dblj);
             // $retqy = Helpers\layThongTinKhuVuc($retmid->mqy,$dblj);
             // $gonowmid = $encode->encode("cmd=gomid&newmid=$retqy->mid&sid=$sid");
             // if ($newmid != $retqy->mid){
@@ -44,18 +44,18 @@ if (isset($newmid)){
 
         // }
         Helpers\thayDoiThuocTinhNguoiChoi('nowmid',$newmid,$sid,$dblj);
-        $player = Helpers\layThongTinNguoiChoi($sid,$dblj);//Thu hoạch người chơi tin tức
+        $nguoiChoi = Helpers\layThongTinNguoiChoi($sid,$dblj);//Thu hoạch người chơi tin tức
     }
 
 }
 
-if ($player->idBanDoHienTai=='' || $player->idBanDoHienTai==0){//Phán đoán nhân vật phải chăng xuất hiện tại phi pháp địa đồ
+if ($nguoiChoi->idBanDoHienTai=='' || $nguoiChoi->idBanDoHienTai==0){//Phán đoán nhân vật phải chăng xuất hiện tại phi pháp địa đồ
     $gameconfig = Helpers\layCauHinhTroChoi($dblj);
     $sql = "update game1 set nowmid='$gameconfig->firstmid' WHERE sid='$sid'";
     $dblj->exec($sql);
-    $player->idBanDoHienTai=$gameconfig->firstmid;
+    $nguoiChoi->idBanDoHienTai=$gameconfig->firstmid;
 }
-$clmid = Helpers\layThongTinBanDo($player->idBanDoHienTai,$dblj); //Thu hoạch địa đồ tin tức
+$clmid = Helpers\layThongTinBanDo($nguoiChoi->idBanDoHienTai,$dblj); //Thu hoạch địa đồ tin tức
 if ($clmid->playerinfo != ''){
     $clmid->playerinfo .='<br/>';
 }
@@ -92,7 +92,7 @@ $boss = Helpers\layThongTinBoss($clmid->midboss,$dblj);
 $bossxl = $boss->bosshp;
 $second=floor((strtotime($nowdate) - strtotime($clmid->mgtime))%86400);
 if ($bossxl<0 && $clmid->midboss != 0 && $second > $clmid->ms){
-	// $sql = "update mid set mgtime='$nowdate' WHERE mid='$player->idBanDoHienTai'";//Gia tăng thời gian, tính toán
+	// $sql = "update mid set mgtime='$nowdate' WHERE mid='$nguoiChoi->idBanDoHienTai'";//Gia tăng thời gian, tính toán
     // $dblj->exec($sql);
 	$sql = "update boss set bosshp = bossmaxhp  WHERE bossid='$clmid->midboss'";//Cho boss Tăng máu, phía trên phán đoán làm mới thời gian
 	$dblj->exec($sql);
@@ -136,13 +136,13 @@ if ($downmid->mname!=''){
 HTML;
 }
 
-$sql = "select * from midguaiwu where mid='$player->idBanDoHienTai' AND sid = ''";//Thu hoạch trước mắt địa đồ quái vật
+$sql = "select * from midguaiwu where mid='$nguoiChoi->idBanDoHienTai' AND sid = ''";//Thu hoạch trước mắt địa đồ quái vật
 $cxjg = $dblj->query($sql);
 $cxallguaiwu = $cxjg->rowCount();
 $nowdate = date('Y-m-d H:i:s');
 $second=floor((strtotime($nowdate)-strtotime($clmid->mgtime))%86400);//Thu hoạch làm mới khoảng cách 86400
 if ($second > $clmid->ms  && $cxallguaiwu<= 0 && $clmid->mgid!=''){//làm mới quái vật, còn thừa nhiều ít quái vật làm mới, có thể tại sửa chữa sửa chữa, đổi thành quái vật tử vong cái gì đang cày mới cái gì
-    $sql = "update mid set mgtime='$nowdate' WHERE mid='$player->idBanDoHienTai'";
+    $sql = "update mid set mgtime='$nowdate' WHERE mid='$nguoiChoi->idBanDoHienTai'";
     $dblj->exec($sql);
     $retgw = explode(",",$clmid->mgid);
     foreach ($retgw as $itemgw){
@@ -153,7 +153,7 @@ if ($second > $clmid->ms  && $cxallguaiwu<= 0 && $clmid->mgid!=''){//làm mới 
         $guaiwu->gexp = round($guaiwu->capDo * $sjexp,0);
         for ($n=0;$n<$gwinfo[1];$n++){
             $sql = "insert into midguaiwu(mid,gname,glv,ghp,ggj,gfy,gbj,gxx,gexp,gyid,gmaxhp) 
-                    values('$player->idBanDoHienTai',
+                    values('$nguoiChoi->idBanDoHienTai',
                     '$guaiwu->tenQuaiVat',
                     '$guaiwu->capDo',
                     '$guaiwu->ghp',
@@ -199,16 +199,16 @@ if ($second > $clmid->ms  && $cxallguaiwu<= 0 && $clmid->mgid!=''){//làm mới 
 
 
 
-$sql = "select * from midguaiwu where mid='$player->idBanDoHienTai' AND sid = ''";//Thu hoạch trước mắt địa đồ quái vật
+$sql = "select * from midguaiwu where mid='$nguoiChoi->idBanDoHienTai' AND sid = ''";//Thu hoạch trước mắt địa đồ quái vật
 $cxjg = $dblj->query($sql);
 $cxallguaiwu = $cxjg->fetchAll(PDO::FETCH_ASSOC);
 $gwhtml = '';
 for ($i = 0;$i<count($cxallguaiwu);$i++){
-    $gwcmd = $encode->encode("cmd=getginfo&gid=".$cxallguaiwu[$i]['id']."&gyid=".$cxallguaiwu[$i]['gyid']."&sid=$sid&nowmid=$player->idBanDoHienTai");
+    $gwcmd = $encode->encode("cmd=getginfo&gid=".$cxallguaiwu[$i]['id']."&gyid=".$cxallguaiwu[$i]['gyid']."&sid=$sid&nowmid=$nguoiChoi->idBanDoHienTai");
     $gwhtml .="<a href='?cmd=$gwcmd'>".$cxallguaiwu[$i]['gname']."</a>";
 }
 
-$sql = "select * from game1 where nowmid='$player->idBanDoHienTai' AND sfzx = 1";//Thu hoạch trước mắt địa đồ người chơi
+$sql = "select * from game1 where nowmid='$nguoiChoi->idBanDoHienTai' AND sfzx = 1";//Thu hoạch trước mắt địa đồ người chơi
 $cxjg = $dblj->query($sql);
 $playerhtml = '';
 if ($cxjg){
@@ -337,7 +337,7 @@ if ($clmid->mnpc !=""){
                 }
             }
         }
-        $npccmd = $encode->encode("cmd=npc&nid=$nid&sid=$player->sid");
+        $npccmd = $encode->encode("cmd=npc&nid=$nid&sid=$nguoiChoi->sid");
 		
         $npchtml .= <<<HTML
       
@@ -361,7 +361,7 @@ if ($ltcxjg){
         $uname = $ret[count($ret) - $i-1]['name'];
         $umsg = $ret[count($ret) - $i-1]['msg'];
         $uid = $ret[count($ret) - $i-1]['uid'];
-        $ucmd = $encode->encode("cmd=getplayerinfo&uid=$uid&sid=$player->sid");
+        $ucmd = $encode->encode("cmd=getplayerinfo&uid=$uid&sid=$nguoiChoi->sid");
         if ($uid){
             $lthtml .="<font color=#F4911A></font><font color=#F80000>$texiao</font><font color=#EE8B14></font><font color=#EB8811></font>
 			<a href='?cmd=$ucmd''>$uname</a>:$umsg<br>";
@@ -499,4 +499,4 @@ HTML;
 echo $nowhtml;
 ?>
 <!--<font color="#FF2800">Trải</font><font color="#FF5000">Tử</font>--!>
-<!--<a href="http://playdreamer.cn/alipay/?id=9&user_id=$player->idNguoiDung" target="_blank">Nạp tiền</a>--!>
+<!--<a href="http://playdreamer.cn/alipay/?id=9&user_id=$nguoiChoi->idNguoiDung" target="_blank">Nạp tiền</a>--!>

@@ -6,10 +6,10 @@ require_once __DIR__ . '/../src/Helpers/DuocPhamHelper.php';
 require_once __DIR__ . '/../src/Helpers/ClubHelper.php';
 use TuTaTuTien\Helpers as Helpers;
 
-$player = Helpers\layThongTinNguoiChoi($sid,$dblj);//Thu hoạch ngươi ID
-$gonowmid = $encode->encode("cmd=gomid&newmid=$player->idBanDoHienTai&sid=$sid");//【Trở về trò chơi kết nối】
+$nguoiChoi = Helpers\layThongTinNguoiChoi($sid,$dblj);//Thu hoạch ngươi ID
+$gonowmid = $encode->encode("cmd=gomid&newmid=$nguoiChoi->idBanDoHienTai&sid=$sid");//【Trở về trò chơi kết nối】
 $qysd = $encode->encode("cmd=shangdian&canshu=gogoumai&sid=$sid");//【Cửa hàng kết nối】  PHP ，Lựa chọn văn bản , tăng thêm dấu hiệu , thân phận của ngươi
-$clmid = Helpers\layThongTinBanDo($player->idBanDoHienTai,$dblj); //Thu hoạch địa đồ tin tức
+$clmid = Helpers\layThongTinBanDo($nguoiChoi->idBanDoHienTai,$dblj); //Thu hoạch địa đồ tin tức
 if ($clmid->playerinfo != ''){
     $clmid->playerinfo .='<br/>';
 }
@@ -202,7 +202,7 @@ HTML;
 
 
 //Phía dưới là một cái tham số cất giữ, sau đó mở ra cái thứ hai web page
-//$player = Helpers\layThongTinNguoiChoi($sid,$dblj);//Thu hoạch ngươi ID
+//$nguoiChoi = Helpers\layThongTinNguoiChoi($sid,$dblj);//Thu hoạch ngươi ID
 // $bb = $encode->encode("cmd=getbagyd&sid=$sid");
 // $sd = $encode->encode("cmd=shangdian&canshu=gogoumai&sid=$sid");
 $qydt = $encode->encode("cmd=qydt&sid=$sid");

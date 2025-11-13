@@ -1,5 +1,9 @@
 <?php
-$gonowmid = $encode->encode("cmd=gomid&newmid=$player->nowmid&sid=$sid");
+require_once __DIR__ . '/../src/Helpers/NguoiChoiHelper.php';
+use TuTaTuTien\Helpers as Helpers;
+
+$nguoiChoi = Helpers\layThongTinNguoiChoi($sid, $dblj);
+$gonowmid = $encode->encode("cmd=gomid&newmid=$nguoiChoi->idBanDoHienTai&sid=$sid");
 $getbagzbcmd = $encode->encode("cmd=getbagzb&sid=$sid");
 $getbagdjcmd = $encode->encode("cmd=getbagdj&sid=$sid");
 $getbagjncmd = $encode->encode("cmd=getbagjn&sid=$sid");

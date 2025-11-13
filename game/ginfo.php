@@ -4,7 +4,7 @@ use TuTaTuTien\Helpers as Helpers;
 use TuTaTuTien\Core\GameHandler;
 
 $game = new GameHandler($dblj, $encode, $sid);
-$player = $game->getNguoiChoi();
+$nguoiChoi = $game->getNguoiChoi();
 $backcmd = $game->getLinkQuayVeBanDo();
 
 // Validate bản đồ
@@ -115,7 +115,7 @@ HTML;
 		
 		
 		
-		$gonowmid = $encode->encode("cmd=gomid&newmid=$player->idBanDoHienTai&sid=$sid");
+		$gonowmid = $encode->encode("cmd=gomid&newmid=$nguoiChoi->idBanDoHienTai&sid=$sid");
         $html = <<<HTML
         [<font color="#F13F0B">$yguaiwu->tenQuaiVat</font>] · $yguaiwu->gioiTinh<br/>
         Đẳng cấp:$yguaiwu->capDo<br/>

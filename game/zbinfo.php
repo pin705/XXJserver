@@ -5,14 +5,14 @@ require_once __DIR__ . '/../src/Helpers/DaoCuHelper.php';
 use TuTaTuTien\Helpers as Helpers;
 use TuTaTuTien\Classes\TrangBi;
 
-$player = Helpers\layThongTinNguoiChoi($sid, $dblj);
-$gonowmid = $encode->encode("cmd=gomid&newmid=$player->idBanDoHienTai&sid=$sid");
+$nguoiChoi = Helpers\layThongTinNguoiChoi($sid, $dblj);
+$gonowmid = $encode->encode("cmd=gomid&newmid=$nguoiChoi->idBanDoHienTai&sid=$sid");
 $zhuangbei = new TrangBi();
 if ($zbnowid!=0){
     $zhuangbei = Helpers\layThongTinTrangBiTheoId($zbnowid, $dblj);
 }
 
-$arr = array($player->tool1,$player->tool2,$player->tool3,$player->tool4,$player->tool5,$player->tool6,$player->tool7);
+$arr = array($nguoiChoi->tool1,$nguoiChoi->tool2,$nguoiChoi->tool3,$nguoiChoi->tool4,$nguoiChoi->tool5,$nguoiChoi->tool6,$nguoiChoi->tool7);
 $setzbwz='';
 $upgj = '';
 $upfy = '';
@@ -31,7 +31,7 @@ if (isset($canshu)){
             $dblj->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $dblj->beginTransaction();
 
-            $sql = "insert into `fangshi_zb`(zbname, zbinfo, zbgj, zbfy, zbbj, zbxx, zbid, uid, zbnowid, sid, zbhp, qianghua, zblv, pay,zbys) VALUES ('$zhuangbei->tenTrangBi','$zhuangbei->moTa','$zhuangbei->congKich','$zhuangbei->phongNgu','$zhuangbei->baoKich','$zhuangbei->hutMau','$zhuangbei->idMauTrangBi','$player->idNguoiDung','$zbnowid','$sid','$zhuangbei->sinhMenh','$zhuangbei->capCuongHoa','$zhuangbei->capDoYeuCau','$pay','$zhuangbei->phamChat')";
+            $sql = "insert into `fangshi_zb`(zbname, zbinfo, zbgj, zbfy, zbbj, zbxx, zbid, uid, zbnowid, sid, zbhp, qianghua, zblv, pay,zbys) VALUES ('$zhuangbei->tenTrangBi','$zhuangbei->moTa','$zhuangbei->congKich','$zhuangbei->phongNgu','$zhuangbei->baoKich','$zhuangbei->hutMau','$zhuangbei->idMauTrangBi','$nguoiChoi->idNguoiDung','$zbnowid','$sid','$zhuangbei->sinhMenh','$zhuangbei->capCuongHoa','$zhuangbei->capDoYeuCau','$pay','$zhuangbei->phamChat')";
             $affected_rows = $dblj->exec($sql);
             if (!$affected_rows){
                 throw new PDOException("Trang bị treo bán thất bại<br/>");//Cái kia sai lầm ném ra ngoài dị thường
@@ -53,10 +53,10 @@ if (isset($canshu)){
 }
 
 
-if ($player->uid == $zhuangbei->uid){
-    $uyxb = '/'.$player->uyxb;
+if ($nguoiChoi->uid == $zhuangbei->uid){
+    $uyxb = '/'.$nguoiChoi->uyxb;
     if ($cmd=='upzb'){
-        if ($player->uyxb >=$upls){
+        if ($nguoiChoi->uyxb >=$upls){
             $ret = Helpers\nangCapThuocTinhTrangBi($zbnowid,$upsx,$sid,$dblj);
             if ($ret != -1){
                 $retyxb = Helpers\thayDoiTienTroChoi(2,$upls,$sid,$dblj);
@@ -104,9 +104,9 @@ HTML;
     $uyxb='';
 }
 
-if ($player->idNguoiDung == $zhuangbei->idNguoiDung && !in_array($zhuangbei->idTrangBi,$arr)){
+if ($nguoiChoi->idNguoiDung == $zhuangbei->idNguoiDung && !in_array($zhuangbei->idTrangBi,$arr)){
 
-    $player = Helpers\layThongTinNguoiChoi($sid, $dblj);
+    $nguoiChoi = Helpers\layThongTinNguoiChoi($sid, $dblj);
     $delezb = $encode->encode("cmd=delezb&zbnowid=$zhuangbei->idTrangBi&sid=$sid");
     $self = $_SERVER['PHP_SELF'];
     $setzbwz = $encode->encode("cmd=setzbwz&zbwz={$zhuangbei->viTriTrangBi}&zbnowid=$zhuangbei->idTrangBi&sid=$sid");

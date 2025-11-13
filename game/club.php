@@ -13,8 +13,8 @@ use TuTaTuTien\Helpers as Helpers;
  * Time: 18:37
  */
 $clubplayer = Helpers\layThongTinClubPlayer($sid,$dblj);
-$player = \Helpers\layThongTinNguoiChoi($sid,$dblj);
-$gonowmid = $encode->encode("cmd=gomid&newmid=$player->idBanDoHienTai&sid=$sid");
+$nguoiChoi = \Helpers\layThongTinNguoiChoi($sid,$dblj);
+$gonowmid = $encode->encode("cmd=gomid&newmid=$nguoiChoi->idBanDoHienTai&sid=$sid");
 $clubhtml= '';
 $clubmenu = '';
 $renzhihtml='';
@@ -26,7 +26,7 @@ if (isset($canshu)){
                 echo "Ngươi đã có môn phái<br/>";
                 break;
             }
-            $sql = "insert into clubplayer(clubid, uid, sid, uclv) VALUES ($clubid,$player->idNguoiDung,'$sid',6)";
+            $sql = "insert into clubplayer(clubid, uid, sid, uclv) VALUES ($clubid,$nguoiChoi->idNguoiDung,'$sid',6)";
             $row = $dblj->exec($sql);
             $clubplayer = Helpers\layThongTinClubPlayer($sid,$dblj);
             echo "Chúc mừng ngươi thành công gia nhập<br/>";
@@ -57,7 +57,7 @@ if (isset($canshu)){
                     $retuid = $ret->fetchAll(PDO::FETCH_ASSOC);
                     foreach ($retuid as $uiditem){
                         $uid = $uiditem['uid'];
-                        if ($uid==$player->idNguoiDung){
+                        if ($uid==$nguoiChoi->idNguoiDung){
                             continue;
                         }
                         $otherplayer = \Helpers\layThongTinNguoiChoiTheoUid($uid,$dblj);
@@ -144,7 +144,7 @@ if (isset($clubid) || $clubplayer){
                 break;
         }
         $otherplayer = \Helpers\layThongTinNguoiChoiTheoUid($uid,$dblj);
-        $ucmd = $encode->encode("cmd=getplayerinfo&uid=$uid&sid=$player->sid");
+        $ucmd = $encode->encode("cmd=getplayerinfo&uid=$uid&sid=$nguoiChoi->sid");
         $playerlist .= "<a href='?cmd=$ucmd'>{$chenhao}{$otherplayer->tenNhanVat}</a><br/>";
     }
 

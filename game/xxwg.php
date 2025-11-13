@@ -8,9 +8,9 @@ require_once __DIR__ . '/../src/Helpers/NhiemVuHelper.php';
 use TuTaTuTien\Helpers as Helpers;
 
 
-$player = \Helpers\layThongTinNguoiChoi($sid,$dblj);
+$nguoiChoi = \Helpers\layThongTinNguoiChoi($sid,$dblj);
 
-$gonowmid = $encode->encode("cmd=gomid&newmid=$player->idBanDoHienTai&sid=$sid");
+$gonowmid = $encode->encode("cmd=gomid&newmid=$nguoiChoi->idBanDoHienTai&sid=$sid");
 $cwhtml='';
 $cwnamehtml= '';
 $chouqucmd = $encode->encode("cmd=xxwg&canshu=chouqu&sid=$sid");
@@ -93,7 +93,7 @@ if (isset($canshu)){
 		
             if (Helpers\thayDoiMaThach(2, 200, $sid, $dblj)) {
 				$cqsjs = mt_rand(1,3);
-				$vip = $player->vip;
+				$vip = $nguoiChoi->vip;
 				if($vip>0){
 					$cqsjs = mt_rand(1,10);
 				}
@@ -106,11 +106,11 @@ if (isset($canshu)){
             break;
         case 'xuexi':
             Helpers\thayDoiThuocTinhNguoiChoi('wugong',$wgid,$sid,$dblj);
-            $player = \Helpers\layThongTinNguoiChoi($sid,$dblj);
+            $nguoiChoi = \Helpers\layThongTinNguoiChoi($sid,$dblj);
             break;
         case 'biguan':
             Helpers\thayDoiThuocTinhNguoiChoi('wugong',0,$sid,$dblj);
-            $player = \Helpers\layThongTinNguoiChoi($sid,$dblj);
+            $nguoiChoi = \Helpers\layThongTinNguoiChoi($sid,$dblj);
             break;
         case 'fangsheng':
             Helpers\xoaVoCong($wgid,$sid,$dblj);
@@ -118,7 +118,7 @@ if (isset($canshu)){
         case 'cwinfo':
             $cx = Helpers\layThongTinVoCong($wgid,$sid,$dblj);
 			
-            $cwinfo = $encode->encode("cmd=xxwg&wgid=$player->wugong&canshu=cwinfo&sid=$sid");
+            $cwinfo = $encode->encode("cmd=xxwg&wgid=$nguoiChoi->wugong&canshu=cwinfo&sid=$sid");
 			$wgxx = $encode->encode("cmd=xxwg&sid=$sid");
 			$xiuliancmd = $encode->encode("cmd=goxiulian&sid=$sid");
             $wgxl = $encode->encode("cmd=wgxl&sid=$sid");
@@ -149,7 +149,7 @@ if ($allcw){
     foreach ($allcw as $cw){
         $wgid = $cw['wgid'];
         $czcmd='';
-        if ($wgid!=$player->wugong){
+        if ($wgid!=$nguoiChoi->wugong){
             $czcmd = $encode->encode("cmd=xxwg&canshu=xuexi&wgid=$wgid&sid=$sid");
             $fscmd = $encode->encode("cmd=xxwg&canshu=fangsheng&wgid=$wgid&sid=$sid");
             $czcmd = '<a href="?cmd='.$czcmd.'">Học tập</a>';
@@ -168,7 +168,7 @@ if ($allcw){
 }else{
     $cwnamehtml= 'Ngươi trước mắt không có bí tịch võ công, trước mắt phiên bản bí tịch nội trắc。Như cần thể nghiệm, xin liên lạc GM。';
 }
-$wgid = $player->wugong ;
+$wgid = $nguoiChoi->wugong ;
 if($wgid==''){
 	$wgid = 0 ;
 }

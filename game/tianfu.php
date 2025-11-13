@@ -1,6 +1,6 @@
 <?php
-$player = player\getplayer($sid,$dblj);
-$gonowmid = $encode->encode("cmd=gomid&newmid=$player->nowmid&sid=$sid");
+$nguoiChoi = player\getplayer($sid,$dblj);
+$gonowmid = $encode->encode("cmd=gomid&newmid=$nguoiChoi->nowmid&sid=$sid");
 $tfxy =  $encode->encode("cmd=tianfu&canshuxy=xy&sid=$sid");
 $tfsb =  $encode->encode("cmd=tianfu&canshusb=xy&sid=$sid");
 $tffy =  $encode->encode("cmd=tianfu&canshufy=xy&sid=$sid");
@@ -16,7 +16,7 @@ $jzjr = <<<HTML
 	<a href="#" onClick="javascript:history.back(-1);">Trở lại</a>
     <a href="game.php?cmd=$gonowmid" style="float:right;" >Trở về trò chơi</a>
 HTML;
-            if ($player->ulv<30){
+            if ($nguoiChoi->ulv<30){
 				echo "<hr>Đẳng cấp nhỏ hơn 30, dễ dàng tẩu hỏa nhập ma！<hr>$jzjr";
 			}
 			//Nơi này biểu hiện không cách nào gián đoạn, không để ý tới, dù sao có thể trông thấy đoạn này đều là không bình thường người chơi
@@ -31,9 +31,9 @@ HTML;
 if (isset($wbts1)){
     switch ($wbts1){
         case "xy":
-            if ($player->uczb>0){
+            if ($nguoiChoi->uczb>0){
                 $ts= $tswb;
-				    $sx = $player->uczb;
+				    $sx = $nguoiChoi->uczb;
 				    $sql = "update game1 set uczb = $sx - '1' WHERE sid='$sid'";//Người chơi thuộc tính--Giảm bớt ma thạch-1
                     $ret = $dblj->exec($sql);
                 }
@@ -47,11 +47,11 @@ if (isset($wbts1)){
 if (isset($nt)){
     switch ($nt){
         case "xy":
-		$sjs = mt_rand(1,30-$player->tfxy);
-            if ($player->ulv !=0 && $sjs <10){
+		$sjs = mt_rand(1,30-$nguoiChoi->tfxy);
+            if ($nguoiChoi->ulv !=0 && $sjs <10){
 				$ts = "<hr>Nghịch thiên cải mệnh thành công！Thiên phú thiết lập lại.<hr>";
 				
-				     $sx = $player->ulv*5;
+				     $sx = $nguoiChoi->ulv*5;
 				     $sql = "update game1 set tf = '$sx' WHERE sid='$sid'";//Cải biến người chơi thuộc tính---Ban đầu hóa thiên phú
                      $ret = $dblj->exec($sql);
 					 $sql = "update game1 set tfbj =  '0' WHERE sid='$sid'";//Thiên phú ban đầu hóa
@@ -79,12 +79,12 @@ if (isset($nt)){
 if (isset($canshuxy)){
     switch ($canshuxy){
         case "xy":
-            if ($player->tf>0){
+            if ($nguoiChoi->tf>0){
                 $ts= "<hr>Tăng lên thành công<hr>";
-				    $sx = $player->tfxy;
+				    $sx = $nguoiChoi->tfxy;
 				    $sql = "update game1 set tfxy = $sx + '1' WHERE sid='$sid'";//Gia tăng người chơi thuộc tính
                     $ret = $dblj->exec($sql);
-					$sql = "update game1 set tf = $player->tf - '1' WHERE sid='$sid'";//Thiên phú tổng giảm
+					$sql = "update game1 set tf = $nguoiChoi->tf - '1' WHERE sid='$sid'";//Thiên phú tổng giảm
                     $ret = $dblj->exec($sql);
                 }
 			 else{
@@ -95,12 +95,12 @@ if (isset($canshuxy)){
 if (isset($canshusb)){
     switch ($canshusb){
         case "xy":
-            if ($player->tf>0){
+            if ($nguoiChoi->tf>0){
                 $ts= "<hr>Tăng lên thành công<hr>";
-				    $sx = $player->tfsb;
+				    $sx = $nguoiChoi->tfsb;
 				    $sql = "update game1 set tfsb = $sx + '1' WHERE sid='$sid'";//Gia tăng người chơi thuộc tính
                     $ret = $dblj->exec($sql);
-					$sql = "update game1 set tf = $player->tf - '1' WHERE sid='$sid'";//Thiên phú tổng giảm
+					$sql = "update game1 set tf = $nguoiChoi->tf - '1' WHERE sid='$sid'";//Thiên phú tổng giảm
                     $ret = $dblj->exec($sql);
                 }
 			 else{
@@ -111,12 +111,12 @@ if (isset($canshusb)){
 if (isset($canshugj)){
     switch ($canshugj){
         case "xy":
-            if ($player->tf>0){
+            if ($nguoiChoi->tf>0){
                 $ts= "<hr>Tăng lên thành công<hr>";
-				    $sx = $player->tfgj;
+				    $sx = $nguoiChoi->tfgj;
 				    $sql = "update game1 set tfgj = $sx + '1' WHERE sid='$sid'";//Gia tăng người chơi thuộc tính
                     $ret = $dblj->exec($sql);
-					$sql = "update game1 set tf = $player->tf - '1' WHERE sid='$sid'";//Thiên phú tổng giảm
+					$sql = "update game1 set tf = $nguoiChoi->tf - '1' WHERE sid='$sid'";//Thiên phú tổng giảm
                     $ret = $dblj->exec($sql);
                 }
 			 else{
@@ -127,12 +127,12 @@ if (isset($canshugj)){
 if (isset($canshufy)){
     switch ($canshufy){
         case "xy":
-            if ($player->tf>0){
+            if ($nguoiChoi->tf>0){
                 $ts= "<hr>Tăng lên thành công<hr>";
-				    $sx = $player->tffy;
+				    $sx = $nguoiChoi->tffy;
 				    $sql = "update game1 set tffy = $sx + '1' WHERE sid='$sid'";//Gia tăng người chơi thuộc tính
                     $ret = $dblj->exec($sql);
-					$sql = "update game1 set tf = $player->tf - '1' WHERE sid='$sid'";//Thiên phú tổng giảm
+					$sql = "update game1 set tf = $nguoiChoi->tf - '1' WHERE sid='$sid'";//Thiên phú tổng giảm
                     $ret = $dblj->exec($sql);
                 }
 			 else{
@@ -143,12 +143,12 @@ if (isset($canshufy)){
 if (isset($canshubj)){
     switch ($canshubj){
         case "xy":
-            if ($player->tf>0){
+            if ($nguoiChoi->tf>0){
                 $ts= "<hr>Tăng lên thành công<hr>";
-				    $sx = $player->tfbj;
+				    $sx = $nguoiChoi->tfbj;
 				    $sql = "update game1 set tfbj = $sx + '1' WHERE sid='$sid'";//Gia tăng người chơi thuộc tính
                     $ret = $dblj->exec($sql);
-					$sql = "update game1 set tf = $player->tf - '1' WHERE sid='$sid'";//Thiên phú tổng giảm
+					$sql = "update game1 set tf = $nguoiChoi->tf - '1' WHERE sid='$sid'";//Thiên phú tổng giảm
                     $ret = $dblj->exec($sql);
                 }
 			 else{
@@ -159,12 +159,12 @@ if (isset($canshubj)){
 if (isset($canshuhp)){
     switch ($canshuhp){
         case "xy":
-            if ($player->tf>0){
+            if ($nguoiChoi->tf>0){
                 $ts= "<hr>Tăng lên thành công<hr>";
-				    $sx = $player->tfhp;
+				    $sx = $nguoiChoi->tfhp;
 				    $sql = "update game1 set tfhp = $sx + '1' WHERE sid='$sid'";//Gia tăng người chơi thuộc tính
                     $ret = $dblj->exec($sql);
-					$sql = "update game1 set tf = $player->tf - '1' WHERE sid='$sid'";//Thiên phú tổng giảm
+					$sql = "update game1 set tf = $nguoiChoi->tf - '1' WHERE sid='$sid'";//Thiên phú tổng giảm
                     $ret = $dblj->exec($sql);
                 }
 			 else{
@@ -175,12 +175,12 @@ if (isset($canshuhp)){
 if (isset($canshuxx)){
     switch ($canshuxx){
         case "xy":
-            if ($player->tf>0){
+            if ($nguoiChoi->tf>0){
                 $ts= "<hr>Tăng lên thành công<hr>";
-				    $sx = $player->tfxx;
+				    $sx = $nguoiChoi->tfxx;
 				    $sql = "update game1 set tfxx = $sx + '1' WHERE sid='$sid'";//Gia tăng người chơi thuộc tính
                     $ret = $dblj->exec($sql);
-					$sql = "update game1 set tf = $player->tf - '1' WHERE sid='$sid'";//Thiên phú tổng giảm
+					$sql = "update game1 set tf = $nguoiChoi->tf - '1' WHERE sid='$sid'";//Thiên phú tổng giảm
                     $ret = $dblj->exec($sql);
                 }
 			 else{
@@ -189,21 +189,21 @@ if (isset($canshuxx)){
 	}
 }
 $ztcmd = $encode->encode("cmd=zhuangtai&sid=$sid");
-$cwinfo = $encode->encode("cmd=chongwu&cwid=$player->cw&canshu=cwinfo&sid=$sid");
+$cwinfo = $encode->encode("cmd=chongwu&cwid=$nguoiChoi->cw&canshu=cwinfo&sid=$sid");
 $cwid = $cw['cwid'];
 $gm =  $encode->encode("cmd=czbgm&canshu2=gaiming2&sid=$sid");
-$player = player\getplayer($sid,$dblj);
+$nguoiChoi = player\getplayer($sid,$dblj);
 $html = <<<HTML
 <link rel="stylesheet" href="./chajian/tishiwenben/css/style.css">
 <div class="menu"><a href="?cmd=$ztcmd">Thông tin cá nhân</a><a href="?cmd=$cwinfo"><font color="#9c27b0">Sủng vật tin tức</font></a><a href="?cmd=$gm">Đổi tên</a></div><br><br>
-Thiên phú còn thừa:$player->tf<br>
-Khí huyết:$player->uhp/$player->umaxhp<br/>
-Công kích:$player->ugj<br/>
-Phòng ngự:$player->ufy<br/>
-Bạo kích:$player->ubj<br/>
-Hút máu:$player->uxx<br/>
-May mắn:$player->tfxy<br>
-Né tránh:$player->tfsb<br>
+Thiên phú còn thừa:$nguoiChoi->tf<br>
+Khí huyết:$nguoiChoi->uhp/$nguoiChoi->umaxhp<br/>
+Công kích:$nguoiChoi->ugj<br/>
+Phòng ngự:$nguoiChoi->ufy<br/>
+Bạo kích:$nguoiChoi->ubj<br/>
+Hút máu:$nguoiChoi->uxx<br/>
+May mắn:$nguoiChoi->tfxy<br>
+Né tránh:$nguoiChoi->tfsb<br>
 $ts
 <a href="?cmd=$tfxy">Tăng lên may mắn</a><a href="?cmd=$tfsb">Tăng lên né tránh</a><a href="?cmd=$tfxx">Tăng lên khôi phục</a><br>
 <a href="?cmd=$tfgj">Tăng lên lực lượng</a><a href="?cmd=$tfbj">Tăng lên cuồng bạo</a><a href="?cmd=$tfhp">Tăng lên thể phách</a><br>
