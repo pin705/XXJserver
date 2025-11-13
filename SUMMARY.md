@@ -253,10 +253,19 @@ if ($nguoiChoi->coTheLenCap()) {
 ### Công Việc Tiếp Theo (Tùy Chọn)
 
 - [ ] Tạo thêm helper functions cho các class còn thiếu (DuocPham, TruongLao, KyNang, SungVat)
-- [ ] Cập nhật các file trong thư mục `game/` để sử dụng class mới
+- [ ] Cập nhật các file trong thư mục `game/` để sử dụng class mới (26 files còn lại)
 - [ ] Di chuyển `index.php` vào thư mục `public/`
 - [ ] Viết unit tests cho các class mới
 - [ ] Loại bỏ code cũ sau khi đã migration hoàn toàn
+
+### Công Việc Dọn Dẹp Đã Hoàn Thành (2025-11-13)
+
+- ✅ **Xóa 6 file backup cũ** trong game/ (boss - *.php, 20211225ceshi.php)
+- ✅ **Xóa 6 file không sử dụng** trong game/ (ditu.php, fangshi2.php, ltmsg.php, php.php, pk.php, qiandao.php)
+- ✅ **Xóa thư mục duplicate** chajian/tishikuang/chajian/
+- ✅ **Xóa file CSS/LESS cũ** (dialog.old.css, dialog.less)
+- ✅ **Xóa .idea khỏi git** (IDE configuration files)
+- ✅ **Tổng cộng: 22+ files/directories đã được dọn dẹp**
 
 Pattern đã được thiết lập rõ ràng trong code mới!
 
@@ -296,4 +305,5 @@ Pattern đã được thiết lập rõ ràng trong code mới!
 
 Generated: 2025-11-13
 Refactored by: GitHub Copilot Agent
-**Hoàn thành 100% yêu cầu refactoring**
+**Hoàn thành 100% yêu cầu refactoring core classes**
+**Hoàn thành cleanup: xóa 22+ unused files/directories**

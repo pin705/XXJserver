@@ -191,10 +191,13 @@ if ($nguoiChoi->conSong()) {
 6. ✅ Tạo compatibility layer
 7. ✅ Tạo file examples.php với ví dụ sử dụng
 8. ✅ Refactor các class còn lại (BanDo, DaoCu, DuocPham, NhiemVu, TruongLao, KyNang, SungVat)
-9. ⏳ Di chuyển index.php vào public/
-10. ⏳ Cập nhật các file game/ để sử dụng class mới
-11. ⏳ Kiểm tra và test toàn bộ hệ thống
-12. ⏳ Loại bỏ code cũ sau khi đã chuyển đổi hoàn toàn
+9. ✅ Xóa các file backup không sử dụng (boss - *.php, test files)
+10. ✅ Xóa các thư mục và file duplicate (chajian/tishikuang/chajian/, dialog.old.css, dialog.less)
+11. ✅ Xóa .idea khỏi git tracking
+12. ⏳ Di chuyển index.php vào public/
+13. ⏳ Cập nhật các file game/ để sử dụng class mới (26 files còn lại)
+14. ⏳ Kiểm tra và test toàn bộ hệ thống
+15. ⏳ Loại bỏ code cũ sau khi đã chuyển đổi hoàn toàn
 
 ## Files Đã Tạo
 
@@ -246,6 +249,34 @@ if ($nguoiChoi->conSong()) {
 | `playerinfo` | `$playerinfo` | `$thongTinNguoiChoi` | Thông tin người chơi |
 | `ispvp` | `$ispvp` | `$laBanDoPvp` | Bản đồ PVP |
 | **game1.nowmid** | `$nowmid` | `$idBanDoHienTai` | **ID bản đồ hiện tại của người chơi** |
+
+## Công Việc Dọn Dẹp (Cleanup Work)
+
+### Files đã xóa (2025-11-13)
+
+**Backup files trong game/ (6 files):**
+- `game/boss - 0.php` - File backup cũ
+- `game/boss - 12251230.php` - File backup cũ
+- `game/boss - 1225副本.php` - File backup cũ
+- `game/boss - 2022-2-12-.php` - File backup cũ
+- `game/boss -20211223.php` - File backup cũ
+- `game/20211225ceshi.php` - File test cũ
+
+**Unused files trong game/ (6 files):**
+- `game/ditu.php` - Không được sử dụng
+- `game/fangshi2.php` - Không được sử dụng
+- `game/ltmsg.php` - Không được sử dụng
+- `game/php.php` - Không được sử dụng
+- `game/pk.php` - Không được sử dụng
+- `game/qiandao.php` - Không được sử dụng
+
+**Duplicate/Old files:**
+- `chajian/tishikuang/chajian/` - Thư mục duplicate nested
+- `chajian/tishikuang/style/dialog.old.css` - CSS cũ không dùng
+- `chajian/tishikuang/style/dialog.less` - LESS source không dùng
+- `.idea/` - IDE configuration files (removed from git tracking)
+
+**Tổng cộng:** Đã xóa 22+ files/directories không sử dụng
 
 ## Lưu Ý
 
