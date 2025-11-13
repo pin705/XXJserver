@@ -105,6 +105,31 @@ function layThongTinNguoiChoi($idPhien, $ketNoiDB)
 }
 
 /**
+ * Lấy thông tin người chơi từ database theo user ID
+ * 
+ * Hàm này truy vấn database để lấy thông tin người chơi theo uid
+ * 
+ * @param int $idNguoiDung User ID của người chơi
+ * @param \PDO $ketNoiDB Đối tượng kết nối PDO database
+ * @return NguoiChoi|null Đối tượng người chơi hoặc null nếu không tìm thấy
+ */
+function layThongTinNguoiChoiTheoUid($idNguoiDung, $ketNoiDB)
+{
+    // Lấy sid từ uid
+    $sql = "SELECT sid FROM game1 WHERE uid = ?";
+    $stmt = $ketNoiDB->prepare($sql);
+    $stmt->execute([$idNguoiDung]);
+    $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+    
+    if (!$result || !isset($result['sid'])) {
+        return null;
+    }
+    
+    // Dùng sid để lấy đầy đủ thông tin
+    return layThongTinNguoiChoi($result['sid'], $ketNoiDB);
+}
+
+/**
  * Tính toán chỉ số bổ sung từ trang bị
  * 
  * @param NguoiChoi $nguoiChoi Đối tượng người chơi
@@ -396,6 +421,106 @@ function nangCapChoNguoiChoi($idPhien, $ketNoiDB)
             
             return true;
         }
+    }
+    
+    return false;
+}
+
+/**
+ * Thay đổi chỉ số người chơi
+ * 
+ * Hàm này thay đổi một chỉ số cụ thể của người chơi thành giá trị mới
+ * 
+ * @param string $tenChiSo Tên cột cần thay đổi (uhp, ugj, ufy, etc.)
+ * @param mixed $giaTriMoi Giá trị mới
+ * @param string $idPhien Session ID của người chơi
+ * @param \PDO $ketNoiDB Đối tượng kết nối PDO database
+ * @return bool True nếu thành công, false nếu thất bại
+ */
+function thayDoiChiSoNguoiChoi($tenChiSo, $giaTriMoi, $idPhien, $ketNoiDB)
+{
+    $sql = "UPDATE game1 SET $tenChiSo = ? WHERE sid = ?";
+    $stmt = $ketNoiDB->prepare($sql);
+    return $stmt->execute([$giaTriMoi, $idPhien]);
+}
+
+/**
+ * Thêm/trừ chỉ số người chơi
+ * 
+ * Hàm này cộng hoặc trừ một giá trị vào chỉ số hiện tại của người chơi
+ * 
+ * @param string $tenChiSo Tên cột cần thay đổi (uhp, ugj, ufy, etc.)
+ * @param int $giaTriThayDoi Giá trị thay đổi (dương để cộng, âm để trừ)
+ * @param string $idPhien Session ID của người chơi
+ * @param \PDO $ketNoiDB Đối tượng kết nối PDO database
+ * @return bool True nếu thành công, false nếu thất bại
+ */
+function themChiSoNguoiChoi($tenChiSo, $giaTriThayDoi, $idPhien, $ketNoiDB)
+{
+    $sql = "UPDATE game1 SET $tenChiSo = $tenChiSo + ? WHERE sid = ?";
+    $stmt = $ketNoiDB->prepare($sql);
+    return $stmt->execute([$giaTriThayDoi, $idPhien]);
+}
+
+/**
+ * Thay đổi tiền trò chơi của người chơi
+ * 
+ * @param int $loaiThaoTac 1 = thêm tiền, 2 = trừ tiền
+ * @param int $soTien Số tiền thay đổi
+ * @param string $idPhien Session ID của người chơi
+ * @param \PDO $ketNoiDB Đối tượng kết nối PDO database
+ * @return bool True nếu thành công, false nếu thất bại (không đủ tiền khi trừ)
+ */
+function thayDoiTienTroChoi($loaiThaoTac, $soTien, $idPhien, $ketNoiDB)
+{
+    if ($loaiThaoTac == 1) {
+        // Thêm tiền
+        $sql = "UPDATE game1 SET uyxb = uyxb + ? WHERE sid = ?";
+        $stmt = $ketNoiDB->prepare($sql);
+        return $stmt->execute([$soTien, $idPhien]);
+    } elseif ($loaiThaoTac == 2) {
+        // Trừ tiền - kiểm tra đủ tiền không
+        $nguoiChoi = layThongTinNguoiChoi($idPhien, $ketNoiDB);
+        
+        if (!$nguoiChoi || $nguoiChoi->tienTroChoi < $soTien) {
+            return false;
+        }
+        
+        $sql = "UPDATE game1 SET uyxb = uyxb - ? WHERE sid = ?";
+        $stmt = $ketNoiDB->prepare($sql);
+        return $stmt->execute([$soTien, $idPhien]);
+    }
+    
+    return false;
+}
+
+/**
+ * Thay đổi tiền nạp của người chơi
+ * 
+ * @param int $loaiThaoTac 1 = thêm tiền, 2 = trừ tiền
+ * @param int $soTien Số tiền thay đổi
+ * @param string $idPhien Session ID của người chơi
+ * @param \PDO $ketNoiDB Đối tượng kết nối PDO database
+ * @return bool True nếu thành công, false nếu thất bại (không đủ tiền khi trừ)
+ */
+function thayDoiTienNap($loaiThaoTac, $soTien, $idPhien, $ketNoiDB)
+{
+    if ($loaiThaoTac == 1) {
+        // Thêm tiền
+        $sql = "UPDATE game1 SET uczb = uczb + ? WHERE sid = ?";
+        $stmt = $ketNoiDB->prepare($sql);
+        return $stmt->execute([$soTien, $idPhien]);
+    } elseif ($loaiThaoTac == 2) {
+        // Trừ tiền - kiểm tra đủ tiền không
+        $nguoiChoi = layThongTinNguoiChoi($idPhien, $ketNoiDB);
+        
+        if (!$nguoiChoi || $nguoiChoi->tienNap < $soTien) {
+            return false;
+        }
+        
+        $sql = "UPDATE game1 SET uczb = uczb - ? WHERE sid = ?";
+        $stmt = $ketNoiDB->prepare($sql);
+        return $stmt->execute([$soTien, $idPhien]);
     }
     
     return false;

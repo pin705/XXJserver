@@ -1,10 +1,12 @@
 <?php
+require_once __DIR__ . '/../src/Helpers/NhiemVuHelper.php';
+use TuTaTuTien\Helpers as Helpers;
 
 $rwhtml .= <<<HTML
 <IMG width='280' height='140' src='./images/rw.png'src="./images/rw.png" style="border-radius: 8px;">
 HTML;
 
-$playertask = \player\getplayerrenwu($sid,$dblj);
+$playertask = Helpers\layTatCaNhiemVuCuaNguoiChoi($sid, $dblj);
 $gonowmid = $encode->encode("cmd=gomid&newmid=$player->nowmid&sid=$sid");
 $mytaskinfo = '';
 $taskhtml='';
