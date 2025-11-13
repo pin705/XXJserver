@@ -1,0 +1,231 @@
+# Tài Liệu Refactoring - Dự Án Game Tự Ta Tu Tiên
+
+## Tổng Quan
+
+Dự án này đã được refactor để tuân thủ các chuẩn mực lập trình hiện đại (PSR-1/PSR-12) với mục tiêu tăng tính dễ đọc, dễ bảo trì và mở rộng.
+
+## Cấu Trúc Thư Mục Mới
+
+```
+XXJserver/
+├── src/                    # Mã nguồn chính
+│   ├── Classes/           # Các class chính của game
+│   │   └── NguoiChoi.php # Class quản lý người chơi (refactored)
+│   └── Helpers/           # Các hàm tiện ích
+│       └── NguoiChoiHelper.php # Helper functions cho người chơi
+├── public/                # Điểm vào ứng dụng (sẽ di chuyển index.php vào đây)
+├── config/                # File cấu hình
+│   └── CauHinhGame.php   # Các hằng số cấu hình game
+├── data/                  # Dữ liệu game (mô tả vật phẩm, quái vật, v.v.)
+├── class/                 # Thư mục cũ (giữ lại để tương thích ngược)
+│   └── player.php        # Class người chơi phiên bản cũ
+├── game/                  # Các file logic game
+└── index.php             # File entry point chính
+```
+
+## Quy Tắc Đặt Tên
+
+### 1. Class Names (PascalCase)
+- **Cũ**: `player`, `guaiwu`, `clmid`
+- **Mới**: `NguoiChoi`, `QuaiVat`, `BanDo`
+
+### 2. Function Names (camelCase)
+- **Cũ**: `getplayer()`, `changeexp()`, `upplayerlv()`
+- **Mới**: `layThongTinNguoiChoi()`, `themKinhNghiem()`, `nangCapChoNguoiChoi()`
+
+### 3. Variable Names (camelCase)
+- **Cũ**: `$player`, `$dblj`, `$cxjg`
+- **Mới**: `$nguoiChoi`, `$ketNoiDB`, `$ketQua`
+
+### 4. Constants (SCREAMING_SNAKE_CASE)
+- **Mới**: `CAP_DO_TOI_DA`, `HE_SO_KINH_NGHIEM`, `THOI_GIAN_OFFLINE_TOI_DA`
+
+## Bảng Mapping Tên Cũ - Mới
+
+### Classes
+
+| Tên Cũ | Tên Mới | Mô Tả |
+|---------|---------|-------|
+| `player` | `NguoiChoi` | Class quản lý người chơi |
+| `guaiwu` | `QuaiVat` | Class quản lý quái vật |
+| `clmid` | `BanDo` | Class quản lý bản đồ |
+| `zhuangbei` | `TrangBi` | Class quản lý trang bị |
+| `yaopin` | `DuocPham` | Class quản lý dược phẩm |
+| `daoju` | `DaoCu` | Class quản lý đạo cụ |
+| `task` | `NhiemVu` | Class quản lý nhiệm vụ |
+| `boss` | `TruongLao` | Class quản lý boss |
+| `chongwu` | `SungVat` | Class quản lý sủng vật |
+| `jineng` | `KyNang` | Class quản lý kỹ năng |
+
+### Functions
+
+| Tên Cũ | Tên Mới | Mô Tả |
+|---------|---------|-------|
+| `getplayer()` | `layThongTinNguoiChoi()` | Lấy thông tin người chơi |
+| `changeexp()` | `themKinhNghiem()` | Thay đổi kinh nghiệm |
+| `upplayerlv()` | `nangCapChoNguoiChoi()` | Nâng cấp người chơi |
+| `changeyxb()` | `thayDoiTienTroChoi()` | Thay đổi tiền game |
+| `getzb()` | `layThongTinTrangBi()` | Lấy thông tin trang bị |
+| `addzb()` | `themTrangBi()` | Thêm trang bị |
+| `useyaopin()` | `suDungDuocPham()` | Sử dụng dược phẩm |
+
+### Properties (Thuộc tính)
+
+| Tên Cũ | Tên Mới | Mô Tả |
+|---------|---------|-------|
+| `$uname` | `$tenNhanVat` | Tên nhân vật |
+| `$uid` | `$idNguoiDung` | ID người dùng |
+| `$sid` | `$idPhien` | Session ID |
+| `$ulv` | `$capDo` | Cấp độ |
+| `$uyxb` | `$tienTroChoi` | Tiền game |
+| `$uczb` | `$tienNap` | Tiền nạp |
+| `$uexp` | `$kinhNghiem` | Kinh nghiệm |
+| `$umaxexp` | `$kinhNghiemToiDa` | Kinh nghiệm tối đa |
+| `$uhp` | `$sinhMenh` | Sinh mệnh (HP) |
+| `$umaxhp` | `$sinhMenhToiDa` | Sinh mệnh tối đa |
+| `$ugj` | `$congKich` | Công kích |
+| `$ufy` | `$phongNgu` | Phòng ngự |
+| `$ubj` | `$baoKich` | Bạo kích |
+| `$uxx` | `$hutMau` | Hút máu |
+| `$uwx` | `$nguHanh` | Ngũ hành |
+| `$usex` | `$gioiTinh` | Giới tính |
+| `$nowmid` | `$idBanDoHienTai` | ID bản đồ hiện tại |
+| `$jingjie` | `$canhGioi` | Cảnh giới |
+| `$cengci` | `$tangCanhGioi` | Tầng cảnh giới |
+| `$tfgj` | `$thienPhuCongKich` | Thiên phú công kích |
+| `$tfxy` | `$thienPhuMayMan` | Thiên phú may mắn |
+| `$tfsb` | `$thienPhuNeTranh` | Thiên phú né tránh |
+| `$tfxx` | `$thienPhuHutMau` | Thiên phú hút máu |
+| `$tfhp` | `$thienPhuSinhMenh` | Thiên phú sinh mệnh |
+| `$tffy` | `$thienPhuPhongNgu` | Thiên phú phòng ngự |
+| `$tfbj` | `$thienPhuBaoKich` | Thiên phú bạo kích |
+| `$shenfen` | `$thanPhan` | Thân phận (class) |
+| `$wugong` | `$voCong` | Võ công |
+
+## PHPDoc Comments
+
+Tất cả các class, function và method mới đều được bổ sung PHPDoc comments đầy đủ bằng tiếng Việt có dấu, bao gồm:
+
+- Mô tả mục đích
+- `@param` - Mô tả các tham số
+- `@return` - Mô tả giá trị trả về
+- `@var` - Mô tả các thuộc tính
+
+### Ví dụ:
+
+```php
+/**
+ * Lấy thông tin người chơi từ database theo session ID
+ * 
+ * Hàm này truy vấn database để lấy tất cả thông tin của người chơi,
+ * bao gồm cả việc tính toán chỉ số từ trang bị và thiên phú
+ * 
+ * @param string $idPhien Session ID của người chơi
+ * @param \PDO $ketNoiDB Đối tượng kết nối PDO database
+ * @return NguoiChoi|null Đối tượng người chơi hoặc null nếu không tìm thấy
+ */
+function layThongTinNguoiChoi($idPhien, $ketNoiDB)
+{
+    // Implementation
+}
+```
+
+## File Cấu Hình
+
+### config/CauHinhGame.php
+
+File này chứa tất cả các hằng số cấu hình của game:
+
+- Cấp độ và giới hạn
+- Hệ số kinh nghiệm, công kích, phòng ngự
+- Tên các cảnh giới tu luyện
+- Hệ số thiên phú
+- Thời gian và giới hạn
+
+## Tương Thích Ngược
+
+- Các file cũ vẫn được giữ nguyên trong thư mục `class/`
+- Code mới được đặt trong `src/` để dễ phân biệt
+- Có thể sử dụng song song cả hai phiên bản trong quá trình chuyển đổi
+
+## Hướng Dẫn Sử Dụng
+
+### Cài đặt và chạy ví dụ
+
+```bash
+# Chạy file ví dụ để xem code mới hoạt động
+php examples.php
+```
+
+### Sử dụng class và function mới:
+
+```php
+<?php
+// Include autoloader hoặc require file
+require_once 'src/Classes/NguoiChoi.php';
+require_once 'src/Helpers/NguoiChoiHelper.php';
+require_once 'config/CauHinhGame.php';
+
+use TuTaTuTien\Helpers;
+use TuTaTuTien\Classes\NguoiChoi;
+
+// Lấy thông tin người chơi
+$nguoiChoi = Helpers\layThongTinNguoiChoi($sid, $pdo);
+
+// Thêm kinh nghiệm
+Helpers\themKinhNghiem($sid, 100, $pdo);
+
+// Kiểm tra còn sống
+if ($nguoiChoi->conSong()) {
+    // Logic game
+}
+```
+
+## Các Bước Tiếp Theo
+
+1. ✅ Tạo cấu trúc thư mục mới
+2. ✅ Refactor class NguoiChoi
+3. ✅ Tạo file cấu hình
+4. ✅ Tạo helper functions
+5. ✅ Tạo class QuaiVat và TrangBi
+6. ✅ Tạo compatibility layer
+7. ✅ Tạo file examples.php với ví dụ sử dụng
+8. ⏳ Di chuyển index.php vào public/
+9. ⏳ Refactor các class khác (BanDo, DaoCu, NhiemVu, v.v.)
+10. ⏳ Cập nhật các file game/ để sử dụng class mới
+11. ⏳ Kiểm tra và test toàn bộ hệ thống
+12. ⏳ Loại bỏ code cũ sau khi đã chuyển đổi hoàn toàn
+
+## Files Đã Tạo
+
+### Cấu trúc (Structure)
+- `.gitignore` - File ignore cho Git
+- `REFACTORING.md` - Tài liệu hướng dẫn refactoring (file này)
+
+### Classes  
+- `src/Classes/NguoiChoi.php` - Class người chơi refactored
+- `src/Classes/QuaiVat.php` - Class quái vật refactored
+- `src/Classes/TrangBi.php` - Class trang bị refactored
+
+### Helpers
+- `src/Helpers/NguoiChoiHelper.php` - Helper functions cho người chơi
+
+### Config
+- `config/CauHinhGame.php` - Game constants và cấu hình
+
+### Utilities
+- `compatibility.php` - Layer tương thích ngược với code cũ
+- `examples.php` - File ví dụ sử dụng code refactored
+
+## Lưu Ý
+
+- **Không xóa code cũ** cho đến khi đã test kỹ code mới
+- **Thực hiện từng bước nhỏ** và test sau mỗi thay đổi
+- **Backup database** trước khi chạy với code mới
+- **Giữ nguyên logic game** - chỉ refactor cấu trúc và tên gọi
+
+## Tác Giả
+
+Refactoring được thực hiện theo yêu cầu modernization và chuẩn hóa codebase.
+
+Ngày cập nhật: 2025-11-13

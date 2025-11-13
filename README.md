@@ -1,1 +1,71 @@
 # XXJserver
+
+Game Text-Based PHP - Tự Ta Tu Tiên (修仙)
+
+## 📋 Tổng Quan
+
+Dự án game tu tiên text-based được viết bằng PHP. Đã được refactor để tuân thủ các chuẩn mực lập trình hiện đại.
+
+## 🎯 Refactoring Status
+
+**Đã hoàn thành:**
+- ✅ Tổ chức lại cấu trúc thư mục (src/, public/, config/, data/)
+- ✅ Refactor các class chính: NguoiChoi, QuaiVat, TrangBi
+- ✅ Đặt tên theo PSR-1/PSR-12 standards
+- ✅ Thêm PHPDoc comments tiếng Việt đầy đủ
+- ✅ Tạo helper functions với tên rõ ràng
+- ✅ Tạo file config cho constants
+- ✅ Compatibility layer với code cũ
+- ✅ Examples và documentation
+
+Xem chi tiết trong [REFACTORING.md](REFACTORING.md)
+
+## 📁 Cấu Trúc Mới
+
+```
+XXJserver/
+├── src/                    # Code refactored mới
+│   ├── Classes/           # NguoiChoi, QuaiVat, TrangBi
+│   └── Helpers/           # Helper functions
+├── config/                # CauHinhGame - Constants
+├── data/                  # Game data (sẽ thêm)
+├── public/                # Entry points (sẽ di chuyển)
+├── class/                 # Code cũ (giữ tương thích)
+├── game/                  # Logic game hiện tại
+├── compatibility.php      # Backward compatibility
+├── examples.php           # Ví dụ sử dụng
+└── REFACTORING.md        # Tài liệu chi tiết
+
+```
+
+## 🚀 Bắt Đầu
+
+### Xem ví dụ code mới:
+```bash
+php examples.php
+```
+
+### Sử dụng trong code:
+```php
+<?php
+use TuTaTuTien\Helpers;
+
+// Lấy thông tin người chơi
+$nguoiChoi = Helpers\layThongTinNguoiChoi($sid, $pdo);
+
+// Thêm kinh nghiệm
+Helpers\themKinhNghiem($sid, 1000, $pdo);
+```
+
+## 📖 Documentation
+
+- [REFACTORING.md](REFACTORING.md) - Hướng dẫn refactoring đầy đủ
+- [examples.php](examples.php) - Ví dụ sử dụng code mới
+
+## 🔄 Tương Thích
+
+Code cũ vẫn hoạt động bình thường. Code mới được thêm vào song song để chuyển đổi dần.
+
+## 👥 Contributors
+
+Refactoring by GitHub Copilot Agent
