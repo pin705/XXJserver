@@ -12,9 +12,9 @@ $wgid = $player->wugong;
 $wgid = $player->wugong;
 $cxwg = Helpers\layThongTinVoCong($wgid,$sid,$dblj);
 
-$gonowmid = $encode->encode("cmd=gomid&newmid=$player->idBanDoHienTai&sid=$sid");
-$strxl = $encode->encode("cmd=wgxiulian&canshu=1&wgid=$wgid&sid=$sid");
-$endxl = $encode->encode("cmd=jswg&wgid=$wgid&sid=$sid");//Kết thúc tu tiên
+$gonowmid = $encode->encode("cmd=goto_map&newmid=$player->idBanDoHienTai&sid=$sid");
+$strxl = $encode->encode("cmd=martial_arts_training&canshu=1&wgid=$wgid&sid=$sid");
+$endxl = $encode->encode("cmd=end_martial_training&wgid=$wgid&sid=$sid");//Kết thúc tu tiên
 $nowdate = date('Y-m-d H:i:s');
 $xlsjc='Chưa bắt đầu tu luyện';
 $tishi = '';
@@ -98,9 +98,9 @@ if ($cxwg->xlzt == 1){
 		$xlcz = "<a style='color: #f50808;'>Thiếu khuyết bí tịch, không cách nào tu hành</a><br><br>";
 	}
 }
-$xiuliancmd = $encode->encode("cmd=goxiulian&sid=$sid");
-$wgxl = $encode->encode("cmd=wgxl&sid=$sid");
-$wgxx = $encode->encode("cmd=xxwg&sid=$sid");
+$xiuliancmd = $encode->encode("cmd=goto_cultivation&sid=$sid");
+$wgxl = $encode->encode("cmd=martial_training&sid=$sid");
+$wgxx = $encode->encode("cmd=learn_martial_arts&sid=$sid");
 $cxwg = Helpers\layThongTinVoCong($wgid,$sid,$dblj);
 $wgys = $cxwg->wgys;
 $wu = $player->wugong;

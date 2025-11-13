@@ -10,7 +10,7 @@ $player = Helpers\layThongTinNguoiChoi($sid,$dblj);
 $player1 = Helpers\layThongTinNguoiChoiTheoUid($uid,$dblj);
 $immenu='';
 
-$gonowmid = $encode->encode("cmd=gomid&newmid=$player->idBanDoHienTai&sid=$sid");
+$gonowmid = $encode->encode("cmd=goto_map&newmid=$player->idBanDoHienTai&sid=$sid");
 $pkcmd = $encode->encode("cmd=pvp&uid=$uid&sid=$sid");
 $clubplayer = Helpers\layThongTinClubPlayer($player1->sid,$dblj);
 if (isset($canshu)){
@@ -21,7 +21,7 @@ if (isset($canshu)){
 
 if ($clubplayer){
     $club = Helpers\layThongTinClub($clubplayer->clubid,$dblj);
-    $clubcmd = $encode->encode("cmd=club&clubid=$club->clubid&sid=$sid");
+    $clubcmd = $encode->encode("cmd=guild&clubid=$club->clubid&sid=$sid");
     $clubname ="<a href='?cmd=$clubcmd'>$club->clubname</a>";
 }else{
     $clubname = "Không môn không phái";
@@ -30,12 +30,12 @@ if ($player->sid != $player1->sid){
     $immenu = "<a href='?cmd=$pkcmd' style='color:#ff0000'>Công kích</a>";
     $ret = Helpers\kiemTraLaBanBe($uid,$sid,$dblj);
     if (!$ret){
-        $addim=  $encode->encode("cmd=getplayerinfo&canshu=addim&uid=$uid&sid=$sid");
+        $addim=  $encode->encode("cmd=get_player_info&canshu=addim&uid=$uid&sid=$sid");
         $immenu.="<a href='?cmd=$addim' style='
     color: #009688;'>Kết giao</a><hr>";
     }else{
-        $chat=  $encode->encode("cmd=getplayerinfo&canshu=addim&uid=$uid&sid=$sid");
-        $deim=  $encode->encode("cmd=im&canshu=deim&uid=$uid&sid=$sid");
+        $chat=  $encode->encode("cmd=get_player_info&canshu=addim&uid=$uid&sid=$sid");
+        $deim=  $encode->encode("cmd=private_message&canshu=deim&uid=$uid&sid=$sid");
         $immenu.=<<<HTML
         </a><a href='?cmd=$deim'>Xóa bỏ hảo hữu</a>
 <form>
@@ -66,7 +66,7 @@ if ($player1->viTriTrangBi1!=0){
     if ($zhuangbei->capCuongHoa>0){
         $qhs = '+'.$zhuangbei->capCuongHoa;
     }
-    $zbcmd = $encode->encode("cmd=chakanzb&zbnowid=$player1->viTriTrangBi1&uid=$player1->idNguoiDung&sid=$sid");
+    $zbcmd = $encode->encode("cmd=view_equipment&zbnowid=$player1->viTriTrangBi1&uid=$player1->idNguoiDung&sid=$sid");
 	
 $tool1 = "Vũ khí:<a href='?cmd=$zbcmd'><font color='$zhuangbei->phamChat'>{$zhuangbei->tenTrangBi}</font>{$qhs}</a><br/>";//Hai cái điểm trong dấu ngoặc cao cấp không cần'.#FFF.'Trực tiếp'#FF'
 
@@ -77,7 +77,7 @@ if ($player1->viTriTrangBi2!=0){
     if ($zhuangbei->capCuongHoa>0){
         $qhs = '+'.$zhuangbei->capCuongHoa;
     }
-    $zbcmd = $encode->encode("cmd=chakanzb&zbnowid=$player1->viTriTrangBi2&uid=$player1->idNguoiDung&sid=$sid");
+    $zbcmd = $encode->encode("cmd=view_equipment&zbnowid=$player1->viTriTrangBi2&uid=$player1->idNguoiDung&sid=$sid");
     $tool2 = "Đồ phòng ngự:<a href='?cmd=$zbcmd'><font color='$zhuangbei->phamChat'>{$zhuangbei->tenTrangBi}</font>{$qhs}</a><br/>";
 }
 if ($player1->viTriTrangBi3!=0){
@@ -86,7 +86,7 @@ if ($player1->viTriTrangBi3!=0){
     if ($zhuangbei->capCuongHoa>0){
         $qhs = '+'.$zhuangbei->capCuongHoa;
     }
-    $zbcmd = $encode->encode("cmd=chakanzb&zbnowid=$player1->viTriTrangBi3&uid=$player1->idNguoiDung&sid=$sid");
+    $zbcmd = $encode->encode("cmd=view_equipment&zbnowid=$player1->viTriTrangBi3&uid=$player1->idNguoiDung&sid=$sid");
     $tool3 = "Đồ trang sức:<a href='?cmd=$zbcmd'><font color='$zhuangbei->phamChat'>{$zhuangbei->tenTrangBi}</font>{$qhs}</a><br/>";
 }
 if ($player1->viTriTrangBi4!=0){
@@ -95,7 +95,7 @@ if ($player1->viTriTrangBi4!=0){
     if ($zhuangbei->capCuongHoa>0){
         $qhs = '+'.$zhuangbei->capCuongHoa;
     }
-    $zbcmd = $encode->encode("cmd=chakanzb&zbnowid=$player1->viTriTrangBi4&uid=$player1->idNguoiDung&sid=$sid");
+    $zbcmd = $encode->encode("cmd=view_equipment&zbnowid=$player1->viTriTrangBi4&uid=$player1->idNguoiDung&sid=$sid");
     $tool4 = "Thư tịch:<a href='?cmd=$zbcmd'><font color='$zhuangbei->phamChat'>{$zhuangbei->tenTrangBi}</font>{$qhs}</a><br/>";
 }
 if ($player1->viTriTrangBi5!=0){
@@ -104,7 +104,7 @@ if ($player1->viTriTrangBi5!=0){
     if ($zhuangbei->capCuongHoa>0){
         $qhs = '+'.$zhuangbei->capCuongHoa;
     }
-    $zbcmd = $encode->encode("cmd=chakanzb&zbnowid=$player1->viTriTrangBi5&uid=$player1->idNguoiDung&sid=$sid");
+    $zbcmd = $encode->encode("cmd=view_equipment&zbnowid=$player1->viTriTrangBi5&uid=$player1->idNguoiDung&sid=$sid");
     $tool5 = "Tọa kỵ:<a href='?cmd=$zbcmd'><font color='$zhuangbei->phamChat'>{$zhuangbei->tenTrangBi}</font>{$qhs}</a><br/>";;
 }
 if ($player1->viTriTrangBi6!=0){
@@ -113,7 +113,7 @@ if ($player1->viTriTrangBi6!=0){
     if ($zhuangbei->capCuongHoa>0){
         $qhs = '+'.$zhuangbei->capCuongHoa;
     }
-    $zbcmd = $encode->encode("cmd=chakanzb&zbnowid=$player1->viTriTrangBi6&uid=$player1->idNguoiDung&sid=$sid");
+    $zbcmd = $encode->encode("cmd=view_equipment&zbnowid=$player1->viTriTrangBi6&uid=$player1->idNguoiDung&sid=$sid");
     $tool6 = "Lệnh bài:<a href='?cmd=$zbcmd'><font color='$zhuangbei->phamChat'>{$zhuangbei->tenTrangBi}</font>{$qhs}</a><br/>";;
 }
 if ($player1->viTriTrangBi7!=0){
@@ -122,7 +122,7 @@ if ($player1->viTriTrangBi7!=0){
     if ($zhuangbei->capCuongHoa>0){
         $qhs = '+'.$zhuangbei->capCuongHoa;
     }
-    $zbcmd = $encode->encode("cmd=chakanzb&zbnowid=$player1->viTriTrangBi7&uid=$player1->idNguoiDung&sid=$sid");
+    $zbcmd = $encode->encode("cmd=view_equipment&zbnowid=$player1->viTriTrangBi7&uid=$player1->idNguoiDung&sid=$sid");
     $tool7 = "Ám khí:<a href='?cmd=$zbcmd'><font color='$zhuangbei->phamChat'>{$zhuangbei->tenTrangBi}</font>{$qhs}</a><br/>";;
 }
 //Dẫn vào võ công, mượn gió bẻ măng
@@ -134,8 +134,8 @@ if ($player->wugong!=0&&$wglx==0){
 	$tishi = "<a href='?cmd=$gonowmid' style='color:$wgys'>$cxwg->wgname</a>";
 }
 
-$ztcmd = $encode->encode("cmd=otherzhuangtai&sid=$sid");//Thông tin cá nhân
-$cwinfo = $encode->encode("cmd=chongwu&cwid=$player1->cw&canshu=cwinfo&sid=$sid");//Sủng vật kết nối
+$ztcmd = $encode->encode("cmd=other_player_status&sid=$sid");//Thông tin cá nhân
+$cwinfo = $encode->encode("cmd=pet&cwid=$player1->cw&canshu=cwinfo&sid=$sid");//Sủng vật kết nối
 $html = <<<HTML
 【<a>Thông tin cá nhân</a><a href="?cmd=$cwinfo"><font color="#e28e0c">Sủng vật tin tức</font></a>】<br/>
 Biệt danh:$player1->tenNhanVat<br/>

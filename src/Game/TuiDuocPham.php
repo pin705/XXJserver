@@ -10,11 +10,11 @@ use TuTaTuTien\Helpers as Helpers;
 
 $nguoiChoi = Helpers\layThongTinNguoiChoi($sid, $dblj);
 
-$gonowmid = $encode->encode("cmd=gomid&newmid=$nguoiChoi->idBanDoHienTai&sid=$sid");
-$getbagzbcmd = $encode->encode("cmd=getbagzb&sid=$sid");
-$getbagdjcmd = $encode->encode("cmd=getbagdj&sid=$sid");
-$getbagjncmd = $encode->encode("cmd=getbagjn&sid=$sid");
-$getbagydcmd = $encode->encode("cmd=getbagyd&sid=$sid");
+$gonowmid = $encode->encode("cmd=goto_map&newmid=$nguoiChoi->idBanDoHienTai&sid=$sid");
+$getbagzbcmd = $encode->encode("cmd=get_equipment_bag&sid=$sid");
+$getbagdjcmd = $encode->encode("cmd=get_item_bag&sid=$sid");
+$getbagjncmd = $encode->encode("cmd=get_skill_bag&sid=$sid");
+$getbagydcmd = $encode->encode("cmd=get_medicine_bag&sid=$sid");
 $yaodan = Helpers\layTatCaDuocDanCuaNguoiChoi($sid, $dblj);
 
 $allyd= '';
@@ -26,11 +26,11 @@ if ($yaodan){
             $suoyin += 1;
             $ydid = $yd['ydid'];
             $ydname = $yd['ydname'];
-            $ydcmd = $encode->encode("cmd=ydinfo&ydid=$ydid&sid=$sid");
+            $ydcmd = $encode->encode("cmd=medicine_info&ydid=$ydid&sid=$sid");
 			
 			$playeryd = Helpers\layDuocDanCuaNguoiChoi($ydid, $sid, $dblj);
 			
-            $useyd = $encode->encode("cmd=ydinfo&canshu=useyd&ydid=$ydid&sid=$sid");
+            $useyd = $encode->encode("cmd=medicine_info&canshu=useyd&ydid=$ydid&sid=$sid");
 			
 			$yaodan1 = Helpers\layThongTinDuocDan($ydid, $dblj);//Dẫn vào nhan sắc văn kiện
 			
@@ -41,10 +41,10 @@ HTML;
         }
     }
 }
-        $shangdian = $encode->encode("cmd=shangdian&canshu=gogoumai&sid=$sid");
-		$shangdian1 = $encode->encode("cmd=shangdian&canshu1=gogoumai1&sid=$sid");
-		$beibaocmd = $encode->encode("cmd=getbagyd&sid=$sid");
-		$getbagydcmd = $encode->encode("cmd=getbagyd&sid=$sid");
+        $shangdian = $encode->encode("cmd=shop&canshu=gogoumai&sid=$sid");
+		$shangdian1 = $encode->encode("cmd=shop&canshu1=gogoumai1&sid=$sid");
+		$beibaocmd = $encode->encode("cmd=get_medicine_bag&sid=$sid");
+		$getbagydcmd = $encode->encode("cmd=get_medicine_bag&sid=$sid");
 
 $bagydhtml =<<<HTML
  <IMG width='280' height='140' src='./images/miji.png'src="./images/rw.png" style="border-radius: 8px;">

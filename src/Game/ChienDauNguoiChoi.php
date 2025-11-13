@@ -23,10 +23,10 @@ use TuTaTuTien\Helpers as Helpers;
 //}
 $cxmid = Helpers\layThongTinBanDo($player->idBanDoHienTai,$dblj);
 $cxqy = Helpers\layThongTinKhuVuc($cxmid->mqy,$dblj);
-$gorehpmid = $encode->encode("cmd=gomid&newmid=$cxqy->mid&sid=$player->sid");
+$gorehpmid = $encode->encode("cmd=goto_map&newmid=$cxqy->mid&sid=$player->sid");
 $player = \Helpers\layThongTinNguoiChoi($sid,$dblj);
 $pvper = \Helpers\layThongTinNguoiChoiTheoUid($uid,$dblj);
-$gonowmid = $encode->encode("cmd=gomid&newmid=$player->idBanDoHienTai&sid=$player->sid");
+$gonowmid = $encode->encode("cmd=goto_map&newmid=$player->idBanDoHienTai&sid=$player->sid");
 if ($cxmid->ispvp == 0){
     Helpers\thayDoiThuocTinhNguoiChoi("ispvp",0,$sid,$dblj);
     $tishihtml = 'Trước mắt địa đồ không cho phép PK<br/><br/>'.

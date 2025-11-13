@@ -4,7 +4,7 @@ require_once __DIR__ . '/../Helpers/TrangBiHelper.php';
 use TuTaTuTien\Helpers as Helpers;
 
 $nguoiChoi = Helpers\layThongTinNguoiChoi($sid, $dblj);
-$gonowmid = $encode->encode("cmd=gomid&newmid=$nguoiChoi->idBanDoHienTai&sid=$sid");
+$gonowmid = $encode->encode("cmd=goto_map&newmid=$nguoiChoi->idBanDoHienTai&sid=$sid");
 $trangBi = Helpers\layThongTinTrangBi($zbid, $dblj);
 $tools = array("Không hạn","Vũ khí","Đồ phòng ngự","Đồ trang sức","Thư tịch","Tọa kỵ","Lệnh bài","Ám khí");
 $tool = $tools[$trangBi->viTri];

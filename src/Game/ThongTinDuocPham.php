@@ -93,7 +93,7 @@ $ydgj = '';
 $ydfy = '';
 $ydbj = '';
 $ydxx = '';
-$gonowmid = $encode->encode("cmd=gomid&newmid=$player->idBanDoHienTai&sid=$sid");
+$gonowmid = $encode->encode("cmd=goto_map&newmid=$player->idBanDoHienTai&sid=$sid");
 $yaodan = Helpers\layThongTinDuocDan($ydid,$dblj);
 $playeryd = Helpers\layThongTinDuocDanCuaNguoiChoi($ydid,$sid,$dblj);
 $setyd = '';
@@ -164,11 +164,11 @@ if (isset($canshu)){
     }
 }
 if ($playeryd){
-    $setyd1 = $encode->encode("cmd=ydinfo&canshu=setyd1&ydid=$ydid&sid=$sid");
-    $setyd2 = $encode->encode("cmd=ydinfo&canshu=setyd2&ydid=$ydid&sid=$sid");
-    $setyd3 = $encode->encode("cmd=ydinfo&canshu=setyd3&ydid=$ydid&sid=$sid");
-    $useyd = $encode->encode("cmd=ydinfo&canshu=useyd&ydid=$ydid&sid=$sid");
-	$daoli = $encode->encode("cmd=ydinfo&canshu=daoli&ydid=$ydid&sid=$sid");
+    $setyd1 = $encode->encode("cmd=medicine_info&canshu=setyd1&ydid=$ydid&sid=$sid");
+    $setyd2 = $encode->encode("cmd=medicine_info&canshu=setyd2&ydid=$ydid&sid=$sid");
+    $setyd3 = $encode->encode("cmd=medicine_info&canshu=setyd3&ydid=$ydid&sid=$sid");
+    $useyd = $encode->encode("cmd=medicine_info&canshu=useyd&ydid=$ydid&sid=$sid");
+	$daoli = $encode->encode("cmd=medicine_info&canshu=daoli&ydid=$ydid&sid=$sid");
 $tshtml = <<<html
 	<a id="load" href="?cmd=$daoli"style="background-color:#7b156f;color: #ffffff;">Dựng ngược chậm nhai</a>
 html;

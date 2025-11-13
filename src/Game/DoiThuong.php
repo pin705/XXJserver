@@ -102,7 +102,7 @@ HTML;
  
 
 $player = \Helpers\layThongTinNguoiChoi($sid,$dblj);
-$gonowmid = $encode->encode("cmd=gomid&newmid=$player->idBanDoHienTai&sid=$sid");
+$gonowmid = $encode->encode("cmd=goto_map&newmid=$player->idBanDoHienTai&sid=$sid");
 $tishi = '';
 if (isset($dhm)){
 		

@@ -6,9 +6,9 @@
  * Time:16:10 
  */
 $player = \player\getplayer($sid,$dblj);
-$gonowmid = $encode->encode("cmd=gomid&newmid=$player->nowmid&sid=$sid");
+$gonowmid = $encode->encode("cmd=goto_map&newmid=$player->nowmid&sid=$sid");
 $gaiming =$encode->encode("cmd=npc&&nid=$nid&canshu=gaiming&sid=$sid");
-//$gm =  $encode->encode("cmd=gaiming&canshu2=gaiming2&sid=$sid");
+//$gm =  $encode->encode("cmd=change_name&canshu2=gaiming2&sid=$sid");
 $gnhtml=<<<HTML
 <div align="center">
 ==重新做人==<br/>

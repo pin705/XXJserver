@@ -10,7 +10,7 @@ require_once __DIR__ . '/../Helpers/DaoCuHelper.php';
 use TuTaTuTien\Helpers as Helpers;
 
 $nguoiChoi = Helpers\layThongTinNguoiChoi($sid, $dblj);
-$gonowmid = $encode->encode("cmd=gomid&newmid=$nguoiChoi->idBanDoHienTai&sid=$sid");
+$gonowmid = $encode->encode("cmd=goto_map&newmid=$nguoiChoi->idBanDoHienTai&sid=$sid");
 if (isset($canshu)){
     $getyxb = 0;
     if ($canshu == "maichu1"){
@@ -53,20 +53,20 @@ for ($i=0;$i<count($retdj);$i++){
     $djsum = $retdj[$i]['djsum'];
     if ($djsum>0){
         $hangshu = $hangshu + 1;
-        $chakandj = $encode->encode("cmd=djinfo&djid=$djid&uid=$nguoiChoi->idNguoiDung&sid=$sid");
-        $maichu1 = $encode->encode("cmd=getbagdj&canshu=maichu1&djid=$djid&uid=$nguoiChoi->idNguoiDung&sid=$sid");
-        $maichu5 = $encode->encode("cmd=getbagdj&canshu=maichu5&djid=$djid&uid=$nguoiChoi->idNguoiDung&sid=$sid");
-        $maichu10 = $encode->encode("cmd=getbagdj&canshu=maichu10&djid=$djid&uid=$nguoiChoi->idNguoiDung&sid=$sid");
+        $chakandj = $encode->encode("cmd=item_info&djid=$djid&uid=$nguoiChoi->idNguoiDung&sid=$sid");
+        $maichu1 = $encode->encode("cmd=get_item_bag&canshu=maichu1&djid=$djid&uid=$nguoiChoi->idNguoiDung&sid=$sid");
+        $maichu5 = $encode->encode("cmd=get_item_bag&canshu=maichu5&djid=$djid&uid=$nguoiChoi->idNguoiDung&sid=$sid");
+        $maichu10 = $encode->encode("cmd=get_item_bag&canshu=maichu10&djid=$djid&uid=$nguoiChoi->idNguoiDung&sid=$sid");
         $djhtml .="[$hangshu]<a href='?cmd=$chakandj'>{$djname}x{$djsum}</a><a href='?cmd=$maichu1'>Bán  1</a>
 		<!--<a href='?cmd=$maichu5'>Bán  5</a><a href='?cmd=$maichu10'>Bán  10</a>-->
 		<br/>";
     }
 
 }
-$getbagzbcmd = $encode->encode("cmd=getbagzb&sid=$sid");
-$getbagypcmd = $encode->encode("cmd=getbagyp&sid=$sid");
-$getbagjncmd = $encode->encode("cmd=getbagjn&sid=$sid");
-$getbagydcmd = $encode->encode("cmd=getbagyd&sid=$sid");
+$getbagzbcmd = $encode->encode("cmd=get_equipment_bag&sid=$sid");
+$getbagypcmd = $encode->encode("cmd=get_pill_bag&sid=$sid");
+$getbagjncmd = $encode->encode("cmd=get_skill_bag&sid=$sid");
+$getbagydcmd = $encode->encode("cmd=get_medicine_bag&sid=$sid");
 $bagdjhtml =<<<HTML
 <font size="2"><div class="menu"><a href="?cmd=$getbagzbcmd">Trang bị</a><a href="#" style="background-color: gray;">Đạo cụ</a><a href="?cmd=$getbagypcmd">Dược phẩm</a><a href="?cmd=$getbagjncmd">Kỹ năng</a><a href="?cmd=$getbagydcmd">Đan dược</a></div></font><br>
 <br/>

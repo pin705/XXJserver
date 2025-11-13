@@ -7,14 +7,14 @@ $rwhtml .= <<<HTML
 HTML;
 
 $playertask = Helpers\layTatCaNhiemVuCuaNguoiChoi($sid, $dblj);
-$gonowmid = $encode->encode("cmd=gomid&newmid=$player->nowmid&sid=$sid");
+$gonowmid = $encode->encode("cmd=goto_map&newmid=$player->nowmid&sid=$sid");
 $mytaskinfo = '';
 $taskhtml='';
 $rwzt='';
 $rwhtml;
 for ($n=0;$n<count($playertask);$n++){
     $rwid = $playertask[$n]['rwid'];
-    $mytaskinfo = $encode->encode("cmd=mytaskinfo&rwid=$rwid&sid=$sid");
+    $mytaskinfo = $encode->encode("cmd=quest_info&rwid=$rwid&sid=$sid");
     $rwname = $playertask[$n]['rwname'];
     $rwlx = $playertask[$n]['rwlx'];
 	

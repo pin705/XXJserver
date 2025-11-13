@@ -6,7 +6,7 @@ require_once __DIR__ . '/../Helpers/DuocPhamHelper.php';
 use TuTaTuTien\Helpers as Helpers;
 
 $boss = Helpers\layThongTinBoss($bossid, $dblj);
-$pvb = $encode->encode("cmd=pvb&bossid=$bossid&sid=$sid");
+$pvb = $encode->encode("cmd=boss_battle&bossid=$bossid&sid=$sid");
 
 if($boss->sinhMenh>0){
         $dlhtml = '';
@@ -18,7 +18,7 @@ if($boss->sinhMenh>0){
             foreach($zbarr as $newstr){
                 $zbkzb = Helpers\layThongTinTrangBi($newstr, $dblj);
 				//$zhuangbei = new \player\zhuangbei();
-                $zbcmd = $encode->encode("cmd=zbinfo_sys&zbid=$zbkzb->idMauTrangBi&sid=$sid");
+                $zbcmd = $encode->encode("cmd=system_equipment_info&zbid=$zbkzb->idMauTrangBi&sid=$sid");
                 $zbhtml .= "<a href='?cmd=$zbcmd'><font color='{$zbkzb->phamChat}'>$zbkzb->tenTrangBi</font></a>";
             }
             $dlhtml .=$zbhtml;
@@ -27,7 +27,7 @@ if($boss->sinhMenh>0){
             $djarr = explode(',',$boss->daoCuRoi);
             foreach($djarr as $newstr){
                 $dj = Helpers\layThongTinDaoCu($newstr, $dblj);
-                $djinfo = $encode->encode("cmd=djinfo&djid=$dj->idDaoCu&sid=$sid");
+                $djinfo = $encode->encode("cmd=item_info&djid=$dj->idDaoCu&sid=$sid");
                 $djhtml .= "<font class='djys'><a href='?cmd=$djinfo'>$dj->tenDaoCu</a></font>";
             }
             $dlhtml .=$djhtml;
@@ -36,7 +36,7 @@ if($boss->sinhMenh>0){
             $yparr = explode(',',$boss->duocPhamRoi);
             foreach($yparr as $newstr){
                 $yp = Helpers\layThongTinDuocPham($newstr, $dblj);
-                $ypinfo = $encode->encode("cmd=ypinfo&ypid=$yp->idDuocPham&sid=$sid");
+                $ypinfo = $encode->encode("cmd=pill_info&ypid=$yp->idDuocPham&sid=$sid");
 
                 $yphtml .= "<font class='ypys'><a href='?cmd=$ypinfo'>$yp->tenDuocPham</a></font>";
             }

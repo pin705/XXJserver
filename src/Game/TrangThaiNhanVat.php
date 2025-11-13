@@ -34,12 +34,12 @@ $('#error').click(function(){
 HTML;
 
 $player = Helpers\layThongTinNguoiChoi($sid, $dblj);
-$gonowmid = $encode->encode("cmd=gomid&newmid=$player->idBanDoHienTai&sid=$sid");
-$getbagzbcmd = $encode->encode("cmd=getbagzb&sid=$sid");
+$gonowmid = $encode->encode("cmd=goto_map&newmid=$player->idBanDoHienTai&sid=$sid");
+$getbagzbcmd = $encode->encode("cmd=get_equipment_bag&sid=$sid");
 //$clubplayer = \player\getclubplayer_once($sid,$dblj);
 //if ($clubplayer){
 //    $club = \player\getclub($clubplayer->clubid,$dblj);
-//    $clubcmd = $encode->encode("cmd=club&sid=$sid");
+//    $clubcmd = $encode->encode("cmd=guild&sid=$sid");
 //    $clubname ="<a href='?cmd=$clubcmd'>$club->clubname</a>";
 //}else{
 //    $clubname = "Không môn không phái";
@@ -91,9 +91,9 @@ if ($player->tool1!=0){
     if ($zhuangbei->capCuongHoa>0){
         $qhs = '+'.$zhuangbei->capCuongHoa;
     }
-    $xxzb1 = '<a href="?cmd='.$encode->encode("cmd=xxzb&zbwz=1&sid=$sid").'">Dỡ xuống</a>';
+    $xxzb1 = '<a href="?cmd='.$encode->encode("cmd=unequip&zbwz=1&sid=$sid").'">Dỡ xuống</a>';
 	
-$tool1 = '<a href="?cmd='.$encode->encode("cmd=chakanzb&zbnowid=$player->tool1&uid=$player->idNguoiDung&sid=$sid").'">
+$tool1 = '<a href="?cmd='.$encode->encode("cmd=view_equipment&zbnowid=$player->tool1&uid=$player->idNguoiDung&sid=$sid").'">
 <font color='.$zhuangbei->phamChat.'>'.$zhuangbei->tenTrangBi.'</font>'.$qhs.'</a>'.$xxzb1;
 }
 if ($player->tool2!=0){
@@ -102,8 +102,8 @@ if ($player->tool2!=0){
     if ($zhuangbei->capCuongHoa>0){
         $qhs = '+'.$zhuangbei->capCuongHoa;
     }
-    $xxzb2 = '<a href="?cmd='.$encode->encode("cmd=xxzb&zbwz=2&sid=$sid").'">Dỡ xuống</a>';
-    $tool2 = '<a href="?cmd='.$encode->encode("cmd=chakanzb&zbnowid=$player->tool2&uid=$player->idNguoiDung&sid=$sid").'"><font color='.$zhuangbei->phamChat.'>'.$zhuangbei->tenTrangBi.'</font>'.$qhs.'</a>'.$xxzb2;
+    $xxzb2 = '<a href="?cmd='.$encode->encode("cmd=unequip&zbwz=2&sid=$sid").'">Dỡ xuống</a>';
+    $tool2 = '<a href="?cmd='.$encode->encode("cmd=view_equipment&zbnowid=$player->tool2&uid=$player->idNguoiDung&sid=$sid").'"><font color='.$zhuangbei->phamChat.'>'.$zhuangbei->tenTrangBi.'</font>'.$qhs.'</a>'.$xxzb2;
 }
 if ($player->tool3!=0){
     $zhuangbei = Helpers\layThongTinTrangBiTheoId($player->tool3, $dblj);
@@ -111,8 +111,8 @@ if ($player->tool3!=0){
     if ($zhuangbei->capCuongHoa>0){
         $qhs = '+'.$zhuangbei->capCuongHoa;
     }
-    $xxzb3 = '<a href="?cmd='.$encode->encode("cmd=xxzb&zbwz=3&sid=$sid").'">Dỡ xuống</a>';
-    $tool3 = '<a href="?cmd='.$encode->encode("cmd=chakanzb&zbnowid=$player->tool3&uid=$player->idNguoiDung&sid=$sid").'"><font color='.$zhuangbei->phamChat.'>'.$zhuangbei->tenTrangBi.'</font>'.$qhs.'</a>'.$xxzb3;
+    $xxzb3 = '<a href="?cmd='.$encode->encode("cmd=unequip&zbwz=3&sid=$sid").'">Dỡ xuống</a>';
+    $tool3 = '<a href="?cmd='.$encode->encode("cmd=view_equipment&zbnowid=$player->tool3&uid=$player->idNguoiDung&sid=$sid").'"><font color='.$zhuangbei->phamChat.'>'.$zhuangbei->tenTrangBi.'</font>'.$qhs.'</a>'.$xxzb3;
 }
 if ($player->tool4!=0){
     $zhuangbei = Helpers\layThongTinTrangBiTheoId($player->tool4, $dblj);
@@ -120,8 +120,8 @@ if ($player->tool4!=0){
     if ($zhuangbei->capCuongHoa>0){
         $qhs = '+'.$zhuangbei->capCuongHoa;
     }
-    $xxzb4 = '<a href="?cmd='.$encode->encode("cmd=xxzb&zbwz=4&sid=$sid").'">Dỡ xuống</a>';
-    $tool4 = '<a href="?cmd='.$encode->encode("cmd=chakanzb&zbnowid=$player->tool4&uid=$player->idNguoiDung&sid=$sid").'"><font color='.$zhuangbei->phamChat.'>'.$zhuangbei->tenTrangBi.'</font>'.$qhs.'</a>'.$xxzb4;
+    $xxzb4 = '<a href="?cmd='.$encode->encode("cmd=unequip&zbwz=4&sid=$sid").'">Dỡ xuống</a>';
+    $tool4 = '<a href="?cmd='.$encode->encode("cmd=view_equipment&zbnowid=$player->tool4&uid=$player->idNguoiDung&sid=$sid").'"><font color='.$zhuangbei->phamChat.'>'.$zhuangbei->tenTrangBi.'</font>'.$qhs.'</a>'.$xxzb4;
 }
 if ($player->tool5!=0){
     $zhuangbei = Helpers\layThongTinTrangBiTheoId($player->tool5, $dblj);
@@ -129,8 +129,8 @@ if ($player->tool5!=0){
     if ($zhuangbei->capCuongHoa>0){
         $qhs = '+'.$zhuangbei->capCuongHoa;
     }
-    $xxzb5 = '<a href="?cmd='.$encode->encode("cmd=xxzb&zbwz=5&sid=$sid").'">Dỡ xuống</a>';
-    $tool5 = '<a href="?cmd='.$encode->encode("cmd=chakanzb&zbnowid=$player->tool5&uid=$player->idNguoiDung&sid=$sid").'"><font color='.$zhuangbei->phamChat.'>'.$zhuangbei->tenTrangBi.'</font>'.$qhs.'</a>'.$xxzb5;
+    $xxzb5 = '<a href="?cmd='.$encode->encode("cmd=unequip&zbwz=5&sid=$sid").'">Dỡ xuống</a>';
+    $tool5 = '<a href="?cmd='.$encode->encode("cmd=view_equipment&zbnowid=$player->tool5&uid=$player->idNguoiDung&sid=$sid").'"><font color='.$zhuangbei->phamChat.'>'.$zhuangbei->tenTrangBi.'</font>'.$qhs.'</a>'.$xxzb5;
 }
 if ($player->tool6!=0){
     $zhuangbei = Helpers\layThongTinTrangBiTheoId($player->tool6, $dblj);
@@ -138,8 +138,8 @@ if ($player->tool6!=0){
     if ($zhuangbei->capCuongHoa>0){
         $qhs = '+'.$zhuangbei->capCuongHoa;
     }
-    $xxzb6 = '<a href="?cmd='.$encode->encode("cmd=xxzb&zbwz=6&sid=$sid").'">Dỡ xuống</a>';
-    $tool6 = '<a href="?cmd='.$encode->encode("cmd=chakanzb&zbnowid=$player->tool6&uid=$player->idNguoiDung&sid=$sid").'"><font color='.$zhuangbei->phamChat.'>'.$zhuangbei->tenTrangBi.'</font>'.$qhs.'</a>'.$xxzb6;
+    $xxzb6 = '<a href="?cmd='.$encode->encode("cmd=unequip&zbwz=6&sid=$sid").'">Dỡ xuống</a>';
+    $tool6 = '<a href="?cmd='.$encode->encode("cmd=view_equipment&zbnowid=$player->tool6&uid=$player->idNguoiDung&sid=$sid").'"><font color='.$zhuangbei->phamChat.'>'.$zhuangbei->tenTrangBi.'</font>'.$qhs.'</a>'.$xxzb6;
 
 }
 
@@ -152,8 +152,8 @@ if ($player->tool7!=0){
     if ($zhuangbei->capCuongHoa>0){
         $qhs = '+'.$zhuangbei->capCuongHoa;
     }
-    $xxzb7 = '<a href="?cmd='.$encode->encode("cmd=xxzb&zbwz=7&sid=$sid").'">Dỡ xuống</a>';
-    $tool7 = '<a href="?cmd='.$encode->encode("cmd=chakanzb&zbnowid=$player->tool7&uid=$player->idNguoiDung&sid=$sid").'"><font color='.$zhuangbei->phamChat.'>'.$zhuangbei->tenTrangBi.'</font>'.$qhs.'</a>'.$xxzb7;
+    $xxzb7 = '<a href="?cmd='.$encode->encode("cmd=unequip&zbwz=7&sid=$sid").'">Dỡ xuống</a>';
+    $tool7 = '<a href="?cmd='.$encode->encode("cmd=view_equipment&zbnowid=$player->tool7&uid=$player->idNguoiDung&sid=$sid").'"><font color='.$zhuangbei->phamChat.'>'.$zhuangbei->tenTrangBi.'</font>'.$qhs.'</a>'.$xxzb7;
 }
 
 
@@ -242,22 +242,22 @@ if (isset($jzjr)){
 	}
 }
 if($player->ulv>=30){
-	$tianfu =  $encode->encode("cmd=tianfu&sid=$sid");
+	$tianfu =  $encode->encode("cmd=talent&sid=$sid");
 }
 else{
-	$tianfu =  $encode->encode("cmd=zhuangtai&jzjr=xy&sid=$sid");	
+	$tianfu =  $encode->encode("cmd=character_status&jzjr=xy&sid=$sid");	
 }
 $player = Helpers\layThongTinNguoiChoi($sid, $dblj);
 $shenfen = array('Chiến sĩ','Chiến sĩ', 'Hiệp sĩ', 'Ẩn sĩ');
 $sf = $shenfen[$player->thanPhan];
-//$tianfu =  $encode->encode("cmd=tianfu&sid=$sid");
-$ztcmd = $encode->encode("cmd=zhuangtai&sid=$sid");
-$cwinfo = $encode->encode("cmd=chongwu&cwid=$player->cw&canshu=cwinfo&sid=$sid");
+//$tianfu =  $encode->encode("cmd=talent&sid=$sid");
+$ztcmd = $encode->encode("cmd=character_status&sid=$sid");
+$cwinfo = $encode->encode("cmd=pet&cwid=$player->cw&canshu=cwinfo&sid=$sid");
 $cwid = $cw['cwid'];
-$gm =  $encode->encode("cmd=czbgm&canshu2=gaiming2&sid=$sid");
-$xiuliancmd = $encode->encode("cmd=goxiulian&sid=$sid");
-$wbts =  $encode->encode("cmd=zhuangtai&tswb=xy&sid=$sid");
-$sz =  $encode->encode("cmd=taozhuang&sid=$sid");
+$gm =  $encode->encode("cmd=recharge_gm&canshu2=gaiming2&sid=$sid");
+$xiuliancmd = $encode->encode("cmd=goto_cultivation&sid=$sid");
+$wbts =  $encode->encode("cmd=character_status&tswb=xy&sid=$sid");
+$sz =  $encode->encode("cmd=equipment_set&sid=$sid");
 $html = <<<HTML
 
 <div class="menu"><a href="?cmd=$ztcmd">Nhân vật</a><a href="?cmd=$cwinfo"><font color="#9c27b0">Sủng vật</font></a><a href="?cmd=$sz">Thần trang</a><a href="?cmd=$gm">Đổi tên</a></div><br/>

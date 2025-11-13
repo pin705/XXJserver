@@ -109,7 +109,7 @@ require_once __DIR__ . '/../src/Helpers/ClubHelper.php';
 use TuTaTuTien\Helpers as Helpers;
 
 $player = Helpers\layThongTinNguoiChoi($sid, $dblj);
-$gonowmid = $encode->encode("cmd=gomid&newmid=$player->idBanDoHienTai&sid=$player->sid");
+$gonowmid = $encode->encode("cmd=goto_map&newmid=$player->idBanDoHienTai&sid=$player->sid");
 
 if ($nowmid != $player->idBanDoHienTai) {
     echo 'Mời bình thường chơi đùa!<br/>';

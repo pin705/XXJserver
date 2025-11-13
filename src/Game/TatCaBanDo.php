@@ -25,7 +25,7 @@ for ($i=0;$i<count($cxallmap);$i++){
         $banDo = Helpers\layThongTinBanDo($mid, $dblj);
         $mname = $banDo->tenBanDo;
         $br++;
-        $gomid = $encode->encode("cmd=gomid&newmid=$mid&sid=$sid");
+        $gomid = $encode->encode("cmd=goto_map&newmid=$mid&sid=$sid");
         $map .=<<<HTML
         <a href="?cmd=$gomid" >[$qyame]$mname</a>
 HTML;
@@ -37,7 +37,7 @@ HTML;
 }
 
 
-$gonowmid = $encode->encode("cmd=gomid&newmid=$nguoiChoi->idBanDoHienTai&sid=$sid");
+$gonowmid = $encode->encode("cmd=goto_map&newmid=$nguoiChoi->idBanDoHienTai&sid=$sid");
 $allmap = <<<HTML
 <IMG width='280' height='140' src='./images/rw.png'src="./images/rw.png" style="border-radius: 8px;">
 <!--<IMG width='280' height='50' src='./images/dt.jpg'>--><hr>

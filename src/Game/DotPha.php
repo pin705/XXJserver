@@ -116,8 +116,8 @@ HTML;
  
 
 $player = \Helpers\layThongTinNguoiChoi($sid,$dblj);
-$tupocmd = $encode->encode("cmd=tupo&canshu=tupo&sid=$sid");
-$gonowmid = $encode->encode("cmd=gomid&newmid=$player->idBanDoHienTai&sid=$sid");
+$tupocmd = $encode->encode("cmd=breakthrough&canshu=tupo&sid=$sid");
+$gonowmid = $encode->encode("cmd=goto_map&newmid=$player->idBanDoHienTai&sid=$sid");
 $tupo = Helpers\kiemTraDieuKienTuPha($sid,$dblj);
 
 

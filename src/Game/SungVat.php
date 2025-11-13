@@ -9,11 +9,11 @@ use TuTaTuTien\Helpers as Helpers;
 
 
 $player = \Helpers\layThongTinNguoiChoi($sid,$dblj);
-$gonowmid = $encode->encode("cmd=gomid&newmid=$player->idBanDoHienTai&sid=$sid");
+$gonowmid = $encode->encode("cmd=goto_map&newmid=$player->idBanDoHienTai&sid=$sid");
 $cwhtml='';
 $cwnamehtml= '';
-$chouqucmd = $encode->encode("cmd=chongwu&canshu=chouqu&sid=$sid");
-$queren = $encode->encode("cmd=chongwu&canshu=queren&sid=$sid");
+$chouqucmd = $encode->encode("cmd=pet&canshu=chouqu&sid=$sid");
+$queren = $encode->encode("cmd=pet&canshu=queren&sid=$sid");
 
 //Nơi này nghĩ dựng cái thành công nhắc nhở khung
 $tskcg = <<<HTML
@@ -88,7 +88,7 @@ $('#error').click(function(){
 </body>
 HTML;
 //Chưa sửa chữa hoàn thành
-$cwcmd = $encode->encode("cmd=chongwu&sid=$sid");
+$cwcmd = $encode->encode("cmd=pet&sid=$sid");
 $qr1 =<<<html
 <div align="center">
 <a id="load" href="?cmd=$chouqucmd"style="color: #fd0000;">Xác nhận rút ra</a>
@@ -128,11 +128,11 @@ if (isset($canshu)){
             $pzarr = array('<font color=#00C000>Phổ thông</font>', '<font color=#1a80da>Ưu tú</font>', '<font color=#a08f0a>Trác tuyệt</font>', '<font color=#14b8b9>Phi phàm</font>', '<font color=#f16613>Hoàn mỹ</font>', '<font color=#ec0909>Nghịch thiên</font>');
             $cwpz = $pzarr[$chongwu->cwpz];
             $chongwu->cwpz = $chongwu->cwpz * 10;
-			$ztcmd = $encode->encode("cmd=zhuangtai&sid=$sid");
-            $cwinfo = $encode->encode("cmd=chongwu&cwid=$player->cw&canshu=cwinfo&sid=$sid");
+			$ztcmd = $encode->encode("cmd=character_status&sid=$sid");
+            $cwinfo = $encode->encode("cmd=pet&cwid=$player->cw&canshu=cwinfo&sid=$sid");
             $cwid = $cw['cwid'];
-            $gm =  $encode->encode("cmd=czbgm&canshu2=gaiming2&sid=$sid");
-			$sz =  $encode->encode("cmd=taozhuang&sid=$sid");
+            $gm =  $encode->encode("cmd=recharge_gm&canshu2=gaiming2&sid=$sid");
+			$sz =  $encode->encode("cmd=equipment_set&sid=$sid");
             $cwhtml = <<<HTML
 			<div class="menu">
             <a href="?cmd=$ztcmd">Nhân vật</a><a href="?cmd=$cwinfo"><font color="#9c27b0">Sủng vật</font></a><a href="?cmd=$sz">Thần trang</a><a href="?cmd=$gm">Đổi tên</a></div><br/>
@@ -166,17 +166,17 @@ if ($allcw){
         $cwid = $cw['cwid'];
         $czcmd='';
         if ($cwid!=$player->cw){
-            $czcmd = $encode->encode("cmd=chongwu&canshu=chuzhan&cwid=$cwid&sid=$sid");
-            $fscmd = $encode->encode("cmd=chongwu&canshu=fangsheng&cwid=$cwid&sid=$sid");
+            $czcmd = $encode->encode("cmd=pet&canshu=chuzhan&cwid=$cwid&sid=$sid");
+            $fscmd = $encode->encode("cmd=pet&canshu=fangsheng&cwid=$cwid&sid=$sid");
             $czcmd = '<a href="?cmd='.$czcmd.'">Xuất chiến</a>';
             $fscmd = '<a href="?cmd='.$fscmd.'">Phóng sinh</a>';
             $gncmd = $czcmd.$fscmd;
         }else{
-            $shcmd = $encode->encode("cmd=chongwu&canshu=shouhui&cwid=$cwid&sid=$sid");
+            $shcmd = $encode->encode("cmd=pet&canshu=shouhui&cwid=$cwid&sid=$sid");
             $shcmd = '<a href="?cmd='.$shcmd.'">Thu hồi</a>';
             $gncmd = '<a style="background-color: #ef0a0a;color: #ecf3ea;border-radius:10px;">(Đã xuất chiến)</a>'.$shcmd;
         }
-        $cwinfo = $encode->encode("cmd=chongwu&cwid=$cwid&canshu=cwinfo&sid=$sid");
+        $cwinfo = $encode->encode("cmd=pet&cwid=$cwid&canshu=cwinfo&sid=$sid");
 		$chongwu = Helpers\layThongTinSungVat($cwid, $dblj);
         $sc = array('#00C000', '#1a80da', '#a08f0a', '#14b8b9', '#f16613', '#ec0909');
 		$pz = array('Phổ thông', 'Ưu tú', 'Trác tuyệt', 'Phi phàm', 'Hoàn mỹ', 'Nghịch thiên');

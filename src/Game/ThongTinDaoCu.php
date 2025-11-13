@@ -4,10 +4,10 @@ require_once __DIR__ . '/../Helpers/DaoCuHelper.php';
 use TuTaTuTien\Helpers as Helpers;
 
 $nguoiChoi = Helpers\layThongTinNguoiChoi($sid, $dblj);
-$gonowmid = $encode->encode("cmd=gomid&newmid=$nguoiChoi->idBanDoHienTai&sid=$sid");
+$gonowmid = $encode->encode("cmd=goto_map&newmid=$nguoiChoi->idBanDoHienTai&sid=$sid");
 $ydaoju = Helpers\layThongTinDaoCu($djid, $dblj);
 $daoju = Helpers\layThongTinDaoCu($djid, $dblj);
-$chushou = $encode->encode("cmd=djinfo&canshu=chushou&djid=$djid&sid=$sid");
+$chushou = $encode->encode("cmd=item_info&canshu=chushou&djid=$djid&sid=$sid");
 $daoju = Helpers\layDaoCuCuaNguoiChoi($sid, $djid, $dblj);
 $djhtml = '';
 if ($daoju){
@@ -54,7 +54,7 @@ if(isset($canshu))
         $daoju = Helpers\layDaoCuCuaNguoiChoi($sid, $djid, $dblj);
         Helpers\capNhatNhiemVu(1, $djid, 1, $sid, $dblj);
     }
-    $gonowmid = $encode->encode("cmd=gomid&newmid=$nguoiChoi->idBanDoHienTai&sid=$nguoiChoi->idPhien");
+    $gonowmid = $encode->encode("cmd=goto_map&newmid=$nguoiChoi->idBanDoHienTai&sid=$nguoiChoi->idPhien");
 $fh =<<<HTML
 	<a href="#" onClick="javascript:history.back(-1);">Trở lại</a>
     <a href="game.php?cmd=$gonowmid" style="float:right;" >Trở về trò chơi</a> <br/>

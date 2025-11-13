@@ -17,12 +17,12 @@ if (isset($canshu)){
 $sql="select * from im WHERE sid='$sid'";
 $ret = $dblj->query($sql);
 $imitem = $ret->fetchAll(PDO::FETCH_ASSOC);
-$gonowmid = $encode->encode("cmd=gomid&newmid=$player->nowmid&sid=$sid");
+$gonowmid = $encode->encode("cmd=goto_map&newmid=$player->nowmid&sid=$sid");
 $imlist = '';
 foreach ($imitem as $im){
     $imuid = $im['imuid'];
     $implayer = Helpers\layThongTinNguoiChoiTheoUid($imuid, $dblj);
-    $playercmd = $encode->encode("cmd=getplayerinfo&uid=$imuid&sid=$sid");
+    $playercmd = $encode->encode("cmd=get_player_info&uid=$imuid&sid=$sid");
     $imlist .="<a href='?cmd=$playercmd'>$implayer->tenNhanVat</a><br/>";
 }
 

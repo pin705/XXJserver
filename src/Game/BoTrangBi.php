@@ -2,7 +2,7 @@
 
 //Khảo thí sáo trang
 $player = player\getplayer($sid,$dblj);
-$gonowmid = $encode->encode("cmd=gomid&newmid=$player->nowmid&sid=$sid");
+$gonowmid = $encode->encode("cmd=goto_map&newmid=$player->nowmid&sid=$sid");
 
 $zb1 = player\getzb($player->tool1,$dblj);
 $zb2 = player\getzb($player->tool2,$dblj);
@@ -260,10 +260,10 @@ if($czb1*$czb2*$czb3*$czb4*$czb5*$czb6*$czb7 != 0){
 	$taozhuang = "Đủ mọi màu sắc trang bị không cách nào tiến hành kích hoạt, cần mặc sắc thái cùng kiểu dáng đồng dạng！<br><br>" ;
 }
 
-$ztcmd = $encode->encode("cmd=zhuangtai&sid=$sid");
-$cwinfo = $encode->encode("cmd=chongwu&cwid=$player->cw&canshu=cwinfo&sid=$sid");
-$gm =  $encode->encode("cmd=czbgm&canshu2=gaiming2&sid=$sid");
-$sz =  $encode->encode("cmd=taozhuang&sid=$sid");
+$ztcmd = $encode->encode("cmd=character_status&sid=$sid");
+$cwinfo = $encode->encode("cmd=pet&cwid=$player->cw&canshu=cwinfo&sid=$sid");
+$gm =  $encode->encode("cmd=recharge_gm&canshu2=gaiming2&sid=$sid");
+$sz =  $encode->encode("cmd=equipment_set&sid=$sid");
 //Khảo thí sáo trang
 
 $tzhtml =<<<HTML

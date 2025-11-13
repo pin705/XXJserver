@@ -1,7 +1,7 @@
 <?php
 $player = \player\getplayer($sid,$dblj);
-$gonowmid = $encode->encode("cmd=gomid&newmid=$player->nowmid&sid=$sid");
-$gm =  $encode->encode("cmd=czbgm&canshu2=gaiming2&sid=$sid");
+$gonowmid = $encode->encode("cmd=goto_map&newmid=$player->nowmid&sid=$sid");
+$gm =  $encode->encode("cmd=recharge_gm&canshu2=gaiming2&sid=$sid");
 $czb = $player->uczb;
 $vip =$player->vip;
 $fh=<<<HTML
