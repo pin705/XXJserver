@@ -452,7 +452,7 @@ INSERT INTO `ggliaotian` (`name`, `msg`, `id`, `uid`) VALUES
 ('道长', 'Tôi sắp sửa xong bug', 4121, 422),
 ('道长', 'thì có thể hỗ trợ chat không cần làm mới', 4122, 422),
 ('道长', 'Xong rồi', 4123, 422),
-('道长', 'trò chuyệnbug修Xong rồi', 4124, 422),
+('道长', 'Bug trò chuyện đã sửa xong', 4124, 422),
 ('道长', 'các bạn gửibug，tôi đã thêm ghi chú ở sau thời gian là đã sửaXong rồi', 4125, 422),
 ('道长', '12121', 4126, 422),
 ('Thông báo hệ thống', 'Vạn trung vô nhất 道长 đã bước lên con đường tu tiên', 4127, 0),
@@ -644,7 +644,7 @@ CREATE TABLE IF NOT EXISTS `mid` (
 
 INSERT INTO `mid` (`mname`, `mid`, `mgid`, `mnpc`, `mgtime`, `ms`, `midinfo`, `midboss`, `mup`, `mdown`, `mleft`, `mright`, `mqy`, `playerinfo`, `ispvp`) VALUES
 ('Quảng trường làng', 225, '', '11,17', '0000-00-00 00:00:00', 0, 'Quảng trường trong làng，Lúc rảnh có vẻ nhiều người quay lại đây', 0, 0, 0, 0, 226, 14, '大梦想家 hướng Phía đông làng đi tới', 0),
-('Phía đông làng', 226, '', '18', '0000-00-00 00:00:00', 0, 'Phía đông làng处', 0, 0, 0, 225, 228, 14, '道长 hướng Quảng trường làng đi tới', 0),
+('Phía đông làng', 226, '', '18', '0000-00-00 00:00:00', 0, 'Phía đông làng', 0, 0, 0, 225, 228, 14, '道长 hướng Quảng trường làng đi tới', 0),
 ('Cửa làng[chiến đấu]', 228, '55|3,56|2', '', '2020-01-03 00:32:51', 0, 'Cửa làng，Thường có quái vật đến tấn công', 0, 0, 0, 226, 229, 14, '大梦想家 hướng Tiểu thụ lâm đi tới', 1),
 ('Tiểu thụ lâm', 229, '56|2,57|5', '', '2020-01-03 08:56:08', 0, '', 0, 0, 0, 228, 230, 14, '道长 hướng Sâu trong rừng đi tới', 0),
 ('Sâu trong rừng', 230, '58|4', '', '2020-01-03 08:56:13', 0, '', 0, 0, 0, 229, 231, 14, '道长 hướng Thành Viêm Dươngtrung tâm đi tới', 0),
@@ -653,27 +653,27 @@ INSERT INTO `mid` (`mname`, `mid`, `mgid`, `mnpc`, `mgtime`, `ms`, `midinfo`, `m
 ('Đảo nhỏ giữa hồ', 233, '65|6', '', '2020-01-02 19:48:28', 0, 'Đảo nhỏ giữa hồ', 0, 0, 0, 232, 235, 14, '黑猫丶 hướng Hồ trong núi đi tới', 0),
 ('Lối ra phía đông sơn mạch', 235, '66|3,67|4', '', '2020-01-02 20:12:55', 0, '', 0, 0, 0, 233, 236, 14, '黑猫丶 hướng Đảo nhỏ giữa hồ đi tới', 0),
 ('Ngoại ô phía tây thành', 236, '69|5', '', '2020-01-02 20:18:56', 0, '', 0, 0, 0, 235, 237, 16, '黑猫丶 hướng Lối ra phía đông sơn mạch đi tới', 0),
-('Thành Tụ Tiên西', 237, '', '13,14', '0000-00-00 00:00:00', 0, '', 0, 0, 0, 236, 238, 16, '黑猫丶 hướng Ngoại ô phía tây thành đi tới', 0),
-('Phố tây Tụ Tiên', 238, '', '15', '0000-00-00 00:00:00', 0, '', 0, 0, 0, 237, 239, 16, '黑猫丶 hướng Thành Tụ Tiên西 đi tới', 0),
-('Thành Tụ Tiêntrung tâm', 239, '', '16,17', '0000-00-00 00:00:00', 0, '', 0, 0, 273, 238, 240, 16, '黑猫丶 hướng Phố tây Tụ Tiên đi tới', 0),
-('Phố đông Tụ Tiên', 240, '', '23', '0000-00-00 00:00:00', 0, '', 0, 0, 0, 239, 241, 16, '黑猫丶 hướng Thành Tụ Tiêntrung tâm đi tới', 0),
-('Thành Tụ Tiên东', 241, '', '', '0000-00-00 00:00:00', 0, '', 0, 0, 0, 240, 242, 16, '黑猫丶 hướng Phố đông Tụ Tiên đi tới', 0),
-('城Đông giao', 242, '70|3,71|2', '', '2020-01-02 20:28:14', 0, '', 0, 0, 0, 241, 243, 16, '黑猫丶 hướng Thành Tụ Tiên东 đi tới', 0),
+('Phía tây Thành Tụ Tiên', 237, '', '13,14', '0000-00-00 00:00:00', 0, '', 0, 0, 0, 236, 238, 16, '黑猫丶 hướng Ngoại ô phía tây thành đi tới', 0),
+('Phố tây Tụ Tiên', 238, '', '15', '0000-00-00 00:00:00', 0, '', 0, 0, 0, 237, 239, 16, '黑猫丶 hướng Phía tây Thành Tụ Tiên đi tới', 0),
+('Trung tâm Thành Tụ Tiên', 239, '', '16,17', '0000-00-00 00:00:00', 0, '', 0, 0, 273, 238, 240, 16, '黑猫丶 hướng Phố tây Tụ Tiên đi tới', 0),
+('Phố đông Tụ Tiên', 240, '', '23', '0000-00-00 00:00:00', 0, '', 0, 0, 0, 239, 241, 16, '黑猫丶 hướng Trung tâm Thành Tụ Tiên đi tới', 0),
+('Phía đông Thành Tụ Tiên', 241, '', '', '0000-00-00 00:00:00', 0, '', 0, 0, 0, 240, 242, 16, '黑猫丶 hướng Phố đông Tụ Tiên đi tới', 0),
+('thànhĐông giao', 242, '70|3,71|2', '', '2020-01-02 20:28:14', 0, '', 0, 0, 0, 241, 243, 16, '黑猫丶 hướng Phía đông Thành Tụ Tiên đi tới', 0),
 ('Động quật ma hóa', 243, '72|6', '', '2020-01-02 20:23:03', 0, '', 0, 246, 0, 242, 244, 16, '冥羽 hướng Sâu trong động quật đi tới', 0),
-('洞窟出口', 244, '74|5', '', '2016-08-21 19:01:07', 0, '', 0, 0, 0, 243, 245, 17, '太长 hướng Bình nguyên ma hóa đi tới', 0),
+('Lối ra động quật', 244, '74|5', '', '2016-08-21 19:01:07', 0, '', 0, 0, 0, 243, 245, 17, '太长 hướng Bình nguyên ma hóa đi tới', 0),
 ('Bình nguyên ma hóa', 245, '73|4', '', '2020-01-02 21:08:42', 0, '', 0, 0, 0, 244, 247, 17, '太长 hướng Ngoại ô phía tây bộ lạc đi tới', 0),
 ('Sâu trong động quật', 246, '75|1', '', '2020-01-03 19:48:39', 200, '', 0, 0, 243, 0, 0, 17, '冥羽 hướng Động quật ma hóa đi tới', 0),
 ('Ngoại ô phía tây bộ lạc', 247, '76|4,77|2', '', '2020-01-02 21:06:03', 0, '', 0, 0, 0, 245, 248, 17, '太长 hướng Phía tây bộ lạc đi tới', 0),
 ('Phía tây bộ lạc', 248, '', '20', '0000-00-00 00:00:00', 0, '', 0, 0, 0, 247, 249, 17, '太长 hướng Bộ lạctrung tâm đi tới', 0),
-('Bộ lạctrung tâm', 249, '', '15,17,21', '0000-00-00 00:00:00', 0, '', 0, 0, 0, 248, 250, 17, '太长 hướng Bộ lạc东 đi tới', 0),
-('Bộ lạc东', 250, '', '19,22', '0000-00-00 00:00:00', 0, '', 0, 0, 0, 249, 251, 17, '太长 hướng Bộ lạcĐông giao đi tới', 0),
+('Bộ lạctrung tâm', 249, '', '15,17,21', '0000-00-00 00:00:00', 0, '', 0, 0, 0, 248, 250, 17, '太长 hướng Bộ lạcđông đi tới', 0),
+('Bộ lạcđông', 250, '', '19,22', '0000-00-00 00:00:00', 0, '', 0, 0, 0, 249, 251, 17, '太长 hướng Bộ lạcĐông giao đi tới', 0),
 ('Bộ lạcĐông giao', 251, '78|6', '', '2016-08-23 15:32:59', 0, '', 0, 0, 0, 250, 252, 17, '太长 hướng Bờ sông Man đi tới', 0),
 ('Bờ sông Man', 252, '78|2,79|4', '', '2016-08-21 13:16:30', 0, '', 0, 0, 0, 251, 253, 17, '太长 hướng Cảng qua sông đi tới', 0),
 ('Cảng qua sông', 253, '80|5', '', '2016-08-20 13:51:25', 0, '', 0, 0, 0, 252, 254, 17, '太长 hướng Bờ bên kia sông Man đi tới', 0),
 ('Bờ bên kia sông Man', 254, '81|6', '', '2016-08-20 13:53:02', 0, '', 0, 0, 0, 253, 255, 17, '太长 hướng Sơn lĩnh vị tri1 đi tới', 0),
 ('Sơn lĩnh vị tri1', 255, '82|7', '', '2016-08-22 06:55:18', 0, '', 0, 0, 0, 254, 256, 18, '太长 hướng Sơn lĩnh vị tri2 đi tới', 0),
 ('Sơn lĩnh vị tri2', 256, '83|5', '', '2016-08-22 06:55:32', 30, '', 0, 257, 0, 255, 258, 18, '太长 hướng Thành Viêm Dươngtrung tâm đi tới', 0),
-('无人山洞', 257, '84|1', '', '2017-01-04 17:14:02', 200, '', 0, 0, 256, 0, 0, 18, '没有角色 hướng Sơn lĩnh vị tri2 đi tới', 0),
+('Động núi vô nhân', 257, '84|1', '', '2017-01-04 17:14:02', 200, '', 0, 0, 256, 0, 0, 18, 'Không có vai trò hướng Sơn lĩnh vị tri2 đi tới', 0),
 ('Sơn lĩnh vị tri3', 258, '85|6', '', '2016-08-21 17:26:27', 200, '', 0, 0, 0, 256, 259, 18, '冥羽 hướng Phía tây cổ trấn Phong Linh đi tới', 0),
 ('Phía tây cổ trấn Phong Linh', 259, '', '15', '0000-00-00 00:00:00', 0, '', 0, 0, 0, 258, 260, 18, '冥羽 hướng Cổ trấn Phong Linh đi tới', 0),
 ('Cổ trấn Phong Linh', 260, '', '24', '0000-00-00 00:00:00', 0, '', 0, 0, 0, 259, 261, 18, '冥羽 hướng Phía đông cổ trấn Phong Linh đi tới', 0),
@@ -683,13 +683,13 @@ INSERT INTO `mid` (`mname`, `mid`, `mgid`, `mnpc`, `mgtime`, `ms`, `midinfo`, `m
 ('Núi yêu thú sâu trong rừng', 264, '88|5', '', '2016-08-23 11:54:01', 100, '', 0, 0, 0, 263, 265, 18, '太长 hướng Bên ngoài rừng yêu thú2 đi tới', 0),
 ('Chân Vạn Yêu Sơn', 265, '89|4,90|4', '', '2016-08-18 11:28:51', 0, '', 0, 0, 0, 264, 266, 18, '太长 hướng Núi yêu thú sâu trong rừng đi tới', 0),
 ('Sườn Vạn Yêu Sơn', 266, '91|3,92|5', '', '2016-08-19 10:05:38', 0, '', 0, 268, 267, 265, 269, 18, '太长 hướng Chân Vạn Yêu Sơn đi tới', 0),
-('Điện Yêu Vương外围', 267, '94|3,95|3', '24', '2016-08-22 11:58:20', 0, '', 0, 266, 0, 0, 0, 20, '冥羽 hướng Sườn Vạn Yêu Sơn đi tới', 0),
-('万妖山顶', 268, '93|7', '', '2016-08-23 15:34:56', 0, '', 0, 0, 266, 0, 0, 18, '道长 hướng Sườn Vạn Yêu Sơn đi tới', 0),
+('Điện Yêu Vươngngoại vi', 267, '94|3,95|3', '24', '2016-08-22 11:58:20', 0, '', 0, 266, 0, 0, 0, 20, '冥羽 hướng Sườn Vạn Yêu Sơn đi tới', 0),
+('Đỉnh Vạn Yêu Sơn', 268, '93|7', '', '2016-08-23 15:34:56', 0, '', 0, 0, 266, 0, 0, 18, '道长 hướng Sườn Vạn Yêu Sơn đi tới', 0),
 ('Ngoại ô Viêm Dương', 269, '96|4,97|4', '', '2016-08-22 07:01:01', 0, '', 0, 0, 0, 266, 270, 21, '太长 hướng Sườn Vạn Yêu Sơn đi tới', 0),
 ('Ngoại ô phía tây Viêm Dương', 270, '98|7', '', '2016-08-23 15:33:16', 0, '', 0, 0, 0, 269, 271, 21, '太长 hướng Ngoại ô Viêm Dương đi tới', 0),
-('炎阳西街', 271, '', '', '0000-00-00 00:00:00', 0, '', 0, 0, 0, 270, 272, 21, '太长 hướng Ngoại ô phía tây Viêm Dương đi tới', 0),
+('Phố tây Viêm Dương', 271, '', '', '0000-00-00 00:00:00', 0, '', 0, 0, 0, 270, 272, 21, '太长 hướng Ngoại ô phía tây Viêm Dương đi tới', 0),
 ('Thành Viêm Dươngtrung tâm', 272, '', '24,25', '0000-00-00 00:00:00', 0, '', 0, 0, 0, 271, 0, 21, '道长 hướng Quảng trường làng đi tới', 0),
-('门派管理处', 273, '', '26', '0000-00-00 00:00:00', 0, '', 0, 239, 0, 0, 0, 16, '太长 hướng Thành Tụ Tiêntrung tâm đi tới', 0);
+('Nơi quản lý môn phái', 273, '', '26', '0000-00-00 00:00:00', 0, '', 0, 239, 0, 0, 0, 16, '太长 hướng Trung tâm Thành Tụ Tiên đi tới', 0);
 
 -- --------------------------------------------------------
 
@@ -843,20 +843,20 @@ CREATE TABLE IF NOT EXISTS `npc` (
 
 INSERT INTO `npc` (`id`, `nname`, `nsex`, `ninfo`, `muban`, `taskid`) VALUES
 (11, 'Trưởng làng', 'Nam', 'Trưởng làng', '', '13,25,24,28'),
-(13, 'vương老五', 'Nam', '唉……一个人的日子，真的好难。', '', '24'),
-(14, '赫炳', 'Nam', '唉，整天站在这里真是无聊。', '', '28'),
-(15, '周富贵[商人]', 'Nam', '来来来   便宜', '商店.php', ''),
-(16, 'Thành Tụ Tiên主[符箓]', 'Nam', 'Thành Tụ Tiên城主', 'Đổi kỹ năng.php', ''),
+(13, 'Vua Lão Ngũ', 'Nam', 'Haizz... Ngày tháng một mình, thật sự khó quá.', '', '24'),
+(14, 'Hách Bỉnh', 'Nam', 'Haizz, suốt ngày đứng ở đây thật vô liêu.', '', '28'),
+(15, '周富贵[Thương nhân]', 'Nam', 'Lại đây lại đây   rẻ', 'Cửa hàng.php', ''),
+(16, 'Thành Tụ Tiênchủ[phù lục]', 'Nam', 'Thành Tụ Tiênthànhchủ', 'Đổi kỹ năng.php', ''),
 (18, 'vươngĐại mẫu', 'Nữ', 'vươngĐại mẫu', '', '24,29'),
-(17, '云游仙医[trị liệu]', 'Nam', '云游的仙医，似乎在哪都能看见他', 'trị liệu.php', ''),
-(19, '符箓大师', 'Nam', '技能大师，负责兑换技能', 'Đổi kỹ năng.php', ''),
-(20, '小蛮', 'Nữ', '小蛮好怕...', '', '20'),
+(17, 'Tiên y du hành[trị liệu]', 'Nam', 'Tiên y du hành，Dường như ở đâu cũng thấy hắn', 'trị liệu.php', ''),
+(19, 'Đại sư phù lục', 'Nam', 'Kỹ năng đại sư，Phụ trách đổi kỹ năng', 'Đổi kỹ năng.php', ''),
+(20, 'Tiểu Man', 'Nữ', 'Tiểu Man sợ quá...', '', '20'),
 (21, 'Trưởng lão man tộc', 'Nam', 'Trưởng lão man tộc', '', '19'),
-(22, '蛮族猎手', 'Nam', '老了,干不动了', '', '21'),
+(22, 'Thợ săn man tộc', 'Nam', 'già rồi,Làm không động nổi', '', '21'),
 (23, 'Đại sứ đổi quà', 'Nam', 'Đại sứ đổi quà', '', '27'),
-(24, 'Tiên y chính quy', 'Nam', 'Tiên y chính quy\r\n比云游的更在行', 'trị liệu_级别1.php', ''),
-(25, '城主雪琴', 'Nữ', '城Thành Viêm Dương的城主,雪琴', '', ''),
-(26, 'Quản lý viên môn phái', 'Nam', '门派管理', 'Quản lý viên môn phái.php', '');
+(24, 'Tiên y chính quy', 'Nam', 'Tiên y chính quy\r\nGiỏi hơn cả tiên y du hành', 'trị liệu_cấp bậc1.php', ''),
+(25, 'Thành chủ Tuyết Cầm', 'Nữ', 'Thành chủ Thành Viêm Dương, Tuyết Cầm', '', ''),
+(26, 'Quản lý viên môn phái', 'Nam', 'Quản lý môn phái', 'Quản lý viên môn phái.php', '');
 
 -- --------------------------------------------------------
 
@@ -1308,7 +1308,7 @@ CREATE TABLE IF NOT EXISTS `playerdaoju` (
 
 INSERT INTO `playerdaoju` (`djname`, `djzl`, `djinfo`, `uid`, `sid`, `djsum`, `djid`) VALUES
 ('Mật ong Ong cánh cứng', 452, 'Ong cánh cứng mật ong', 425, '42352a5bb2acc1e76e8a2fa10ba7673b', 2, 8),
-('强化石', 2, '强化装备用的道具', 424, 'f76c11b6601d3a6ce505c616b64ed478', 7, 1),
+('Đá cường hóa', 2, 'Đạo cụ dùng để cường hóa trang bị', 424, 'f76c11b6601d3a6ce505c616b64ed478', 7, 1),
 ('Mật ong Ong cánh cứng', 453, 'Ong cánh cứng mật ong', 424, 'f76c11b6601d3a6ce505c616b64ed478', 4, 8),
 ('Mảnh phù lục-Sơ cấp linh', 454, 'Dùng để đổi phù lục', 424, 'f76c11b6601d3a6ce505c616b64ed478', 0, 6),
 ('Mảnh phù lục-Sơ cấp ma', 455, 'Đổi phù lục', 424, 'f76c11b6601d3a6ce505c616b64ed478', 8, 7),
@@ -1347,8 +1347,8 @@ CREATE TABLE IF NOT EXISTS `playerjineng` (
 
 INSERT INTO `playerjineng` (`jnname`, `jnid`, `jngj`, `jnfy`, `jnbj`, `jnxx`, `sid`, `jncount`) VALUES
 ('Chém tụ linh', 4, 10, 0, 0, 2, '43e4c5c6dda6740216e3bd54ff200c15', 7),
-('牛B kỹ năng', 5, 0, 0, 100, 100, '43e4c5c6dda6740216e3bd54ff200c15', 3),
-('牛B kỹ năng', 5, 0, 0, 100, 100, 'af1d74362b935eb0ac845b7e4f7f707f', 1),
+('trâuB kỹ năng', 5, 0, 0, 100, 100, '43e4c5c6dda6740216e3bd54ff200c15', 3),
+('trâuB kỹ năng', 5, 0, 0, 100, 100, 'af1d74362b935eb0ac845b7e4f7f707f', 1),
 ('Chém tụ linh', 4, 10, 0, 0, 2, '099f465c0c34dd5ef59f230a21447af4', 8),
 ('Chém tụ linh', 4, 10, 0, 0, 2, '9bb5f086e2f1efdbc8215e55f8a4a30f', 0),
 ('Chém tụ linh', 4, 10, 0, 0, 2, '6d07cdb650fc1fca94c0dd51a8ed971e', 32),
@@ -1877,7 +1877,7 @@ CREATE TABLE IF NOT EXISTS `renwu` (
 --
 
 INSERT INTO `renwu` (`rwname`, `rwzl`, `rwdj`, `rwzb`, `rwexp`, `rwyxb`, `rwid`, `rwyq`, `rwinfo`, `rwcount`, `rwlx`, `rwyp`, `lastrwid`, `rwjineng`) VALUES
-('Lợn rừnggây loạn', 2, '1|5', '24', '100', '120', 13, 56, '最近Lợn rừngxuống núi,làm xáo trộn cuộc sống của chúng tôi,hãy giúp chúng tôi đuổi chúng đi', 5, 2, '6|3', 0, ''),
+('Lợn rừnggây loạn', 2, '1|5', '24', '100', '120', 13, 56, 'Gần đâyLợn rừngxuống núi,làm xáo trộn cuộc sống của chúng tôi,hãy giúp chúng tôi đuổi chúng đi', 5, 2, '6|3', 0, ''),
 ('Thu thập mật ong', 1, '1|5', '23', '200', '100', 14, 8, 'Thu thậpOng cánh cứng mật ong', 10, 2, '6|3', 0, ''),
 ('Man!', 2, '1|30,9|50', '38', '500', '500', 19, 76, 'Ma đạo luôn không chịu từ bỏ vùng đất này, đã quyến rũ nhiều người trong tộc chúng tôi nhập ma, hy vọng bạn có thể giải cứu họ', 50, 1, '', -1, ''),
 ('Giết!', 2, '1|50,9|50', '39', '600', '400', 20, 77, 'Tôi sợ quá, giúp tôi giết chúng!!!', 50, 1, '', -1, ''),
@@ -2161,7 +2161,7 @@ INSERT INTO `zhuangbei` (`zbname`, `zbinfo`, `zbgj`, `zbfy`, `zbbj`, `zbxx`, `zb
 ('Duyên Phong - Hài mặc hồn', 'Duyên Phong - Hài mặc hồn', '0', '10', '3', '0', 42, '155', 0, 0),
 ('Duyên Phong - Đai yêu phá quân', 'Duyên Phong - Đai yêu phá quân', '0', '14', '0', '0', 43, '170', 0, 0),
 ('Duyên Phong - Dây chuyền thú hồn', 'Duyên Phong - Dây chuyền thú hồn', '18', '12', '4', '4', 44, '55', 0, 0),
-('[Thần khí] Kiếm Yêu Vương', '[Thần khí] Kiếm Yêu Vương\r\n妖vương剑碎片合成', '45', '0', '13', '11', 45, '0', 0, 0),
+('[Thần khí] Kiếm Yêu Vương', '[Thần khí] Kiếm Yêu Vương\r\nyêuvươngHợp thành từ mảnh kiếm', '45', '0', '13', '11', 45, '0', 0, 0),
 ('Dao kiếp', 'Dao kiếp', '25', '0', '4', '5', 46, '0', 0, 0),
 ('Giáp xích quân dụng', 'Giáp xích quân dụng', '5', '16', '5', '0', 47, '170', 0, 0),
 ('Đao mạc quan quân', 'Đao mạc quan quân', '30', '0', '5', '4', 48, '0', 0, 0);
