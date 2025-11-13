@@ -1,8 +1,5 @@
 <?php
-require_once __DIR__ . '/../src/Helpers/TruongLaoHelper.php';
-require_once __DIR__ . '/../src/Helpers/TrangBiHelper.php';
-require_once __DIR__ . '/../src/Helpers/DaoCuHelper.php';
-require_once __DIR__ . '/../src/Helpers/DuocPhamHelper.php';
+require_once __DIR__ . '/../bootstrap.php';
 use TuTaTuTien\Helpers as Helpers;
 
 $boss = Helpers\layThongTinBoss($bossid, $dblj);
