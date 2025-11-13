@@ -84,7 +84,7 @@ if (isset($_POST[ 'submit']) && $_POST['submit']){
     $stmt->bindColumn('username',$cxusername);
     $stmt->bindColumn('userpass',$cxuserpass);
     $stmt->bindColumn('token',$cxtoken);
-    $exeres = $stmt->fetch(PDO::FETCH_ASSOC);
+    $exeres = $stmt->fetch(PDO::FETCH_BOUND);
 
     if ((strlen($username) < 6 || strlen($userpass) < 6) && !$exeres){
         $a = 'Tài khoản hoặc mật mã sai lầm';
@@ -94,7 +94,7 @@ if (isset($_POST[ 'submit']) && $_POST['submit']){
         $sql = "select * from game1 where token='$cxtoken'";
         $cxjg = $dblj->query($sql);
         $cxjg->bindColumn('sid',$sid);
-        $cxjg->fetch(PDO::FETCH_ASSOC);
+        $cxjg->fetch(PDO::FETCH_BOUND);
         if ($sid==null){
             $cmd = "cmd=create_character&token=$cxtoken";
         }else{

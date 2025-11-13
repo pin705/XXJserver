@@ -126,7 +126,7 @@ if ($cmd == 'delezb'){
 
 $sql = "select * from playerzhuangbei  WHERE sid = '$sid' ORDER BY zbid DESC LIMIT $yeshu,10";
 $cxjg = $dblj->query($sql);
-$retzb = $cxjg->fetchAll(PDO::FETCH_ASSOC);
+$retzb = $cxjg->fetchAll(PDO::FETCH_BOUND);
 
 $sql = "select count(*) from playerzhuangbei where sid = '$sid'";
 $cxjg = $dblj->query($sql);

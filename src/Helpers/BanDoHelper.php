@@ -51,7 +51,7 @@ function layThongTinBanDo($idBanDo, $ketNoiDB)
     $stmt->bindColumn('playerinfo', $banDo->thongTinNguoiChoi);
     $stmt->bindColumn('ispvp', $banDo->laBanDoPvp);
     
-    $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+    $result = $stmt->fetch(\PDO::FETCH_BOUND);
     
     if (!$result) {
         return null;
@@ -168,7 +168,7 @@ function layThongTinKhuVuc($idKhuVuc, $ketNoiDB)
     $stmt->bindColumn('qyid', $khuVuc->qyid);
     $stmt->bindColumn('mid', $khuVuc->mid);
     
-    $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+    $result = $stmt->fetch(\PDO::FETCH_BOUND);
     
     if (!$result) {
         return null;
@@ -188,6 +188,6 @@ function layTatCaKhuVuc($ketNoiDB)
     $sql = "SELECT * FROM qy";
     $stmt = $ketNoiDB->query($sql);
     
-    return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    return $stmt->fetchAll(\PDO::FETCH_BOUND);
 }
 

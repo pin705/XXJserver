@@ -47,7 +47,7 @@ function layTrangBiCuaNguoiChoi($idTrangBi, $ketNoiDB)
     $stmt->bindColumn('zbtool', $trangBi->viTri);
     $stmt->bindColumn('zbys', $trangBi->phamChat);
     
-    $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+    $result = $stmt->fetch(\PDO::FETCH_BOUND);
     
     if (!$result) {
         return null;
@@ -86,7 +86,7 @@ function layThongTinTrangBi($idMauTrangBi, $ketNoiDB)
     $stmt->bindColumn('zbys', $trangBi->phamChat);
     $stmt->bindColumn('zblv', $trangBi->capDoYeuCau);
     
-    $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+    $result = $stmt->fetch(\PDO::FETCH_BOUND);
     
     if (!$result) {
         return null;
@@ -187,5 +187,5 @@ function layDanhSachTrangBi($idPhien, $ketNoiDB)
     $stmt = $ketNoiDB->prepare($sql);
     $stmt->execute([$idPhien]);
     
-    return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    return $stmt->fetchAll(\PDO::FETCH_BOUND);
 }

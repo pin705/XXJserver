@@ -30,6 +30,9 @@ function layThongTinNguoiChoi($idPhien, $ketNoiDB)
 {
     $nguoiChoi = new NguoiChoi();
     
+    // Debug: Log query
+    error_log("NguoiChoiHelper: Querying player with SID: " . $idPhien);
+    
     // Truy vấn thông tin cơ bản từ database
     $sql = "SELECT * FROM game1 WHERE sid = ?";
     $stmt = $ketNoiDB->prepare($sql);
@@ -88,8 +91,14 @@ function layThongTinNguoiChoi($idPhien, $ketNoiDB)
     $stmt->bindColumn('yd2', $nguoiChoi->duocDan2);
     $stmt->bindColumn('yd3', $nguoiChoi->duocDan3);
     
-    // Lấy dữ liệu
-    $ketQua = $stmt->fetch(\PDO::FETCH_ASSOC);
+    // Lấy dữ liệu - PHẢI dùng PDO::FETCH_BOUND để bindColumn() hoạt động
+    $ketQua = $stmt->fetch(\PDO::FETCH_BOUND);
+    
+    // Debug: Log result
+    error_log("NguoiChoiHelper: Query result: " . ($ketQua ? "Found" : "NOT FOUND"));
+    if (!$ketQua) {
+        error_log("NguoiChoiHelper: No player found with SID: " . $idPhien);
+    }
     
     if (!$ketQua) {
         return null;
@@ -122,7 +131,7 @@ function layThongTinNguoiChoiTheoUid($idNguoiDung, $ketNoiDB)
     $sql = "SELECT sid FROM game1 WHERE uid = ?";
     $stmt = $ketNoiDB->prepare($sql);
     $stmt->execute([$idNguoiDung]);
-    $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+    $result = $stmt->fetch(\PDO::FETCH_BOUND);
     
     if (!$result || !isset($result['sid'])) {
         return null;
@@ -267,7 +276,7 @@ function layThongTinTrangBiNguoiChoi($idTrangBi, $ketNoiDB)
     $stmt->bindColumn('zbxx', $trangBi->hutMau);
     $stmt->bindColumn('zbhp', $trangBi->sinhMenh);
     
-    $ketQua = $stmt->fetch(\PDO::FETCH_ASSOC);
+    $ketQua = $stmt->fetch(\PDO::FETCH_BOUND);
     
     return $ketQua ? $trangBi : null;
 }

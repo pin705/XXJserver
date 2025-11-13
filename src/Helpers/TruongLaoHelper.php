@@ -53,7 +53,7 @@ function layThongTinBoss($idBoss, $ketNoiDB)
     $stmt->bindColumn('djjv', $boss->tyLeRoiDaoCu);
     $stmt->bindColumn('sid', $boss->idPhienNguoiChoi);
     
-    $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+    $result = $stmt->fetch(\PDO::FETCH_BOUND);
     
     if (!$result) {
         return null;
@@ -97,7 +97,7 @@ function layThongTinBossTemplate($idBoss, $ketNoiDB)
     $stmt->bindColumn('ypjv', $boss->tyLeRoiDuocPham);
     $stmt->bindColumn('djjv', $boss->tyLeRoiDaoCu);
     
-    $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+    $result = $stmt->fetch(\PDO::FETCH_BOUND);
     
     if (!$result) {
         return null;

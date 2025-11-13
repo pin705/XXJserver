@@ -12,13 +12,24 @@ require_once __DIR__ . '/../Helpers/KyNangHelper.php';
 require_once __DIR__ . '/../Helpers/ClubHelper.php';
 use TuTaTuTien\Helpers as Helpers;
 
+// Debug: Kiểm tra $sid có giá trị không
+if (!isset($sid) || empty($sid)) {
+    echo '<meta charset="utf-8">';
+    echo "Lỗi: Thiếu session ID (sid)!<br/>";
+    echo "Debug info:<br/>";
+    echo "isset(\$sid): " . (isset($sid) ? 'true' : 'false') . "<br/>";
+    echo "sid value: " . (isset($sid) ? $sid : 'NULL') . "<br/>";
+    echo '<a href="index.php">Quay về trang chủ</a>';
+    exit();
+}
 
 $player = Helpers\layThongTinNguoiChoi($sid,$dblj);//Thu hoạch người chơi tin tức
 
 // Kiểm tra nếu player không tồn tại
 if (!$player) {
     echo '<meta charset="utf-8">';
-    echo "Không tìm thấy thông tin nhân vật! Vui lòng đăng nhập lại.<br/>";
+    echo "Không tìm thấy thông tin nhân vật với SID: $sid<br/>";
+    echo "Vui lòng kiểm tra lại hoặc tạo nhân vật mới.<br/>";
     echo '<a href="index.php">Quay về trang chủ</a>';
     exit();
 }
@@ -210,7 +221,7 @@ if ($second > $clmid->ms  && $cxallguaiwu<= 0 && $clmid->mgid!=''){//làm mới 
 
 $sql = "select * from midguaiwu where mid='$player->idBanDoHienTai' AND sid = ''";//Thu hoạch trước mắt địa đồ quái vật
 $cxjg = $dblj->query($sql);
-$cxallguaiwu = $cxjg->fetchAll(PDO::FETCH_ASSOC);
+$cxallguaiwu = $cxjg->fetchAll(PDO::FETCH_BOUND);
 $gwhtml = '';
 for ($i = 0;$i<count($cxallguaiwu);$i++){
     $gwcmd = $encode->encode("cmd=get_game_info&gid=".$cxallguaiwu[$i]['id']."&gyid=".$cxallguaiwu[$i]['gyid']."&sid=$sid&nowmid=$player->idBanDoHienTai");
@@ -221,7 +232,7 @@ $sql = "select * from game1 where nowmid='$player->idBanDoHienTai' AND sfzx = 1"
 $cxjg = $dblj->query($sql);
 $playerhtml = '';
 if ($cxjg){
-    $cxallplayer = $cxjg->fetchAll(PDO::FETCH_ASSOC);
+    $cxallplayer = $cxjg->fetchAll(PDO::FETCH_BOUND);
     $nowdate = date('Y-m-d H:i:s');
     for ($i = 0;$i<count($cxallplayer);$i++){
         if ($cxallplayer[$i]['uname']!=""){
@@ -257,7 +268,7 @@ $task = Helpers\layDanhSachNhiemVuNguoiChoi($sid,$dblj);//Người chơi nhiệm
 
 $sql = "select * from playerrenwu WHERE sid='$sid' AND rwlx = 2";
 $cxjg = $dblj->query($sql);
-$mrrw = $cxjg->fetchAll(PDO::FETCH_ASSOC);
+$mrrw = $cxjg->fetchAll(PDO::FETCH_BOUND);
 for ($n=0;$n<count($mrrw);$n++){
     if ($mrrw[$n]['data']!=date('d') ){
         $rwid = $mrrw[$n]['rwid'];
@@ -268,13 +279,13 @@ for ($n=0;$n<count($mrrw);$n++){
 
 $sql = "select * from playerrenwu WHERE sid='$sid' AND rwzt!=3";
 $cxjg = $dblj->query($sql);
-$wtjrw = $cxjg->fetchAll(PDO::FETCH_ASSOC);
+$wtjrw = $cxjg->fetchAll(PDO::FETCH_BOUND);
 $taskcount = count($wtjrw);
 
 if ($clmid->mnpc !=""){
     $sql = "select * from npc where id in ($clmid->mnpc)";//Thu hoạch npc
     $cxjg = $dblj->query($sql);
-    $cxnpcall = $cxjg->fetchAll(PDO::FETCH_ASSOC);
+    $cxnpcall = $cxjg->fetchAll(PDO::FETCH_BOUND);
 
     for ($i=0;$i < count($cxnpcall);$i++){
         $nname = $cxnpcall[$i]['nname'];
@@ -365,7 +376,7 @@ $sql = 'SELECT * FROM ggliaotian ORDER BY id DESC LIMIT 2';//Nói chuyện phi�
 $ltcxjg = $dblj->query($sql);
 $lthtml='';
 if ($ltcxjg){
-    $ret = $ltcxjg->fetchAll(PDO::FETCH_ASSOC);
+    $ret = $ltcxjg->fetchAll(PDO::FETCH_BOUND);
     for ($i=0;$i < count($ret);$i++){
         $uname = $ret[count($ret) - $i-1]['name'];
         $umsg = $ret[count($ret) - $i-1]['msg'];

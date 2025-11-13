@@ -38,7 +38,7 @@ function layThongTinDuocPham($idDuocPham, $ketNoiDB)
     $stmt->bindColumn('ypbj', $duocPham->baoKichTangThem);
     $stmt->bindColumn('ypid', $duocPham->idDuocPham);
     
-    $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+    $result = $stmt->fetch(\PDO::FETCH_BOUND);
     
     if (!$result) {
         return null;
@@ -61,7 +61,7 @@ function layDuocPhamCuaNguoiChoi($idDuocPham, $idPhien, $ketNoiDB)
     $stmt = $ketNoiDB->prepare($sql);
     $stmt->execute([$idDuocPham, $idPhien]);
     
-    return $stmt->fetch(\PDO::FETCH_ASSOC);
+    return $stmt->fetch(\PDO::FETCH_BOUND);
 }
 
 /**
@@ -77,7 +77,7 @@ function layTatCaDuocPhamCuaNguoiChoi($idPhien, $ketNoiDB)
     $stmt = $ketNoiDB->prepare($sql);
     $stmt->execute([$idPhien]);
     
-    return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    return $stmt->fetchAll(\PDO::FETCH_BOUND);
 }
 
 /**
@@ -205,5 +205,5 @@ function layTatCaDuocPham($ketNoiDB)
     $sql = "SELECT * FROM yaopin";
     $stmt = $ketNoiDB->query($sql);
     
-    return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    return $stmt->fetchAll(\PDO::FETCH_BOUND);
 }

@@ -83,7 +83,7 @@ $a = '';
         $stmt = $dblj->prepare($sql);
         $stmt->execute(array($username));
         $stmt->bindColumn('username',$cxusername);
-        $ret = $stmt->fetch(PDO::FETCH_ASSOC);
+        $ret = $stmt->fetch(PDO::FETCH_BOUND);
 
         if($userpass2 != $userpass){
             $a = '<br>Hai lần điền mật mã vào không nhất trí<br><br>';

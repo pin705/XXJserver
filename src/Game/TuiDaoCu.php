@@ -43,7 +43,7 @@ if (isset($canshu)){
 $sql = "select * from playerdaoju WHERE sid = '$sid'";
 $cxjg = $dblj->query($sql);
 if ($cxjg){
-    $retdj = $cxjg->fetchAll(PDO::FETCH_ASSOC);
+    $retdj = $cxjg->fetchAll(PDO::FETCH_BOUND);
 }
 $djhtml = '';
 $hangshu = 0;

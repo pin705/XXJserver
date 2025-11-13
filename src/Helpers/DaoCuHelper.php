@@ -35,7 +35,7 @@ function layDaoCuCuaNguoiChoi($idPhien, $idDaoCu, $ketNoiDB)
     $stmt->bindColumn('djid', $daoCu->idDaoCu);
     $stmt->bindColumn('djsum', $daoCu->soLuong);
     
-    $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+    $result = $stmt->fetch(\PDO::FETCH_BOUND);
     
     if (!$result) {
         return null;
@@ -65,7 +65,7 @@ function layThongTinDaoCu($idDaoCu, $ketNoiDB)
     $stmt->bindColumn('djid', $daoCu->idDaoCu);
     $stmt->bindColumn('djyxb', $daoCu->giaTienTroChoi);
     
-    $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+    $result = $stmt->fetch(\PDO::FETCH_BOUND);
     
     if (!$result) {
         return null;
@@ -89,7 +89,7 @@ function themDaoCu($idPhien, $idDaoCu, $soLuong, $ketNoiDB)
     $sqlPlayer = "SELECT uid FROM game1 WHERE sid = ?";
     $stmtPlayer = $ketNoiDB->prepare($sqlPlayer);
     $stmtPlayer->execute([$idPhien]);
-    $player = $stmtPlayer->fetch(\PDO::FETCH_ASSOC);
+    $player = $stmtPlayer->fetch(\PDO::FETCH_BOUND);
     
     if (!$player) {
         return false;

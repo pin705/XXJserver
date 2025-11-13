@@ -16,7 +16,7 @@ if (isset($canshu)){
 }
 $sql="select * from im WHERE sid='$sid'";
 $ret = $dblj->query($sql);
-$imitem = $ret->fetchAll(PDO::FETCH_ASSOC);
+$imitem = $ret->fetchAll(PDO::FETCH_BOUND);
 $gonowmid = $encode->encode("cmd=goto_map&newmid=$player->nowmid&sid=$sid");
 $imlist = '';
 foreach ($imitem as $im){

@@ -264,7 +264,7 @@ HTML;
             $cxdljg = $dblj->query($sql);
             if ($cxdljg){
 				
-                $retzb = $cxdljg->fetchAll(PDO::FETCH_ASSOC);
+                $retzb = $cxdljg->fetchAll(PDO::FETCH_BOUND);
                 $sjdl = mt_rand(0,count($retzb)-1);
                 $zbname = $retzb[$sjdl]['zbname'];
                 $zbid = $retzb[$sjdl]['zbid'];
@@ -291,7 +291,7 @@ HTML;
             $sql = "select * from daoju WHERE djid in ($boss->bossdj)";
             $cxdljg = $dblj->query($sql);
             if ($cxdljg){
-                $retdj = $cxdljg->fetchAll(PDO::FETCH_ASSOC);
+                $retdj = $cxdljg->fetchAll(PDO::FETCH_BOUND);
                 $sjdj = mt_rand(0,count($retdj)-1);
                 $djname = $retdj[$sjdj]['djname'];
                 $djid = $retdj[$sjdj]['djid'];
@@ -322,7 +322,7 @@ HTML;
             $sql = "select * from yaopin WHERE ypid in ($boss->bossyp)";
             $cxdljg = $dblj->query($sql);
         if ($cxdljg){
-			$retyp = $cxdljg->fetchAll(PDO::FETCH_ASSOC);
+			$retyp = $cxdljg->fetchAll(PDO::FETCH_BOUND);
             //$sjyp = mt_rand(0, count($retyp) - 1);
 			$sjyp = mt_rand(0,5);
             $ypname = $retyp[$sjyp]['ypname'];

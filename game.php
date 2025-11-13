@@ -118,7 +118,7 @@ if (isset($cmd)){
                  $stmt = $dblj->prepare($sql);
                  $stmt->execute(array($username));
                  $stmt->bindColumn('uname',$cxusername);
-                 $ret = $stmt->fetch(PDO::FETCH_ASSOC);
+                 $ret = $stmt->fetch(PDO::FETCH_BOUND);
 				 
 				 if($ret){
                   $tishi = 'Người chơi:【'.$cxusername.'】Đã tồn tại<br><br>';
@@ -138,7 +138,7 @@ if (isset($cmd)){
                 $cxjg = $dblj->query($sql);
                 $existingSid = '';
                 $cxjg->bindColumn('sid',$existingSid);
-                $ret = $cxjg->fetch(PDO::FETCH_ASSOC);
+                $ret = $cxjg->fetch(PDO::FETCH_BOUND);
                 $nowdate = date('Y-m-d H:i:s');
                 if ($existingSid ==''){
                     $gameconfig = \player\getgameconfig($dblj);

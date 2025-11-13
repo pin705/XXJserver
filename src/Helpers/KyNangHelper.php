@@ -39,7 +39,7 @@ function layThongTinKyNang($idKyNang, $ketNoiDB)
     $stmt->bindColumn('jndj', $kyNang->soDaoCuCanHoc);
     $stmt->bindColumn('djsum', $kyNang->soLuongDaoCu);
     
-    $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+    $result = $stmt->fetch(\PDO::FETCH_BOUND);
     
     if (!$result) {
         return null;
@@ -62,7 +62,7 @@ function layKyNangCuaNguoiChoi($idKyNang, $idPhien, $ketNoiDB)
     $stmt = $ketNoiDB->prepare($sql);
     $stmt->execute([$idKyNang, $idPhien]);
     
-    return $stmt->fetch(\PDO::FETCH_ASSOC);
+    return $stmt->fetch(\PDO::FETCH_BOUND);
 }
 
 /**
@@ -81,7 +81,7 @@ function layTatCaKyNangCuaNguoiChoi($idPhien, $ketNoiDB)
     $stmt = $ketNoiDB->prepare($sql);
     $stmt->execute([$idPhien]);
     
-    return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    return $stmt->fetchAll(\PDO::FETCH_BOUND);
 }
 
 /**
@@ -139,5 +139,5 @@ function layTatCaKyNang($ketNoiDB)
     $sql = "SELECT * FROM jineng";
     $stmt = $ketNoiDB->query($sql);
     
-    return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    return $stmt->fetchAll(\PDO::FETCH_BOUND);
 }

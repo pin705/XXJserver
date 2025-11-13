@@ -43,7 +43,7 @@ function layThongTinQuaiVat($idQuai, $ketNoiDB)
     $stmt->bindColumn('gxx', $quaiVat->hutMau);
     $stmt->bindColumn('gyid', $quaiVat->idKhoQuai);
     
-    $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+    $result = $stmt->fetch(\PDO::FETCH_BOUND);
     
     if (!$result) {
         return null;
@@ -100,7 +100,7 @@ function layThongTinQuaiVatTemplate($idKhoQuai, $ketNoiDB)
     $stmt->bindColumn('ypjv', $quaiVat->tyLeRoiDuocPham);
     $stmt->bindColumn('djjv', $quaiVat->tyLeRoiDaoCu);
     
-    $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+    $result = $stmt->fetch(\PDO::FETCH_BOUND);
     
     if (!$result) {
         return null;

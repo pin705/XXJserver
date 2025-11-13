@@ -54,7 +54,7 @@ if (isset($canshu)){
                 if (isset($zhiwei)){
                     $sql="select uid from clubplayer WHERE clubid=$clubplayer->clubid AND uclv > $clubplayer->uclv";
                     $ret = $dblj->query($sql);
-                    $retuid = $ret->fetchAll(PDO::FETCH_ASSOC);
+                    $retuid = $ret->fetchAll(PDO::FETCH_BOUND);
                     foreach ($retuid as $uiditem){
                         $uid = $uiditem['uid'];
                         if ($uid==$player->idNguoiDung){
@@ -121,7 +121,7 @@ if (isset($clubid) || $clubplayer){
     
     $sql="select uid,uclv from clubplayer WHERE clubid=$clubid ORDER BY uclv ASC ";
     $ret = $dblj->query($sql);
-    $retuid = $ret->fetchAll(PDO::FETCH_ASSOC);
+    $retuid = $ret->fetchAll(PDO::FETCH_BOUND);
     foreach ($retuid as $uiditem){
         $uid = $uiditem['uid'];
         $uclv = $uiditem['uclv'];

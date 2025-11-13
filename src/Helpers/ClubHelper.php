@@ -23,7 +23,7 @@ function layThongTinClub($idClub, $ketNoiDB)
     $stmt = $ketNoiDB->prepare($sql);
     $stmt->execute([$idClub]);
     
-    $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+    $result = $stmt->fetch(\PDO::FETCH_BOUND);
     
     if (!$result) {
         return null;
@@ -53,7 +53,7 @@ function layTatCaClub($ketNoiDB)
     $sql = "SELECT * FROM `club`";
     $stmt = $ketNoiDB->query($sql);
     
-    return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    return $stmt->fetchAll(\PDO::FETCH_BOUND);
 }
 
 /**
@@ -69,7 +69,7 @@ function layThongTinClubPlayer($idPhien, $ketNoiDB)
     $stmt = $ketNoiDB->prepare($sql);
     $stmt->execute([$idPhien]);
     
-    $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+    $result = $stmt->fetch(\PDO::FETCH_BOUND);
     
     if (!$result) {
         return null;

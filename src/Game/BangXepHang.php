@@ -17,7 +17,7 @@ $phhtml='';
 $phlshtml='';
 $backcmd=$encode->encode("cmd=goto_map&newmid=$player->idBanDoHienTai&sid=$sid");
 if ($phcxjg){
-    $ret = $phcxjg->fetchAll(PDO::FETCH_ASSOC);
+    $ret = $phcxjg->fetchAll(PDO::FETCH_BOUND);
     for ($i=0;$i < count($ret);$i++){
         $uname = $ret[$i]['uname'];
         $ulv = $ret[$i]['ulv'];

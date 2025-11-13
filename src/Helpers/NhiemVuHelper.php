@@ -43,7 +43,7 @@ function layThongTinNhiemVu($idNhiemVu, $ketNoiDB)
     $stmt->bindColumn('lastrwid', $nhiemVu->idNhiemVuTruoc);
     $stmt->bindColumn('rwqy', $nhiemVu->idKhuVucNhiemVu);
     
-    $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+    $result = $stmt->fetch(\PDO::FETCH_BOUND);
     
     if (!$result) {
         return null;
@@ -82,7 +82,7 @@ function layNhiemVuCuaNguoiChoi($idPhien, $idNhiemVu, $ketNoiDB)
     $stmt->bindColumn('rwlx', $nhiemVu->loaiThuong);
     $stmt->bindColumn('rwyp', $nhiemVu->duocPhamThuong);
     
-    $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+    $result = $stmt->fetch(\PDO::FETCH_BOUND);
     
     if (!$result) {
         return null;
@@ -106,7 +106,7 @@ function layTatCaNhiemVuCuaNguoiChoi($idPhien, $ketNoiDB)
     $stmt = $ketNoiDB->prepare($sql);
     $stmt->execute([$idPhien]);
     
-    return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    return $stmt->fetchAll(\PDO::FETCH_BOUND);
 }
 
 /**

@@ -52,7 +52,7 @@ function layThongTinSungVat($idSungVat, $ketNoiDB)
     $stmt->bindColumn('tool6', $sungVat->trangBi6);
     $stmt->bindColumn('tool7', $sungVat->trangBi7);
     
-    $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+    $result = $stmt->fetch(\PDO::FETCH_BOUND);
     
     if (!$result) {
         return null;
@@ -74,7 +74,7 @@ function layTatCaSungVatCuaNguoiChoi($idPhien, $ketNoiDB)
     $stmt = $ketNoiDB->prepare($sql);
     $stmt->execute([$idPhien]);
     
-    return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    return $stmt->fetchAll(\PDO::FETCH_BOUND);
 }
 
 /**

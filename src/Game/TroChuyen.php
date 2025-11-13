@@ -11,7 +11,7 @@ if ($ltlx == "all"){
     $lthtml='';
 
     if ($ltcxjg){
-        $ret = $ltcxjg->fetchAll(PDO::FETCH_ASSOC);
+        $ret = $ltcxjg->fetchAll(PDO::FETCH_BOUND);
         $goliaotian = $encode->encode("cmd=chat&ltlx=all&sid=$sid");
         $imliaotian = $encode->encode("cmd=chat&ltlx=im&sid=$sid");
         $lthtml = "【Công cộng|<a href='?cmd=$imliaotian'>Nói chuyện riêng</a>】<div style='border: #dcd4a1; border-style: dashed; border-top-width: 1px;
@@ -50,7 +50,7 @@ if ($ltlx == 'im'){
     $lthtml='';
 
     if ($ltcxjg){
-        $ret = $ltcxjg->fetchAll(PDO::FETCH_ASSOC);
+        $ret = $ltcxjg->fetchAll(PDO::FETCH_BOUND);
         $goliaotian = $encode->encode("cmd=chat&ltlx=all&sid=$sid");
         $imliaotian = $encode->encode("cmd=chat&ltlx=im&sid=$sid");
         $lthtml = "【<a href='?cmd=$goliaotian'>Công cộng</a>|Nói chuyện riêng】<br/>";

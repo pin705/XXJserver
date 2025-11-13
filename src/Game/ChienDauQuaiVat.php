@@ -209,7 +209,7 @@ HTML;
             $cxdljg = $dblj->query($sql);
             if ($cxdljg){
 				
-                $retzb = $cxdljg->fetchAll(PDO::FETCH_ASSOC);
+                $retzb = $cxdljg->fetchAll(PDO::FETCH_BOUND);
                 $sjdl = mt_rand(0,count($retzb)-1);
                 $zbname = $retzb[$sjdl]['zbname'];
                 $zbid = $retzb[$sjdl]['zbid'];
@@ -231,7 +231,7 @@ HTML;
             $sql = "select * from daoju WHERE djid in ($yguaiwu->daoCuRoi)";
             $cxdljg = $dblj->query($sql);
             if ($cxdljg){
-                $retdj = $cxdljg->fetchAll(PDO::FETCH_ASSOC);
+                $retdj = $cxdljg->fetchAll(PDO::FETCH_BOUND);
                 $sjdj = mt_rand(0,count($retdj)-1);
                 $djname = $retdj[$sjdj]['djname'];
                 $djid = $retdj[$sjdj]['djid'];
@@ -261,7 +261,7 @@ HTML;
         if ($yguaiwu->ypjv >= $sjjv && $yguaiwu->duocPhamRoi != ''){
             $sql = "select * from yaopin WHERE ypid in ($yguaiwu->duocPhamRoi)";
             $cxdljg = $dblj->query($sql);
-            $retyp = $cxdljg->fetchAll(PDO::FETCH_ASSOC);
+            $retyp = $cxdljg->fetchAll(PDO::FETCH_BOUND);
             $sjdj = mt_rand(0, count($retyp) - 1);
             $ypname = $retyp[$sjdj]['ypname'];
             $ypid = $retyp[$sjdj]['ypid'];
