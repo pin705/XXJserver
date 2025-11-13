@@ -1,4 +1,17 @@
 ﻿<?php
+require_once __DIR__ . '/../src/Helpers/NguoiChoiHelper.php';
+require_once __DIR__ . '/../src/Helpers/TrangBiHelper.php';
+require_once __DIR__ . '/../src/Helpers/DaoCuHelper.php';
+require_once __DIR__ . '/../src/Helpers/DuocPhamHelper.php';
+require_once __DIR__ . '/../src/Helpers/QuaiVatHelper.php';
+require_once __DIR__ . '/../src/Helpers/TruongLaoHelper.php';
+require_once __DIR__ . '/../src/Helpers/NhiemVuHelper.php';
+require_once __DIR__ . '/../src/Helpers/BanDoHelper.php';
+require_once __DIR__ . '/../src/Helpers/SungVatHelper.php';
+require_once __DIR__ . '/../src/Helpers/KyNangHelper.php';
+require_once __DIR__ . '/../src/Helpers/ClubHelper.php';
+use TuTaTuTien\Helpers as Helpers;
+
 /**
  * Created by PhpStorm.
  * User: Administrator
@@ -8,102 +21,102 @@
 //if (!isset($uid)){
 //
 //}
-$cxmid = \player\getmid($player->nowmid,$dblj);
-$cxqy = \player\getqy($cxmid->mqy,$dblj);
+$cxmid = Helpers\layThongTinBanDo($player->idBanDoHienTai,$dblj);
+$cxqy = Helpers\layThongTinKhuVuc($cxmid->mqy,$dblj);
 $gorehpmid = $encode->encode("cmd=gomid&newmid=$cxqy->mid&sid=$player->sid");
-$player = \player\getplayer($sid,$dblj);
-$pvper = \player\getplayer1($uid,$dblj);
-$gonowmid = $encode->encode("cmd=gomid&newmid=$player->nowmid&sid=$player->sid");
+$player = \Helpers\layThongTinNguoiChoi($sid,$dblj);
+$pvper = \Helpers\layThongTinNguoiChoiTheoUid($uid,$dblj);
+$gonowmid = $encode->encode("cmd=gomid&newmid=$player->idBanDoHienTai&sid=$player->sid");
 if ($cxmid->ispvp == 0){
-    \player\changeplayersx("ispvp",0,$sid,$dblj);
+    Helpers\thayDoiThuocTinhNguoiChoi("ispvp",0,$sid,$dblj);
     $tishihtml = 'Trước mắt địa đồ không cho phép PK<br/><br/>'.
         '<a href="?cmd='.$gonowmid.'">Trở về trò chơi</a>';
     exit($tishihtml);;
 }
 
 if ($pvper->sfzx == 0){
-    \player\changeplayersx("ispvp",0,$sid,$dblj);
+    Helpers\thayDoiThuocTinhNguoiChoi("ispvp",0,$sid,$dblj);
     $tishihtml = 'Nên người chơi không có online<br/><br/>'.
         '<a href="?cmd='.$gonowmid.'">Trở về trò chơi</a>';
     exit($tishihtml);;
 }
-if ($pvper->nowmid != $player->nowmid){
-    \player\changeplayersx("ispvp",0,$sid,$dblj);
+if ($pvper->idBanDoHienTai != $player->idBanDoHienTai){
+    Helpers\thayDoiThuocTinhNguoiChoi("ispvp",0,$sid,$dblj);
     $tishihtml = 'Nên người chơi không có ở nơi đó đồ<br/><br/>'.
         '<a href="?cmd='.$gonowmid.'">Trở về trò chơi</a>';
     exit($tishihtml);
 }
-if ($player->uhp<=0){
-    \player\changeplayersx("ispvp",0,$sid,$dblj);
+if ($player->sinhMenh<=0){
+    Helpers\thayDoiThuocTinhNguoiChoi("ispvp",0,$sid,$dblj);
     $tishihtml = 'Ngươi là thân bị trọng thương, không cách nào tiến hành chiến đấu<br/><br/>'.
         '<a href="?cmd='.$gorehpmid.'">Trở về trò chơi</a>';
     exit($tishihtml);
 }
-if ($pvper->uhp<=0){
-    \player\changeplayersx("ispvp",0,$sid,$dblj);
-	 \player\changeplayersx("ispvp",0,$pvper->sid,$dblj);
+if ($pvper->sinhMenh<=0){
+    Helpers\thayDoiThuocTinhNguoiChoi("ispvp",0,$sid,$dblj);
+	 Helpers\thayDoiThuocTinhNguoiChoi("ispvp",0,$pvper->sid,$dblj);
 	 
     $tishihtml = '<FONT color="#ff7888" size="3.5&sid">Nên người chơi đã nhận bạo lực một kích, trước mắt chính vùng vẫy giãy chết, còn xin đại hiệp giơ cao đánh khẽ。</FONT><br/><br/>'.
 
         '<a href="?cmd='.$gonowmid.'">Trở về trò chơi</a>';
     exit($tishihtml);
 }
-//\player\changeplayersx("ispvp",$pvper->uid,$sid,$dblj);
-\player\changeplayersx("ispvp",$player->uid,$pvper->sid,$dblj);
+//Helpers\thayDoiThuocTinhNguoiChoi("ispvp",$pvper->idNguoiDung,$sid,$dblj);
+Helpers\thayDoiThuocTinhNguoiChoi("ispvp",$player->idNguoiDung,$pvper->sid,$dblj);
 $pvperhurt = '';
 $tishihtml = '';
 $pvpbj = '';
 if (isset($canshu)){
     switch ($canshu){
         case 'gj':
-            $jineng = new \player\jineng();
+            $jineng = Helpers\taoMoiKyNang();
             if (isset($jnid)){
-                $ret = \player\delejnsum($jnid,1,$sid,$dblj);
+                $ret = Helpers\giamKyNang($jnid,1,$sid,$dblj);
                 if ($ret){
-                    $jineng = \player\getplayerjineng($jnid,$sid,$dblj);
+                    $jineng = Helpers\layThongTinKyNangCuaNguoiChoi($jnid,$sid,$dblj);
                     $tishihtml = "Sử dụng kỹ năng：$jineng->jnname<br/>";
                 }else{
                     $tishihtml = "Kỹ năng số lượng không đủ<br/>";
                 }
             }
-            $player->ugj +=$jineng->jngj;
-            $player->ufy +=$jineng->jnfy;
-            $player->ubj +=$jineng->jnbj;
-            $player->uxx +=$jineng->jnxx;
+            $player->congKich +=$jineng->jngj;
+            $player->phongNgu +=$jineng->jnfy;
+            $player->baoKich +=$jineng->jnbj;
+            $player->hutMau +=$jineng->jnxx;
 
             $ran = mt_rand(1,100);
-            if ($player->ubj >= $ran){
-                $player->ugj = round($player->ugj * 1.82);
+            if ($player->baoKich >= $ran){
+                $player->congKich = round($player->congKich * 1.82);
                 $pvpbj = 'Bạo kích';
             }
 
-            $pvperhurt = round($player->ugj - $pvper->ufy * 0.75,0);
-            if ($pvperhurt < $player->ugj * 0.05){
-                $pvperhurt = round($player->ugj*0.05);
+            $pvperhurt = round($player->congKich - $pvper->phongNgu * 0.75,0);
+            if ($pvperhurt < $player->congKich * 0.05){
+                $pvperhurt = round($player->congKich*0.05);
             }
 
-            $pvpxx = round($pvperhurt*($player->uxx/100));
+            $pvpxx = round($pvperhurt*($player->hutMau/100));
 
             $sql = "update game1 set uhp = uhp - $pvperhurt  WHERE sid = '$pvper->sid'";
             $dblj->exec($sql);
 
 
-            \player\addplayersx("uhp",$pvpxx,$sid,$dblj);
+            Helpers\themThuocTinhNguoiChoi("uhp",$pvpxx,$sid,$dblj);
 
-            $player =  player\getplayer($sid,$dblj);
+            $player =  Helpers\layThongTinNguoiChoi($sid,$dblj);
 			
-            if ($player->uhp > $player->umaxhp){
-                \player\changeplayersx("uhp",$player->umaxhp,$sid,$dblj);
-                $player =  player\getplayer($sid,$dblj);
+            if ($player->sinhMenh > $player->sinhMenhToiDa){
+                Helpers\thayDoiThuocTinhNguoiChoi("uhp",$player->sinhMenhToiDa,$sid,$dblj);
+                $player =  Helpers\layThongTinNguoiChoi($sid,$dblj);
             }
-            $pvper = \player\getplayer1($uid,$dblj);
+            $pvper = \Helpers\layThongTinNguoiChoiTheoUid($uid,$dblj);
             $pvperhurt = '-'.$pvperhurt;
-            if ($pvper->uhp<=0){
-                \player\changeplayersx("ispvp",0,$sid,$dblj);
-                \player\changeplayersx("ispvp",0,$pvper->sid,$dblj);
+            if ($pvper->sinhMenh<=0){
+                Helpers\thayDoiThuocTinhNguoiChoi("ispvp",0,$sid,$dblj);
+                Helpers\thayDoiThuocTinhNguoiChoi("ispvp",0,$pvper->sid,$dblj);
 				
 				
-                $dieinfo = ["Nghe nói$player->uname Đánh chết$pvper->uname","$pvper->uname Bị$player->uname Đánh cho hoa rơi nước chảy"," $player->uname Đem$pvper->uname Đánh cho sinh hoạt không thể tự gánh vác"];
+                $dieinfo = ["Nghe nói$player->tenNhanVat Đánh chết$pvper->tenNhanVat","$pvper->tenNhanVat Bị$player->tenNhanVat Đánh cho hoa rơi nước chảy"," $player->tenNhanVat Đem$pvper->tenNhanVat Đánh cho sinh hoạt không thể tự gánh vác"];
 				
 				
                 $randdie = mt_rand(0,count($dieinfo)-1);
@@ -112,7 +125,7 @@ if (isset($canshu)){
                 $cxjg = $dblj->exec($sql);
                 $html = '
                     Chiến đấu kết quả:<br/>
-                    Ngươi đánh chết'.$pvper->uname.'<br/>
+                    Ngươi đánh chết'.$pvper->tenNhanVat.'<br/>
                     Chiến đấu thắng lợi！<br/>
                     <a href="?cmd='.$gonowmid.'">Trở về trò chơi</a>';
                 exit($html);
@@ -121,14 +134,14 @@ if (isset($canshu)){
     }
 }
 
-if ($player->uhp<=0){
-    $cxmid = \player\getmid($player->nowmid,$dblj);
-    $cxqy = \player\getqy($cxmid->mqy,$dblj);
-    \player\changeplayersx("ispvp",0,$sid,$dblj);
-    \player\changeplayersx("ispvp",0,$pvper->sid,$dblj);
+if ($player->sinhMenh<=0){
+    $cxmid = Helpers\layThongTinBanDo($player->idBanDoHienTai,$dblj);
+    $cxqy = Helpers\layThongTinKhuVuc($cxmid->mqy,$dblj);
+    Helpers\thayDoiThuocTinhNguoiChoi("ispvp",0,$sid,$dblj);
+    Helpers\thayDoiThuocTinhNguoiChoi("ispvp",0,$pvper->sid,$dblj);
     $html = <<<HTML
             Chiến đấu kết quả:<br/>
-            Ngươi bị$guaiwu->gname Đánh chết<br/>
+            Ngươi bị$guaiwu->tenQuaiVat Đánh chết<br/>
             Chiến đấu thất bại！<br/>
             Mời thiếu hiệp lại đến<br/>
             <br/>
@@ -149,19 +162,19 @@ $jnname3 = 'Phù lục 3';
 
 
 if ($player->jn1!=0){
-    $jineng = \player\getplayerjineng($player->jn1,$sid,$dblj);
+    $jineng = Helpers\layThongTinKyNangCuaNguoiChoi($player->jn1,$sid,$dblj);
     if ($jineng){
         $jnname1 = $jineng->jnname.'('.$jineng->jncount.')';
     }
 }
 if ($player->jn2!=0){
-    $jineng = \player\getplayerjineng($player->jn2,$sid,$dblj);
+    $jineng = Helpers\layThongTinKyNangCuaNguoiChoi($player->jn2,$sid,$dblj);
     if ($jineng){
         $jnname2 = $jineng->jnname.'('.$jineng->jncount.')';
     }
 }
 if ($player->jn3!=0){
-    $jineng = \player\getplayerjineng($player->jn3,$sid,$dblj);;
+    $jineng = Helpers\layThongTinKyNangCuaNguoiChoi($player->jn3,$sid,$dblj);;
     if ($jineng){
         $jnname3 = $jineng->jnname.'('.$jineng->jncount.')';
     }
@@ -169,16 +182,16 @@ if ($player->jn3!=0){
 
 $html = <<<HTML
 ==Chiến đấu==<br/>
-$pvper->uname [lv:$pvper->ulv]<br/>
+$pvper->tenNhanVat [lv:$pvper->capDo]<br/>
 
-Khí huyết:(<div class="hpys" style="display: inline">$pvper->uhp</div>/<div class="hpys" style="display: inline">$pvper->umaxhp</div>)$pvpbj $pvperhurt<br/>
-Công kích:($pvper->ugj)<br/>
-Phòng ngự:($pvper->ufy)<br/>
+Khí huyết:(<div class="hpys" style="display: inline">$pvper->sinhMenh</div>/<div class="hpys" style="display: inline">$pvper->sinhMenhToiDa</div>)$pvpbj $pvperhurt<br/>
+Công kích:($pvper->congKich)<br/>
+Phòng ngự:($pvper->phongNgu)<br/>
 ===================<br/>
-$player->uname [lv:$player->ulv]<br/>
-Khí huyết:(<div class="hpys" style="display: inline">$player->uhp</div>/<div class="hpys" style="display: inline">$player->umaxhp</div>)<br/>
-Công kích:($player->ugj)<br/>
-Phòng ngự:($player->ufy)<br/>
+$player->tenNhanVat [lv:$player->capDo]<br/>
+Khí huyết:(<div class="hpys" style="display: inline">$player->sinhMenh</div>/<div class="hpys" style="display: inline">$player->sinhMenhToiDa</div>)<br/>
+Công kích:($player->congKich)<br/>
+Phòng ngự:($player->phongNgu)<br/>
 $tishihtml
 <ul>
 <li><a href="?cmd=$pgjcmd">Công kích</a></li><br/>

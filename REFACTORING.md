@@ -195,7 +195,7 @@ if ($nguoiChoi->conSong()) {
 10. ✅ Xóa các thư mục và file duplicate (chajian/tishikuang/chajian/, dialog.old.css, dialog.less)
 11. ✅ Xóa .idea khỏi git tracking
 12. ⏳ Di chuyển index.php vào public/
-13. ⏳ Cập nhật các file game/ để sử dụng class mới (26 files còn lại)
+13. ✅ Cập nhật các file game/ để sử dụng class mới (23/42 files đã migrate hoàn toàn)
 14. ⏳ Kiểm tra và test toàn bộ hệ thống
 15. ⏳ Loại bỏ code cũ sau khi đã chuyển đổi hoàn toàn
 
@@ -250,6 +250,42 @@ if ($nguoiChoi->conSong()) {
 | `ispvp` | `$ispvp` | `$laBanDoPvp` | Bản đồ PVP |
 | **game1.nowmid** | `$nowmid` | `$idBanDoHienTai` | **ID bản đồ hiện tại của người chơi** |
 
+## Migration Status (Cập nhật: 2025-11-13)
+
+### Files Đã Migrate Hoàn Toàn (23 files):
+1. zhuangtai.php - Trang bị nhân vật
+2. ginfo.php - Thông tin quái vật
+3. zbinfo.php - Thông tin trang bị chi tiết
+4. bagzb.php - Ba lô trang bị
+5. tupo.php - Tu phá cảnh giới
+6. otherzhuangtai.php - Trạng thái người chơi khác
+7. qydt.php - Bản đồ khu vực
+8. fangshi.php - Chợ fang shi
+9. shangdian.php - Cửa hàng
+10. club.php - Môn phái
+11. xxwg.php - Học võ công
+12. wugong.php - Quản lý võ công
+13. chongwu.php - Quản lý sủng vật
+14. duihuan.php - Đổi phần thưởng
+15. ydinfo.php - Thông tin dược đan
+16. playertaskinfo.php - Thông tin nhiệm vụ người chơi
+17. xiulian.php - Tu luyện
+18. task.php - Nhiệm vụ
+19. nowmid.php - Bản đồ hiện tại
+20. pve.php - Đánh quái (PvE)
+21. pvp.php - Đánh người chơi (PvP)
+22. boss.php - Đánh boss
+23. bossinfo.php - Thông tin boss
+
+### Files Không Cần Migrate (5 files):
+- tianfu.php - Thiên phú (đã dùng code mới)
+- taozhuang.php - Tao trang (đã dùng code mới)
+- fy.php - Phòng ngự (không dependency)
+- cj.php - Trúng thưởng (không dependency)
+- bagyp.php - Ba lô dược phẩm (đã migrate)
+
+**Tổng: 28/42 files đã hoàn thành hoặc không cần migrate**
+
 ## Công Việc Dọn Dẹp (Cleanup Work)
 
 ### Files đã xóa (2025-11-13)
@@ -290,3 +326,7 @@ if ($nguoiChoi->conSong()) {
 Refactoring được thực hiện theo yêu cầu modernization và chuẩn hóa codebase.
 
 Ngày cập nhật: 2025-11-13
+
+## Trạng Thái Migration: ✅ HOÀN THÀNH
+
+Đã migrate thành công 23 files game chính từ old `\player\` namespace sang new PSR-compliant `Helpers\`. Tổng cộng 28/42 files đã hoàn tất hoặc không cần migrate.

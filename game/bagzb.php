@@ -1,4 +1,8 @@
 <?php
+require_once __DIR__ . '/../src/Helpers/NguoiChoiHelper.php';
+require_once __DIR__ . '/../src/Helpers/TrangBiHelper.php';
+require_once __DIR__ . '/../src/Helpers/DaoCuHelper.php';
+use TuTaTuTien\Helpers as Helpers;
 
 $tscg = <<<HTML
              <link rel="stylesheet" type="text/css" href="./chajian/tishikuang/style/dialog.css">
@@ -71,18 +75,18 @@ $('#error').click(function(){
 HTML;
 
 
-$player = player\getplayer($sid,$dblj);
+$player = Helpers\layThongTinNguoiChoi($sid,$dblj);
 $tishi = '';
 if (isset($canshu)){
     if ($canshu=='maichu'){
-        $mczb = \player\getzb($zbnowid,$dblj);
-        $sxzz = $mczb->zbgj*50 + $mczb->zbhp*3 + $mczb->zbfy*15 + $mczb->zbbj * 15 + $mczb->zbxx * 15 + $mczb->qianghua*20;
+        $mczb = Helpers\layThongTinTrangBiTheoId($zbnowid,$dblj);
+        $sxzz = $mczb->congKich*50 + $mczb->sinhMenh*3 + $mczb->phongNgu*15 + $mczb->baoKich * 15 + $mczb->hutMau * 15 + $mczb->capCuongHoa*20;
         $mcls = round($sxzz);
         $sql = "delete from playerzhuangbei where zbnowid =$zbnowid AND sid='$sid'";//Xóa bỏ trang bị
         $mcret = $dblj->exec($sql);
         if ($mcret){
-            $ret = \player\changeyxb(1,$sxzz,$sid,$dblj);
-            $tishi = "Bán [$mczb->zbname],nhận được  linh thạch:$mcls<hr>";
+            $ret = Helpers\thayDoiTienTroChoi(1,$sxzz,$sid,$dblj);
+            $tishi = "Bán [$mczb->tenTrangBi],nhận được  linh thạch:$mcls<hr>";
         }
     }
 }
@@ -90,13 +94,13 @@ if (!isset($yeshu)){
     $yeshu = 0;
 }
 if ($cmd == 'delezb'){
-    $zhuangbei = \player\getzb($zbnowid,$dblj);
-    $fjls = $zhuangbei->qianghua * 20 + 20;
-    $ret = \player\changeyxb(2,$fjls,$sid,$dblj);
+    $zhuangbei = Helpers\layThongTinTrangBiTheoId($zbnowid,$dblj);
+    $fjls = $zhuangbei->capCuongHoa * 20 + 20;
+    $ret = Helpers\thayDoiTienTroChoi(2,$fjls,$sid,$dblj);
     if ($ret){
         $sql = "delete from playerzhuangbei where zbnowid =$zbnowid AND sid='$sid'";//Xóa bỏ trang bị
         $dblj->exec($sql);
-        $qhs = round($zhuangbei->qianghua*$zhuangbei->qianghua+($zhuangbei->zbgj+$zhuangbei->zbfy)/2);//Tính toán cường hóa thạch phân giải nhận được  tình huống
+        $qhs = round($zhuangbei->capCuongHoa*$zhuangbei->capCuongHoa+($zhuangbei->congKich+$zhuangbei->phongNgu)/2);//Tính toán cường hóa thạch phân giải nhận được  tình huống
         $sjs = mt_rand(1,100);
         if ($sjs <= 30){
             $sjs = mt_rand(1,100);
@@ -108,7 +112,7 @@ if ($cmd == 'delezb'){
                 $qhs = $qhs + 1;
             }
         }
-        \player\adddj($sid,1,$qhs,$dblj);
+        Helpers\themDaoCu($sid,1,$qhs,$dblj);
         //$tishi = 'Phân giải thành công!';
         if ($qhs >= 0){
             $tishi .= "Phân giải thành công!nhận được  cường hóa thạch:".$qhs."!<hr>";
@@ -128,7 +132,7 @@ $sql = "select count(*) from playerzhuangbei where sid = '$sid'";
 $cxjg = $dblj->query($sql);
 $zbcount = $cxjg->fetchColumn();
 
-$gonowmid = $encode->encode("cmd=gomid&newmid=$player->nowmid&sid=$sid");
+$gonowmid = $encode->encode("cmd=gomid&newmid=$player->idBanDoHienTai&sid=$sid");
 $zbhtml = '';
 $fanye='';
 if ($yeshu!=0){
@@ -147,7 +151,7 @@ if ($fanye!=''){
 $hangshu = 0;
 for ($i=0;$i<count($retzb);$i++){
     $zbnowid = $retzb[$i]['zbnowid'];
-    $arr = array($player->tool1,$player->tool2,$player->tool3,$player->tool4,$player->tool5,$player->tool6,$player->tool7);
+    $arr = array($player->viTriTrangBi1,$player->viTriTrangBi2,$player->viTriTrangBi3,$player->viTriTrangBi4,$player->viTriTrangBi5,$player->viTriTrangBi6,$player->viTriTrangBi7);
     $hangshu = $hangshu + 1;
 
     $zbname = $retzb[$i]['zbname'];
@@ -157,18 +161,18 @@ for ($i=0;$i<count($retzb);$i++){
     if($zbqh>0){
         $qhhtml="+".$zbqh;
     }
-    $chakanzb = $encode->encode("cmd=chakanzb&zbnowid=$zbnowid&uid=$player->uid&sid=$sid");
+    $chakanzb = $encode->encode("cmd=chakanzb&zbnowid=$zbnowid&uid=$player->idNguoiDung&sid=$sid");
     if (!in_array($zbnowid,$arr)){
         $mczb = $encode->encode("cmd=getbagzb&canshu=maichu&yeshu=$yeshu&zbnowid=$zbnowid&sid=$sid");
-		$zhuangbei = \player\getzb($zbnowid,$dblj);
+		$zhuangbei = Helpers\layThongTinTrangBiTheoId($zbnowid,$dblj);
         $delezb = $encode->encode("cmd=delezb&zbnowid=$zbnowid&sid=$sid");
         $zbhtml .= <<<HTML
-        [$hangshu].<a href="?cmd=$chakanzb"><font color='{$zhuangbei->zbys}'>$zbname</font>$qhhtml</a><a href="?cmd=$mczb">Bán </a><a href="?cmd=$delezb">Phân giải</a><br/>
+        [$hangshu].<a href="?cmd=$chakanzb"><font color='{$zhuangbei->phamChat}'>$zbname</font>$qhhtml</a><a href="?cmd=$mczb">Bán </a><a href="?cmd=$delezb">Phân giải</a><br/>
 HTML;
     }else{
-		$zhuangbei = \player\getzb($zbnowid,$dblj);
+		$zhuangbei = Helpers\layThongTinTrangBiTheoId($zbnowid,$dblj);
         $zbhtml .= <<<HTML
-        [$hangshu].<a href="?cmd=$chakanzb"><font color='{$zhuangbei->zbys}'>{$zbname}</font>$qhhtml</a>(Đã trang bị)<br/>
+        [$hangshu].<a href="?cmd=$chakanzb"><font color='{$zhuangbei->phamChat}'>{$zbname}</font>$qhhtml</a>(Đã trang bị)<br/>
 HTML;
     }
 }

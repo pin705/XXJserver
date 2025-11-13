@@ -1,19 +1,32 @@
 
+require_once __DIR__ . '/../src/Helpers/NguoiChoiHelper.php';
+require_once __DIR__ . '/../src/Helpers/TrangBiHelper.php';
+require_once __DIR__ . '/../src/Helpers/DaoCuHelper.php';
+require_once __DIR__ . '/../src/Helpers/DuocPhamHelper.php';
+require_once __DIR__ . '/../src/Helpers/QuaiVatHelper.php';
+require_once __DIR__ . '/../src/Helpers/TruongLaoHelper.php';
+require_once __DIR__ . '/../src/Helpers/NhiemVuHelper.php';
+require_once __DIR__ . '/../src/Helpers/BanDoHelper.php';
+require_once __DIR__ . '/../src/Helpers/SungVatHelper.php';
+require_once __DIR__ . '/../src/Helpers/KyNangHelper.php';
+require_once __DIR__ . '/../src/Helpers/ClubHelper.php';
+use TuTaTuTien\Helpers as Helpers;
+
 <?php
-$player = \player\getplayer($sid,$dblj);
-$nowmid=$player->nowmid;
-$gonowmid = $encode->encode("cmd=gomid&newmid=$player->nowmid&sid=$player->sid");
+$player = \Helpers\layThongTinNguoiChoi($sid,$dblj);
+$nowmid=$player->idBanDoHienTai;
+$gonowmid = $encode->encode("cmd=gomid&newmid=$player->idBanDoHienTai&sid=$player->sid");
 // $pgjcmd = $encode->encode("cmd=pvb&canshu=ptgj&bossid=$bossid&sid=$sid");Vốn có boss Công kích
 
 $pgjcmd = $encode->encode("cmd=pvbgj&bossid=$bossid&sid=$player->sid&nowmid=$nowmid");
 // $pgjcmd = $encode->encode("cmd=pvbgj&bossid=$bossid&sid=$player->sid&nowmid=$nowmid");
-$boss = \player\getboss($bossid,$dblj);
-$yboss = new \player\boss();
+$boss = Helpers\layThongTinBoss($bossid,$dblj);
+$yboss = Helpers\taoMoiBoss();
 $wgid = $player->wugong;
-$cxwg = \player\wgcx($wgid,$sid,$dblj);
+$cxwg = Helpers\layThongTinVoCong($wgid,$sid,$dblj);
 $wglx = $cxwg->wglx;
-// $cxmid = \player\getmid($player->nowmid,$dblj);
-// $cxqy = \player\getqy($cxmid->mqy,$dblj);
+// $cxmid = Helpers\layThongTinBanDo($player->idBanDoHienTai,$dblj);
+// $cxqy = Helpers\layThongTinKhuVuc($cxmid->mqy,$dblj);
 // $gorehpmid = $encode->encode("cmd=gomid&newmid=$cxqy->mid&sid=$player->sid");
 if ($player->wugong!=''&&$wglx==1){
 	$tishi = "<a href='?cmd=$gonowmid'>$cxwg->wgname</a><br><br> ";
@@ -34,16 +47,16 @@ $ypname2 = 'Dược phẩm 2';
 $ypname3 = 'Dược phẩm 3';
 
 if ($player->yp1!=0){
-    $yaopin = \player\getplayeryaopin($player->yp1,$sid,$dblj);
-    $ypname1 = $yaopin->ypname.'('.$yaopin->ypsum.')';
+    $yaopin = Helpers\layThongTinDuocPhamCuaNguoiChoi($player->yp1,$sid,$dblj);
+    $ypname1 = $yaopin->tenDuocPham.'('.$yaopin->ypsum.')';
 }
 if ($player->yp2!=0){
-    $yaopin = \player\getplayeryaopin($player->yp2,$sid,$dblj);
-    $ypname2 = $yaopin->ypname.'('.$yaopin->ypsum.')';
+    $yaopin = Helpers\layThongTinDuocPhamCuaNguoiChoi($player->yp2,$sid,$dblj);
+    $ypname2 = $yaopin->tenDuocPham.'('.$yaopin->ypsum.')';
 }
 if ($player->yp3!=0){
-    $yaopin = \player\getplayeryaopin($player->yp3,$sid,$dblj);
-    $ypname3 = $yaopin->ypname.'('.$yaopin->ypsum.')';
+    $yaopin = Helpers\layThongTinDuocPhamCuaNguoiChoi($player->yp3,$sid,$dblj);
+    $ypname3 = $yaopin->tenDuocPham.'('.$yaopin->ypsum.')';
 }
 $cwhurt = '';
 $tishihtml='';
@@ -62,7 +75,7 @@ HTML;
     exit();
 }
 
-if ($nowmid!=$player->nowmid){
+if ($nowmid!=$player->idBanDoHienTai){
     $html = <<<HTML
         Mời bình thường chơi đùa！<br/>
         <br/>
@@ -88,23 +101,23 @@ $gwbj = '';
 if (isset($canshu)){
 
     if ($canshu == 'useyp'){
-        $ret = \player\useyaopin($ypid,1,$sid,$dblj);
-        $player =  player\getplayer($sid,$dblj);
+        $ret = Helpers\suDungDuocPham($ypid,1,$sid,$dblj);
+        $player =  Helpers\layThongTinNguoiChoi($sid,$dblj);
     }
 }
 
 if($cmd=='pvb' && $boss->sid==''){
 
-    if ($player->ulv >= 1 && $player->uhp <=0){
+    if ($player->capDo >= 1 && $player->sinhMenh <=0){
         $zdjg = -1;
     }else{
         // $sql = "update boss set sid = '$sid' WHERE id='$bossid'";Nơi này xóa quái, ID Viết xong là được, xảy ra vấn đề, ta có chút im lặng 12.23
         // $dblj->exec($sql);
-        $cw = \player\getchongwu($player->cw,$dblj);
-        \player\changecwsx('cwhp',$cw->cwmaxhp,$player->cw,$dblj);
-        if($player->ulv <= 10){
-            \player\changeplayersx('uhp',$player->umaxhp,$sid,$dblj);
-            $player =  player\getplayer($sid,$dblj);
+        $cw = Helpers\layThongTinSungVat($player->cw,$dblj);
+        Helpers\thayDoiThuocTinhSungVat('cwhp',$cw->cwmaxhp,$player->cw,$dblj);
+        if($player->capDo <= 10){
+            Helpers\thayDoiThuocTinhNguoiChoi('uhp',$player->sinhMenhToiDa,$sid,$dblj);
+            $player =  Helpers\layThongTinNguoiChoi($sid,$dblj);
         }
     }
 
@@ -114,14 +127,14 @@ elseif ($cmd == 'pvbgj' && $bossid != 0){
     //Đòn công kích bình thường
     $hurt = false;
     $ghurt = 0;
-    // $jineng = new \player\jineng();
+    // $jineng = Helpers\taoMoiKyNang();
 
     // if (isset($canshu)){
         // switch ($canshu){
             // case 'usejn':
-                // $ret = \player\delejnsum($jnid,1,$sid,$dblj);
+                // $ret = Helpers\giamKyNang($jnid,1,$sid,$dblj);
                 // if ($ret){
-                    // $jineng = \player\getplayerjineng($jnid,$sid,$dblj);
+                    // $jineng = Helpers\layThongTinKyNangCuaNguoiChoi($jnid,$sid,$dblj);
                     // $tishihtml = "Sử dụng kỹ năng：$jineng->jnname<br/>";
                 // }else{
                     // $tishihtml = "Kỹ năng số lượng không đủ<br/>";
@@ -130,12 +143,12 @@ elseif ($cmd == 'pvbgj' && $bossid != 0){
                 // break;
         // }
    // }
-    // $player->ugj +=$jineng->jngj;
-    // $player->ufy +=$jineng->jnfy;
-    // $player->ubj +=$jineng->jnbj;
-    // $player->uxx +=$jineng->jnxx;
+    // $player->congKich +=$jineng->jngj;
+    // $player->phongNgu +=$jineng->jnfy;
+    // $player->baoKich +=$jineng->jnbj;
+    // $player->hutMau +=$jineng->jnxx;
 
-    $lvc = $player->ulv - $boss->bosslv;
+    $lvc = $player->capDo - $boss->bosslv;
 	//Công kích tổn thương tính toán
     if ($lvc <= 0){
         $lvc = 0;
@@ -148,29 +161,29 @@ elseif ($cmd == 'pvbgj' && $bossid != 0){
         $gwbj = 'Trọng kích';
     }
 
-    $phurt = round($boss->bossgj - ($player->ufy * 0.75),0);//boss Công kích tính toán
+    $phurt = round($boss->bossgj - ($player->phongNgu * 0.75),0);//boss Công kích tính toán
 	
     if ($phurt < $boss->bossgj*0.15){
         $phurt = round($boss->bossgj*0.25);
     }
 
     $ran = mt_rand(1,200);//Khống chế bạo kích xác suất
-    if ($player->ubj >= $ran){
-        $player->ugj = round($player->ugj * 1.72);
+    if ($player->baoKich >= $ran){
+        $player->congKich = round($player->congKich * 1.72);
         $pvbbj = 'Bạo kích';
     }
-     $cw = \player\getchongwu($player->cw,$dblj);//Dẫn vào sủng vật, phán đoán sủng vật chết sống
+     $cw = Helpers\layThongTinSungVat($player->cw,$dblj);//Dẫn vào sủng vật, phán đoán sủng vật chết sống
 	 if ($cw->cwhp > 0){
         $cwgj = round($cw->cwgj * 1);   
     }else{
         $cwgj = 0 ;
     }
 	 
-    $gphurt = round($cwgj + $player->ugj - ($boss->bossfy * 0.75),0);//Nhân vật chính công kích quái vật chụp máu tình huống, bản thân công kích+Sủng vật công kích
-    if ($gphurt < $player->ugj*0.15){
-        $gphurt = round( $player->ugj * 0.15);
+    $gphurt = round($cwgj + $player->congKich - ($boss->bossfy * 0.75),0);//Nhân vật chính công kích quái vật chụp máu tình huống, bản thân công kích+Sủng vật công kích
+    if ($gphurt < $player->congKich*0.15){
+        $gphurt = round( $player->congKich * 0.15);
     }
-    $pvbxx = ceil($gphurt * ($player->uxx/200) );//Khống chế hút máu cường độ
+    $pvbxx = ceil($gphurt * ($player->hutMau/200) );//Khống chế hút máu cường độ
 
     if ($phurt <= 0){
         $hurt = true;
@@ -193,16 +206,16 @@ elseif ($cmd == 'pvbgj' && $bossid != 0){
 	
 	
 
-    $cw = \player\getchongwu($player->cw,$dblj);
+    $cw = Helpers\layThongTinSungVat($player->cw,$dblj);
     $sql = "update boss set bosshp = bosshp - {$gphurt} WHERE bossid='$bossid'";
     $dblj->exec($sql);
-    $boss = player\getboss($bossid,$dblj);
+    $boss = Helpers\layThongTinBoss($bossid,$dblj);
 	
     if ($boss->bosshp <=0 ){//Quái vật tử vong, ban thưởng tính toán
 	    
         $sql = "delete from boss where bossid = $bossid AND sid='$player->sid'";//Xóa bỏ quái vật
         $dblj->exec($sql);
-		$sql = "update mid set mgtime='$nowdate' WHERE mid='$player->nowmid'";//Gia tăng thời gian, tính toán
+		$sql = "update mid set mgtime='$nowdate' WHERE mid='$player->idBanDoHienTai'";//Gia tăng thời gian, tính toán
         $dblj->exec($sql);
 		//$sql = "update boss set bosshp = bossmaxhp  WHERE bossid='$bossid'";//Cho boss Tăng máu
 		//$dblj->exec($sql);
@@ -215,13 +228,13 @@ elseif ($cmd == 'pvbgj' && $bossid != 0){
 		
 		$sjczb = mt_rand(1,5);
 		$sj = $sjczb+ round($boss->bosslv /10);
-        $ret = \player\changeyxb(1,$yxb,$sid,$dblj);//Lựa chọn 1 Phương án（Thêm tiền），Cải biến số lượng=yxb，id，Quan bế kho số liệu；
-		$ret1 = \player\changeczb(1,$sj,$sid,$dblj);//Ma thạch gia tăng
+        $ret = Helpers\thayDoiTienTroChoi(1,$yxb,$sid,$dblj);//Lựa chọn 1 Phương án（Thêm tiền），Cải biến số lượng=yxb，id，Quan bế kho số liệu；
+		$ret1 = Helpers\thayDoiMaThach(1,$sj,$sid,$dblj);//Ma thạch gia tăng
         if ($ret){
             $huode .= "nhận được  linh thạch:$yxb<br/>nhận được  ma thạch:$sj<br>";
         }
-        // $taskarr = \player\getplayerrenwu($sid,$dblj);//Nơi này là nhiệm vụ tình huống
-        // \player\changerwyq1(2,$boss->gyid,1,$sid,$dblj);
+        // $taskarr = Helpers\layDanhSachNhiemVuNguoiChoi($sid,$dblj);//Nơi này là nhiệm vụ tình huống
+        // Helpers\thayDoiNhiemVu(2,$boss->gyid,1,$sid,$dblj);
         // for ($i=0;$i<count($taskarr);$i++){
             // $rwyq = $taskarr[$i]['rwyq'];
             // $rwid = $taskarr[$i]['rwid'];
@@ -256,17 +269,17 @@ HTML;
                 $zbname = $retzb[$sjdl]['zbname'];
                 $zbid = $retzb[$sjdl]['zbid'];
                 $zbnowid = player\addzb($sid,$zbid,$dblj);
-				$zbys = \player\getzbkzb($zbid,$dblj);//Thu hoạch trang bị ID Địa chỉ, đây là dùng để thu hoạch sắc thái
-                $chakanzb = $encode->encode("cmd=chakanzb&zbnowid=$zbnowid&uid=$player->uid&sid=$sid");
-			    $huode .= "nhận được :".'<a href="?cmd='.$chakanzb.'"><font color='.$zbys->zbys.' >'.$zbname .'</font></a><br>';//Trang bị yếu tố
-			        $zbpz = $zbys->zbgj + $zbys->zbfy + $zbys->zbxx +$zbys->zbbj ;//Viết một cái thông cáo, nhận được  trang bị
+				$zbys = Helpers\layThongTinTrangBi($zbid,$dblj);//Thu hoạch trang bị ID Địa chỉ, đây là dùng để thu hoạch sắc thái
+                $chakanzb = $encode->encode("cmd=chakanzb&zbnowid=$zbnowid&uid=$player->idNguoiDung&sid=$sid");
+			    $huode .= "nhận được :".'<a href="?cmd='.$chakanzb.'"><font color='.$zbys->phamChat.' >'.$zbname .'</font></a><br>';//Trang bị yếu tố
+			        $zbpz = $zbys->congKich + $zbys->phongNgu + $zbys->hutMau +$zbys->baoKich ;//Viết một cái thông cáo, nhận được  trang bị
 					if ($zbpz >=5){
 			        $sql = "insert into ggliaotian(name,msg,uid) values(?,?,?)";
                     $stmt = $dblj->prepare($sql);
 					
 $tz = <<<HTML
 
-					[{$player->uname}]{$jisha}[{$boss->bossname}]nhận được <a href='?cmd=zbinfo_sys&zbid=$zbys->zbid&sid=$sid' style="background-color: #f6f7f7;padding: 0px 0px;"><font style="color:{$zbys->zbys}">[{$zbname}]</font></a>Khiến người ghen tị.
+					[{$player->tenNhanVat}]{$jisha}[{$boss->tenBoss}]nhận được <a href='?cmd=zbinfo_sys&zbid=$zbys->idMauTrangBi&sid=$sid' style="background-color: #f6f7f7;padding: 0px 0px;"><font style="color:{$zbys->phamChat}">[{$zbname}]</font></a>Khiến người ghen tị.
 HTML;
                     $stmt->execute(array('【Phụ trương】',$tz,'0'));//Hệ thống thông cáo
 					}
@@ -287,7 +300,7 @@ HTML;
                     goto yp;
                 }
                 $djsum = mt_rand(3,12);
-                \player\adddj($sid,$djid,$djsum,$dblj);
+                Helpers\themDaoCu($sid,$djid,$djsum,$dblj);
                 $huode .= "nhận được :<font class='djys'>$djname x$djsum</font><br>";//Sắc thái yếu tố
                 for ($i=0;$i<count($taskarr);$i++){
                     $rwyq = $taskarr[$i]['rwyq'];
@@ -315,12 +328,12 @@ HTML;
             $ypname = $retyp[$sjyp]['ypname'];
             $ypid = $retyp[$sjyp]['ypid'];
             $ypsum = mt_rand(1, 2);//Dược phẩm rơi xuống số lượng
-            \player\addyaopin($sid,$ypid,$ypsum,$dblj);
+            Helpers\themDuocPham($sid,$ypid,$ypsum,$dblj);
             $huode .= "nhận được :<div class='ypys'>$ypname x$ypsum</div>";
         }
 		}
        // $boss->bossexp = round($boss->bossexp / ($lvc+1),0);//Kinh nghiệm tính toán
-	    $boss->bossexp = round($boss->bossgj / 2+$player->ugj/2+$player->ufy/2,0);
+	    $boss->bossexp = round($boss->bossgj / 2+$player->congKich/2+$player->phongNgu/2,0);
         if($boss->bossexp < 3){
             $boss->bossexp = 3;
         }
@@ -332,18 +345,18 @@ HTML;
     $sql = "update game1 set uhp = uhp - $pzssh  WHERE sid = '$sid'";//Viếng thăm kho số liệu, tên, lượng, id,
 	
     $dblj->exec($sql);                                                     //Quan bế kho số liệu
-    $player =  player\getplayer($sid,$dblj);//Người ID Cùng với hắn thuộc tính
-    if ($player->uhp > $player->umaxhp){//Phán đoán hút máu tràn ra
-        $sql = "update game1 set uhp = $player->umaxhp WHERE sid = '$sid'";//HP tràn ra một lần nữa tính toán
+    $player =  Helpers\layThongTinNguoiChoi($sid,$dblj);//Người ID Cùng với hắn thuộc tính
+    if ($player->sinhMenh > $player->sinhMenhToiDa){//Phán đoán hút máu tràn ra
+        $sql = "update game1 set uhp = $player->sinhMenhToiDa WHERE sid = '$sid'";//HP tràn ra một lần nữa tính toán
 		//$cwjx = "update playerchongwu set cwhp = cwhp - $cwxl WHERE sid = '$sid'";//Sủng vật HP cũng lần nữa tới một chút, dư thừa...
         $dblj->exec($sql);//Quan bế kho số liệu
-        $player->uhp = $player->umaxhp;//Cho giá trị
+        $player->sinhMenh = $player->sinhMenhToiDa;//Cho giá trị
 		
     }
 	$cwxl = round($phurt*2.2);//Sủng vật bị công kích tổn thương tính toán
 	$sql = "update playerchongwu set cwhp = cwhp - $cwxl  WHERE sid = '$sid'";
 	$dblj->exec($sql);
-	$cw = \player\getchongwu($player->cw,$dblj);
+	$cw = Helpers\layThongTinSungVat($player->cw,$dblj);
 	    if ($cw->cwhp >0){
         $cwts="(-".$cwxl.')';
     }else{
@@ -353,38 +366,38 @@ HTML;
 	
 	
 	
-    if ($player->uhp <= 0){//Phán đoán chiến đấu trải qua, HP quá thấp thời điểm
+    if ($player->sinhMenh <= 0){//Phán đoán chiến đấu trải qua, HP quá thấp thời điểm
         $zdjg = 0;//Nhảy chuyển tới$zdjg Chiến đấu trải qua
     }
 }
 
 if ($player->yp1!=0){
-    $yaopin = \player\getplayeryaopin($player->yp1,$sid,$dblj);
-    $ypname1 = $yaopin->ypname.'('.$yaopin->ypsum.')';
+    $yaopin = Helpers\layThongTinDuocPhamCuaNguoiChoi($player->yp1,$sid,$dblj);
+    $ypname1 = $yaopin->tenDuocPham.'('.$yaopin->ypsum.')';
 }
 if ($player->yp2!=0){
-    $yaopin = \player\getplayeryaopin($player->yp2,$sid,$dblj);
-    $ypname2 = $yaopin->ypname.'('.$yaopin->ypsum.')';
+    $yaopin = Helpers\layThongTinDuocPhamCuaNguoiChoi($player->yp2,$sid,$dblj);
+    $ypname2 = $yaopin->tenDuocPham.'('.$yaopin->ypsum.')';
 }
 if ($player->yp3!=0){
-    $yaopin = \player\getplayeryaopin($player->yp3,$sid,$dblj);
-    $ypname3 = $yaopin->ypname.'('.$yaopin->ypsum.')';
+    $yaopin = Helpers\layThongTinDuocPhamCuaNguoiChoi($player->yp3,$sid,$dblj);
+    $ypname3 = $yaopin->tenDuocPham.'('.$yaopin->ypsum.')';
 }
 
 // if ($player->jn1!=0){
-    // $jineng = \player\getplayerjineng($player->jn1,$sid,$dblj);
+    // $jineng = Helpers\layThongTinKyNangCuaNguoiChoi($player->jn1,$sid,$dblj);
     // if ($jineng){
         // $jnname1 = $jineng->jnname.'('.$jineng->jncount.')';
     // }
 // }
 // if ($player->jn2!=0){
-    // $jineng = \player\getplayerjineng($player->jn2,$sid,$dblj);
+    // $jineng = Helpers\layThongTinKyNangCuaNguoiChoi($player->jn2,$sid,$dblj);
     // if ($jineng){
         // $jnname2 = $jineng->jnname.'('.$jineng->jncount.')';
     // }
 // }
 // if ($player->jn3!=0){
-    // $jineng = \player\getplayerjineng($player->jn3,$sid,$dblj);;
+    // $jineng = Helpers\layThongTinKyNangCuaNguoiChoi($player->jn3,$sid,$dblj);;
     // if ($jineng){
         // $jnname3 = $jineng->jnname.'('.$jineng->jncount.')';
     // }
@@ -404,7 +417,7 @@ if (isset($zdjg)){//Nơi này là chiến đấu trải qua, có ba cái 0 1-1 L
 
             $html = <<<HTML
             Chiến đấu kết quả:<br/>
-            Ngươi đánh bại$boss->bossname<br/>
+            Ngươi đánh bại$boss->tenBoss<br/>
             Chiến đấu thắng lợi！<br/>
             $huode
             $rwts<br/>
@@ -412,14 +425,14 @@ if (isset($zdjg)){//Nơi này là chiến đấu trải qua, có ba cái 0 1-1 L
 HTML;
             break;
         case 0:
-		    if ($player->uhp <= 0){
+		    if ($player->sinhMenh <= 0){
 			$sql = "insert into ggliaotian(name,msg,uid) values(?,?,?)";
             $stmt = $dblj->prepare($sql);
-            $stmt->execute(array('【Phụ trương】',"[{$boss->bossname}]Ngay tại trêu đùa[{$player->uname}]...",'0'));//Hệ thống thông cáo
+            $stmt->execute(array('【Phụ trương】',"[{$boss->tenBoss}]Ngay tại trêu đùa[{$player->tenNhanVat}]...",'0'));//Hệ thống thông cáo
 			}
             $html = <<<HTML
             Chiến đấu kết quả:<br/>
-            Ngươi bị$boss->bossname Đánh chết<br/>
+            Ngươi bị$boss->tenBoss Đánh chết<br/>
             Chiến đấu thất bại！<br/>
             Mời thiếu hiệp lại đến<br/>
             <br/>
@@ -463,7 +476,7 @@ else{
     }
 
     if ($player->cw!=0){
-        $cw = \player\getchongwu($player->cw,$dblj);
+        $cw = Helpers\layThongTinSungVat($player->cw,$dblj);
 		
         if ($cwhurt!='' || $cw->cwhp>0){
             $cwhtml=<<<HTML
@@ -480,12 +493,12 @@ HTML;
 if($boss->bosshp >=10000&&$boss->bosshp<11000){
 $sql = "insert into ggliaotian(name,msg,uid) values(?,?,?)";
 $stmt = $dblj->prepare($sql);
-$stmt->execute(array('【Mới nhất】',"Có người phát hiện[{$player->uname}]Ngay tại khiêu chiến{$boss->bossname}，Ai sẽ chiến thắng, để chúng ta rửa mắt mà đợi！",'0'));//Hệ thống thông cáo
+$stmt->execute(array('【Mới nhất】',"Có người phát hiện[{$player->tenNhanVat}]Ngay tại khiêu chiến{$boss->tenBoss}，Ai sẽ chiến thắng, để chúng ta rửa mắt mà đợi！",'0'));//Hệ thống thông cáo
 }
 if($boss->bosshp <2200 && $boss->bosshp>1700){
 $sql = "insert into ggliaotian(name,msg,uid) values(?,?,?)";
 $stmt = $dblj->prepare($sql);
-$stmt->execute(array('【Mới nhất】',"Đoạt BOSS ,[{$player->uname}]Muốn đánh giết{$boss->bossname},Sẽ rơi xuống bảo vật gì đâu？",'0'));//Hệ thống thông cáo
+$stmt->execute(array('【Mới nhất】',"Đoạt BOSS ,[{$player->tenNhanVat}]Muốn đánh giết{$boss->tenBoss},Sẽ rơi xuống bảo vật gì đâu？",'0'));//Hệ thống thông cáo
 }
 
 
@@ -503,27 +516,27 @@ if ($cmd == 'taopao'){
 	}
 }
 
-$yaopin = \player\getplayeryaopin($player->yp1,$sid,$dblj);
-$ypname1 = $yaopin->ypname.'('.$yaopin->ypsum.')';
-$yaopin = \player\getplayeryaopin($player->yp2,$sid,$dblj);
-$ypname2 = $yaopin->ypname.'('.$yaopin->ypsum.')';
-$yaopin = \player\getplayeryaopin($player->yp3,$sid,$dblj);
-$ypname3 = $yaopin->ypname.'('.$yaopin->ypsum.')';
+$yaopin = Helpers\layThongTinDuocPhamCuaNguoiChoi($player->yp1,$sid,$dblj);
+$ypname1 = $yaopin->tenDuocPham.'('.$yaopin->ypsum.')';
+$yaopin = Helpers\layThongTinDuocPhamCuaNguoiChoi($player->yp2,$sid,$dblj);
+$ypname2 = $yaopin->tenDuocPham.'('.$yaopin->ypsum.')';
+$yaopin = Helpers\layThongTinDuocPhamCuaNguoiChoi($player->yp3,$sid,$dblj);
+$ypname3 = $yaopin->tenDuocPham.'('.$yaopin->ypsum.')';
 $bl =  round ($boss->bosshp * 80 / $boss->bossmaxhp);
 
 $html=<<<HTML
 ==BOSS Chiến đấu==<br/>
 <IMG width="50" height="50" src="./images/cqgs.png"><BR>
-<font style="box-shadow: inset {$bl}px 0px #dc3232;border-radius: 4px;">$boss->bossname</font>:[lv:$boss->bosslv]<br/>
+<font style="box-shadow: inset {$bl}px 0px #dc3232;border-radius: 4px;">$boss->tenBoss</font>:[lv:$boss->bosslv]<br/>
 Khí huyết:(<div class="hpys" style="display: inline">$boss->bosshp</div>/<div class="hpys" style="display: inline">$boss->bossmaxhp</div>)$pvbsb$pvbbj$ghurt<br/>
 Công kích:($boss->bossgj)<br/>
 Phòng ngự:($boss->bossfy)<br/>
 Trước mắt công kích nhân số:<br/>
 ===================<br/>
-$player->uname [lv:$player->ulv]<br/>
-Khí huyết:(<div class="hpys" style="display: inline">$player->uhp</div>/<div class="hpys" style="display: inline">$player->umaxhp</div>)$gwbj$phurt$pvbxx<br/>
-Công kích:($player->ugj)<br/>
-Phòng ngự:($player->ufy)<br/>
+$player->tenNhanVat [lv:$player->capDo]<br/>
+Khí huyết:(<div class="hpys" style="display: inline">$player->sinhMenh</div>/<div class="hpys" style="display: inline">$player->sinhMenhToiDa</div>)$gwbj$phurt$pvbxx<br/>
+Công kích:($player->congKich)<br/>
+Phòng ngự:($player->phongNgu)<br/>
 $tishihtml
 <br/>
 

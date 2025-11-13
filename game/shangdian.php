@@ -1,6 +1,13 @@
 <?php
-$player = player\getplayer($sid,$dblj);//Thu hoạch ngươi ID
-$gonowmid = $encode->encode("cmd=gomid&newmid=$player->nowmid&sid=$sid");
+require_once __DIR__ . '/../src/Helpers/NguoiChoiHelper.php';
+require_once __DIR__ . '/../src/Helpers/TrangBiHelper.php';
+require_once __DIR__ . '/../src/Helpers/DaoCuHelper.php';
+require_once __DIR__ . '/../src/Helpers/DuocPhamHelper.php';
+require_once __DIR__ . '/../src/Helpers/ClubHelper.php';
+use TuTaTuTien\Helpers as Helpers;
+
+$player = Helpers\layThongTinNguoiChoi($sid,$dblj);//Thu hoạch ngươi ID
+$gonowmid = $encode->encode("cmd=gomid&newmid=$player->idBanDoHienTai&sid=$sid");
 
 $shangdian = $encode->encode("cmd=shangdian&canshu=gogoumai&sid=$sid");//  PHP ，Lựa chọn văn bản , tăng thêm dấu hiệu , thân phận của ngươi
 
@@ -119,18 +126,18 @@ if (isset($canshu)){
         case 'gogoumai':
             $gnhtml='';
             if (isset($ydcount) && isset($ydid)){
-                $yaodan = \player\getyaodanonce($ydid,$dblj);
+                $yaodan = Helpers\layThongTinDuocDan($ydid,$dblj);
                 $ydjg = $yaodan->ydjg;
                 $ydname = $yaodan->ydname;
-                $ret = \player\changeyxb(2,$ydjg*$ydcount,$sid,$dblj);
+                $ret = Helpers\thayDoiTienTroChoi(2,$ydjg*$ydcount,$sid,$dblj);
                 if ($ret){
-                    \player\addyaodan($sid,$ydid,$ydcount,$dblj);
+                    Helpers\themDuocDan($sid,$ydid,$ydcount,$dblj);
 				$gnhtml .= "".$tskcg."";
                 }else{
                     $gnhtml .= "".$tsksb."<br/>";
                 }
             }
-            $yaodan = \player\getyaodan($dblj);
+            $yaodan = Helpers\layTatCaDuocDan($dblj);
             foreach ($yaodan as $oneyaodan){
                 $ydname = $oneyaodan['ydname'];
                 $ydid = $oneyaodan['ydid'];
@@ -163,12 +170,12 @@ if (isset($canshu1)){
         case 'gogoumai1':
             $gnhtml='';
             if (isset($ydcount) && isset($ydid)){
-                $yaodan = \player\getyaodanonce($ydid,$dblj);
+                $yaodan = Helpers\layThongTinDuocDan($ydid,$dblj);
                 $ydjg = $yaodan->ydjgm;
                 $ydname = $yaodan->ydname;
-                $ret = \player\changeczb(2,$ydjg*$ydcount,$sid,$dblj);
+                $ret = Helpers\thayDoiMaThach(2,$ydjg*$ydcount,$sid,$dblj);
                 if ($ret){
-                    \player\addyaodan($sid,$ydid,$ydcount,$dblj);
+                    Helpers\themDuocDan($sid,$ydid,$ydcount,$dblj);
 				//$gnhtml .= $tskhtml."Mua".$ydcount.$ydname.""Nguyên mã
 				$gnhtml .= "".$tskcg.""
 					;
@@ -176,7 +183,7 @@ if (isset($canshu1)){
                     $gnhtml .= "".$tsksb."";
                 }
             }
-            $yaodan = \player\getyaodan($dblj);
+            $yaodan = Helpers\layTatCaDuocDan($dblj);
 			
             foreach ($yaodan as $oneyaodan){
                 $ydname = $oneyaodan['ydname'];
@@ -212,7 +219,7 @@ HTML;
         $shangdian = $encode->encode("cmd=shangdian&canshu=gogoumai&sid=$sid");
 		$shangdian1 = $encode->encode("cmd=shangdian&canshu1=gogoumai1&sid=$sid");
 		$beibaocmd = $encode->encode("cmd=getbagyd&sid=$sid");
-		$player = player\getplayer($sid,$dblj);
+		$player = Helpers\layThongTinNguoiChoi($sid,$dblj);
 
 $gnhtml =<<<HTML
               <IMG width='280' height='140' src='./images/shangdian.png'src="./images/rw.png" style="border-radius: 8px;">
@@ -226,7 +233,7 @@ $gnhtml =<<<HTML
 			<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=1.0" />
             <link rel="stylesheet" type="text/css" href="./chajian/tishikuang/style/dialog.css">
             Đang có <br/>
-			Linh thạch: $player->uyxb<br/>Ma thạch: $player->uczb<hr>
+			Linh thạch: $player->tienTroChoi<br/>Ma thạch: $player->tienNap<hr>
              $gnhtml<br/>
 		<a href="#" onClick="javascript:history.back(-1);">Trở lại</a>
         <a href="game.php?cmd=$gonowmid" style="float:right;background-color:#cff3d2;color: #755d5d;" >Trở về trò chơi</a>

@@ -1,4 +1,12 @@
 <?php
+require_once __DIR__ . '/../src/Helpers/NguoiChoiHelper.php';
+require_once __DIR__ . '/../src/Helpers/TrangBiHelper.php';
+require_once __DIR__ . '/../src/Helpers/DaoCuHelper.php';
+require_once __DIR__ . '/../src/Helpers/DuocPhamHelper.php';
+require_once __DIR__ . '/../src/Helpers/SungVatHelper.php';
+require_once __DIR__ . '/../src/Helpers/NhiemVuHelper.php';
+use TuTaTuTien\Helpers as Helpers;
+
 //Nơi này nghĩ dựng cái thành công nhắc nhở khung
 $tscg = <<<HTML
 <html> 
@@ -85,23 +93,23 @@ $ydgj = '';
 $ydfy = '';
 $ydbj = '';
 $ydxx = '';
-$gonowmid = $encode->encode("cmd=gomid&newmid=$player->nowmid&sid=$sid");
-$yaodan = \player\getyaodanonce($ydid,$dblj);
-$playeryd = \player\getplayeryaodan($ydid,$sid,$dblj);
+$gonowmid = $encode->encode("cmd=gomid&newmid=$player->idBanDoHienTai&sid=$sid");
+$yaodan = Helpers\layThongTinDuocDan($ydid,$dblj);
+$playeryd = Helpers\layThongTinDuocDanCuaNguoiChoi($ydid,$sid,$dblj);
 $setyd = '';
 $tishi='';
 if (isset($canshu)){
     switch ($canshu){
         case 'setyd1':
-            \player\changeplayersx('yd1',$ydid,$sid,$dblj);
+            Helpers\thayDoiThuocTinhNguoiChoi('yd1',$ydid,$sid,$dblj);
             $tishi = "Thiết trí dược phẩm 1 Thành công<br/>";
             break;
         case 'setyd2':
-            \player\changeplayersx('yd2',$ydid,$sid,$dblj);
+            Helpers\thayDoiThuocTinhNguoiChoi('yd2',$ydid,$sid,$dblj);
             $tishi = "Thiết trí dược phẩm 2 Thành công<br/>";
             break;
         case 'setyd3':
-            \player\changeplayersx('yd3',$ydid,$sid,$dblj);
+            Helpers\thayDoiThuocTinhNguoiChoi('yd3',$ydid,$sid,$dblj);
             $tishi = "Thiết trí dược phẩm 3 Thành công<br/>";
             break;
 			
@@ -111,16 +119,16 @@ if (isset($canshu)){
 		if ($sjs > 2){
             
             if ($sjs > 3){
-				$userydret = \player\useyaodan($ydid,1,$sid,$dblj);
+				$userydret = Helpers\suDungDuocDan($ydid,1,$sid,$dblj);
                 $tishi = "Tăng lên thành công<br/>";
 				$ts .= "".$tscg."";
             }else{
-				$userydret = \player\deleyaodan($sid,$ydid,1,$dblj);
+				$userydret = Helpers\giamDuocDan($sid,$ydid,1,$dblj);
                 $tishi = "Tăng lên thất bại, vận khí không đủ<br/>";
 				$ts .= "".$tssb."";
             }
 		}else{
-			 $userydret = \player\deleyaodan($sid,$ydid,1,$dblj);
+			 $userydret = Helpers\giamDuocDan($sid,$ydid,1,$dblj);
              $tishi = "Tẩu hỏa nhập ma, tăng lên thất bại<br/>";
 			 $ts .= "".$tssb."";
             }break;
@@ -135,16 +143,16 @@ if (isset($canshu)){
 		if ($sjs > 0){
             
             if ($sjs > 1){
-				$userydret = \player\useyaodan($ydid,1,$sid,$dblj);
+				$userydret = Helpers\suDungDuocDan($ydid,1,$sid,$dblj);
                 $tishi = "Là kẻ hung hãn, tăng lên thành công<br/>";
 				$ts .= "".$tscg."";
             }else{
-				$userydret = \player\deleyaodan($sid,$ydid,1,$dblj);
+				$userydret = Helpers\giamDuocDan($sid,$ydid,1,$dblj);
                 $tishi = "Lành lạnh, nếm thử những phương thức khác nhìn xem..<br/>";
 				$ts .= "".$tssb."";
             }
 		}else{
-			 $userydret = \player\deleyaodan($sid,$ydid,1,$dblj);
+			 $userydret = Helpers\giamDuocDan($sid,$ydid,1,$dblj);
              $tishi = "Tẩu hỏa nhập ma, tăng lên thất bại<br/>";
 			 $ts .= "".$tssb."";
             }break;
@@ -193,7 +201,7 @@ if ($yaodan->ydxx!=0){
     $ydxx = "Hút máu+".$yaodan->ydxx."<br/>";
 }
 $ydsx = "<br/>".$ydhp.$ydgj.$ydfy.$ydbj.$ydxx;
-$playeryd = \player\getplayeryaodan($ydid,$sid,$dblj);
+$playeryd = Helpers\layThongTinDuocDanCuaNguoiChoi($ydid,$sid,$dblj);
 $ydinfo = <<<HTML
 <IMG width='280' height='140' src='./images/rw.png'src="./images/rw.png" style="border-radius: 8px;">
 <div align="center">

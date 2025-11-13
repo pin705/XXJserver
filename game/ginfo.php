@@ -1,7 +1,14 @@
 <?php
-$player = player\getplayer($sid,$dblj);
-$backcmd=$encode->encode("cmd=gomid&newmid=$player->nowmid&sid=$sid");
-if ($nowmid!=$player->nowmid){
+require_once __DIR__ . '/../src/Helpers/NguoiChoiHelper.php';
+require_once __DIR__ . '/../src/Helpers/QuaiVatHelper.php';
+require_once __DIR__ . '/../src/Helpers/TrangBiHelper.php';
+require_once __DIR__ . '/../src/Helpers/DaoCuHelper.php';
+require_once __DIR__ . '/../src/Helpers/DuocPhamHelper.php';
+use TuTaTuTien\Helpers as Helpers;
+
+$player = Helpers\layThongTinNguoiChoi($sid, $dblj);
+$backcmd=$encode->encode("cmd=gomid&newmid=$player->idBanDoHienTai&sid=$sid");
+if ($nowmid!=$player->idBanDoHienTai){
     $html = <<<HTML
         Mời bình thường chơi đùa！<br/>
         <br/>
@@ -11,8 +18,8 @@ HTML;
     exit();
 }
 if (isset($gid)){
-    $guaiwu = player\getguaiwu($gid,$dblj);
-    $yguaiwu = \player\getyguaiwu($gyid,$dblj);
+    $guaiwu = Helpers\layThongTinQuaiVat($gid, $dblj);
+    $yguaiwu = Helpers\layThongTinMauQuaiVat($gyid, $dblj);
     $pvecmd=$encode->encode("cmd=pve&gid=$gid&sid=$sid&nowmid=$nowmid");
     if ($yguaiwu->ginfo==''){
         $yguaiwu->ginfo = 'Không có bất kỳ cái gì danh khí';
@@ -30,32 +37,32 @@ HTML;
         $zbhtml = '';
         $djhtml = '';
         $yphtml = '';
-        if ($yguaiwu->gzb!=''){
-            $zbarr = explode(',',$yguaiwu->gzb);
+        if ($yguaiwu->trangBiRoi!=''){
+            $zbarr = explode(',',$yguaiwu->trangBiRoi);
             foreach($zbarr as $newstr){
-                $zbkzb = \player\getzbkzb($newstr,$dblj);
+                $zbkzb = Helpers\layThongTinTrangBi($newstr, $dblj);
 				//$zhuangbei = new \player\zhuangbei();
-                $zbcmd = $encode->encode("cmd=zbinfo_sys&zbid=$zbkzb->zbid&sid=$sid");
-                $zbhtml .= "<a href='?cmd=$zbcmd'><font color='{$zbkzb->zbys}'>$zbkzb->zbname</font></a>";
+                $zbcmd = $encode->encode("cmd=zbinfo_sys&zbid=$zbkzb->idMauTrangBi&sid=$sid");
+                $zbhtml .= "<a href='?cmd=$zbcmd'><font color='{$zbkzb->phamChat}'>$zbkzb->tenTrangBi</font></a>";
             }
             $dlhtml .=$zbhtml;
         }
-        if ($yguaiwu->gdj!=''){
-            $djarr = explode(',',$yguaiwu->gdj);
+        if ($yguaiwu->daoCuRoi!=''){
+            $djarr = explode(',',$yguaiwu->daoCuRoi);
             foreach($djarr as $newstr){
-                $dj = \player\getdaoju($newstr,$dblj);
-                $djinfo = $encode->encode("cmd=djinfo&djid=$dj->djid&sid=$sid");
-                $djhtml .= "<font class='djys'><a href='?cmd=$djinfo'>$dj->djname</a></font>";
+                $dj = Helpers\layThongTinDaoCu($newstr, $dblj);
+                $djinfo = $encode->encode("cmd=djinfo&djid=$dj->idDaoCu&sid=$sid");
+                $djhtml .= "<font class='djys'><a href='?cmd=$djinfo'>$dj->tenDaoCu</a></font>";
             }
             $dlhtml .=$djhtml;
         }
-        if ($yguaiwu->gyp!=''){
-            $yparr = explode(',',$yguaiwu->gyp);
+        if ($yguaiwu->duocPhamRoi!=''){
+            $yparr = explode(',',$yguaiwu->duocPhamRoi);
             foreach($yparr as $newstr){
-                $yp = \player\getyaopinonce($newstr,$dblj);
-                $ypinfo = $encode->encode("cmd=ypinfo&ypid=$yp->ypid&sid=$sid");
+                $yp = Helpers\layThongTinDuocPham($newstr, $dblj);
+                $ypinfo = $encode->encode("cmd=ypinfo&ypid=$yp->idDuocPham&sid=$sid");
 
-                $yphtml .= "<font class='ypys'><a href='?cmd=$ypinfo'>$yp->ypname</a></font>";
+                $yphtml .= "<font class='ypys'><a href='?cmd=$ypinfo'>$yp->tenDuocPham</a></font>";
             }
             $dlhtml .=$yphtml;
         }
@@ -112,14 +119,14 @@ HTML;
 		
 		
 		
-		$gonowmid = $encode->encode("cmd=gomid&newmid=$player->nowmid&sid=$sid");
+		$gonowmid = $encode->encode("cmd=gomid&newmid=$player->idBanDoHienTai&sid=$sid");
         $html = <<<HTML
-        [<font color="#F13F0B">$yguaiwu->gname</font>] · $yguaiwu->gsex<br/>
-        Đẳng cấp:$yguaiwu->glv<br/>
-		Công kích:$guaiwu->ggj<br/>
-		Phòng ngự:$guaiwu->gfy<br/>
-		Cảnh giới:$guaiwu->jingjie<br/>
-		Tin tức:<FONT style="TEXT-DECORATION: line-through">$yguaiwu->ginfo</font>Làm ngươi nhìn cái này gặp đoạn văn tự, mới phát hiện chữ này chút đều sai là loạn。
+        [<font color="#F13F0B">$yguaiwu->tenQuaiVat</font>] · $yguaiwu->gioiTinh<br/>
+        Đẳng cấp:$yguaiwu->capDo<br/>
+		Công kích:$guaiwu->congKich<br/>
+		Phòng ngự:$guaiwu->phongNgu<br/>
+		Cảnh giới:$guaiwu->canhGioi<br/>
+		Tin tức:<FONT style="TEXT-DECORATION: line-through">$yguaiwu->moTa</font>Làm ngươi nhìn cái này gặp đoạn văn tự, mới phát hiện chữ này chút đều sai là loạn。
 		$sjhtml<br>
         
         =========Rơi xuống========<br/>
