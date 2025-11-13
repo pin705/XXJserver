@@ -5,6 +5,9 @@
  * Date: 2026/8/30 0030
  * Time: 19:32
  */
+require_once __DIR__ . '/../src/Helpers/NguoiChoiHelper.php';
+use TuTaTuTien\Helpers as Helpers;
+
 if (isset($canshu)){
     if ($canshu=="deim"){
         $sql="delete from im WHERE imuid = $uid AND sid='$sid'";
@@ -18,9 +21,9 @@ $gonowmid = $encode->encode("cmd=gomid&newmid=$player->nowmid&sid=$sid");
 $imlist = '';
 foreach ($imitem as $im){
     $imuid = $im['imuid'];
-    $implayer = \player\getplayer1($imuid,$dblj);
+    $implayer = Helpers\layThongTinNguoiChoiTheoUid($imuid, $dblj);
     $playercmd = $encode->encode("cmd=getplayerinfo&uid=$imuid&sid=$sid");
-    $imlist .="<a href='?cmd=$playercmd'>$implayer->uname</a><br/>";
+    $imlist .="<a href='?cmd=$playercmd'>$implayer->tenNhanVat</a><br/>";
 }
 
 

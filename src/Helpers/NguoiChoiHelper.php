@@ -105,6 +105,31 @@ function layThongTinNguoiChoi($idPhien, $ketNoiDB)
 }
 
 /**
+ * Lấy thông tin người chơi từ database theo user ID
+ * 
+ * Hàm này truy vấn database để lấy thông tin người chơi theo uid
+ * 
+ * @param int $idNguoiDung User ID của người chơi
+ * @param \PDO $ketNoiDB Đối tượng kết nối PDO database
+ * @return NguoiChoi|null Đối tượng người chơi hoặc null nếu không tìm thấy
+ */
+function layThongTinNguoiChoiTheoUid($idNguoiDung, $ketNoiDB)
+{
+    // Lấy sid từ uid
+    $sql = "SELECT sid FROM game1 WHERE uid = ?";
+    $stmt = $ketNoiDB->prepare($sql);
+    $stmt->execute([$idNguoiDung]);
+    $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+    
+    if (!$result || !isset($result['sid'])) {
+        return null;
+    }
+    
+    // Dùng sid để lấy đầy đủ thông tin
+    return layThongTinNguoiChoi($result['sid'], $ketNoiDB);
+}
+
+/**
  * Tính toán chỉ số bổ sung từ trang bị
  * 
  * @param NguoiChoi $nguoiChoi Đối tượng người chơi
