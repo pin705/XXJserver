@@ -148,3 +148,46 @@ function laBanDoPvp($idBanDo, $ketNoiDB)
     
     return $banDo && $banDo->laBanDoPvp == 1;
 }
+
+/**
+ * Lấy thông tin khu vực từ database theo ID khu vực
+ * 
+ * @param int $idKhuVuc ID của khu vực
+ * @param \PDO $ketNoiDB Đối tượng kết nối PDO database
+ * @return object|null Đối tượng khu vực hoặc null nếu không tìm thấy
+ */
+function layThongTinKhuVuc($idKhuVuc, $ketNoiDB)
+{
+    $khuVuc = new \stdClass();
+    
+    $sql = "SELECT * FROM qy WHERE qyid = ?";
+    $stmt = $ketNoiDB->prepare($sql);
+    $stmt->execute([$idKhuVuc]);
+    
+    $stmt->bindColumn('qyname', $khuVuc->qyname);
+    $stmt->bindColumn('qyid', $khuVuc->qyid);
+    $stmt->bindColumn('mid', $khuVuc->mid);
+    
+    $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+    
+    if (!$result) {
+        return null;
+    }
+    
+    return $khuVuc;
+}
+
+/**
+ * Lấy tất cả khu vực từ database
+ * 
+ * @param \PDO $ketNoiDB Đối tượng kết nối PDO database
+ * @return array Mảng chứa tất cả khu vực
+ */
+function layTatCaKhuVuc($ketNoiDB)
+{
+    $sql = "SELECT * FROM qy";
+    $stmt = $ketNoiDB->query($sql);
+    
+    return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+}
+
