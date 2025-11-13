@@ -15,7 +15,7 @@ $guaiwu = new \player\guaiwu();
 $clmid = new \player\clmid();
 $npc = new \player\npc();
 
-$ym = 'game/nowmid.php';
+$ym = 'src/Game/BanDoHienTai.php';
 $Dcmd = $_SERVER['QUERY_STRING'];
 $pvpts ='';
 $tpts = '';
@@ -87,7 +87,7 @@ if (isset($cmd)){
     parse_str($Dcmd);
     switch ($cmd){
         case 'cj':
-            $ym = 'game/cj.php';
+            $ym = 'src/Game/TaoNhanVat.php';
             break;
         case 'login';
             $player = \player\getplayer($sid,$dblj);
@@ -99,7 +99,7 @@ if (isset($cmd)){
             exit();
             break;
         case 'zhuangtai';
-            $ym = 'game/zhuangtai.php';
+            $ym = 'src/Game/TrangThaiNhanVat.php';
             break;
         case 'cjplayer':
 
@@ -114,14 +114,14 @@ if (isset($cmd)){
 				 
 				 if($ret){
                   $tishi = 'Người chơi:【'.$cxusername.'】Đã tồn tại<br><br>';
-				  $ym = 'game/cj.php';
+				  $ym = 'src/Game/TaoNhanVat.php';
 				  break;
 				 }
 				//Phán đoán danh tự dài ngắn
                 if(strlen($username)<6 || strlen($username)>12){
                     //echo "Người sử dụng tên không thể quá ngắn hoặc là quá dài";
 					$tishi = "Người sử dụng tên không thể quá ngắn hoặc là quá dài<br><br>";
-                    $ym = 'game/cj.php';
+                    $ym = 'src/Game/TaoNhanVat.php';
                     break;
                 }
                 $username = htmlspecialchars($username);
@@ -153,22 +153,22 @@ if (isset($cmd)){
             }
             break;
         case 'gomid':
-            $ym = 'game/nowmid.php';
+            $ym = 'src/Game/BanDoHienTai.php';
             break;
         case 'getginfo':
-            $ym = 'game/ginfo.php';
+            $ym = 'src/Game/ThongTinTroChoi.php';
             break;
         case 'pve':
-            $ym = 'game/pve.php';
+            $ym = 'src/Game/ChienDauQuaiVat.php';
             break;
         case 'pvp':
-            $ym = 'game/pvp.php';
+            $ym = 'src/Game/ChienDauNguoiChoi.php';
             break;
         case 'pvegj':
-            $ym = 'game/pve.php';
+            $ym = 'src/Game/ChienDauQuaiVat.php';
             break;
 		case 'pvbgj':
-            $ym = 'game/boss.php';
+            $ym = 'src/Game/ChienDauTruongLao.php';
             break;
         case 'sendliaotian':
             if (isset($ltlx) && isset($ltmsg)){
@@ -181,7 +181,7 @@ if (isset($cmd)){
                             $stmt = $dblj->prepare($sql);
                             $exeres = $stmt->execute(array($player->uname,$ltmsg,$player->uid));
                         }
-                        $ym = 'game/liaotian.php';
+                        $ym = 'src/Game/TroChuyen.php';
                         break;
                     case "im":
                         $player = player\getplayer($sid,$dblj);
@@ -192,140 +192,140 @@ if (isset($cmd)){
                             $cxjg = $dblj->exec($sql);
                             
                         }
-                        $ym = 'game/liaotian.php';
+                        $ym = 'src/Game/TroChuyen.php';
                         break;
                 }
             }
             break;
         case 'liaotian':
-            $ym ='game/liaotian.php';
+            $ym ='src/Game/TroChuyen.php';
             break;
         case 'getplayerinfo':
-            $ym ='game/otherzhuangtai.php';
+            $ym ='src/Game/TrangThaiNguoiKhac.php';
             break;
         case 'zbinfo':
-            $ym = 'game/zbinfo.php';
+            $ym = 'src/Game/ThongTinTrangBi.php';
             break;
         case 'npc':
             $ym = "npc/npc.php";
             break;
         case 'paihang';
-            $ym = 'game/paihang.php';
+            $ym = 'src/Game/BangXepHang.php';
             break;
         case 'chakanzb':
-            $ym = 'game/zbinfo.php';
+            $ym = 'src/Game/ThongTinTrangBi.php';
             break;
         case 'djinfo':
-            $ym = 'game/djinfo.php';
+            $ym = 'src/Game/ThongTinDaoCu.php';
             break;
         case 'getbagzb':
-            $ym = 'game/bagzb.php';
+            $ym = 'src/Game/TuiTrangBi.php';
             break;
         case 'getbagyp':
-            $ym = 'game/bagyp.php';
+            $ym = 'src/Game/TuiDan.php';
             break;
         case 'getbagyd':
-            $ym = 'game/bagyd.php';
+            $ym = 'src/Game/TuiDuocPham.php';
             break;
 		
 		case 'getbagjn':
-            $ym = 'game/bagjn.php';
+            $ym = 'src/Game/TuiKyNang.php';
             break;
         case 'xxzb':
-            $ym = 'game/zhuangtai.php';
+            $ym = 'src/Game/TrangThaiNhanVat.php';
             break;
         case 'setzbwz':
-            $ym = 'game/zhuangtai.php';
+            $ym = 'src/Game/TrangThaiNhanVat.php';
             break;
         case 'allmap':
-            $ym = 'game/allmap.php';
+            $ym = 'src/Game/TatCaBanDo.php';
             break;
         case 'delezb':
-            $ym = 'game/bagzb.php';
+            $ym = 'src/Game/TuiTrangBi.php';
             break;
         case 'getbagdj':
-            $ym = 'game/bagdj.php';
+            $ym = 'src/Game/TuiDaoCu.php';
             break;
         case 'upzb':
-            $ym = 'game/zbinfo.php';
+            $ym = 'src/Game/ThongTinTrangBi.php';
             break;
         case 'goxiulian':
-            $ym = 'game/xiulian.php';
+            $ym = 'src/Game/TuLuyen.php';
             break;
 		case 'wgxiulian':
-            $ym = 'game/wugong.php';
+            $ym = 'src/Game/VoKong.php';
             break;
 		case 'wgxl':
-            $ym = 'game/wugong.php';
+            $ym = 'src/Game/VoKong.php';
             break;
 		case 'taopao':
-            $ym = 'game/boss.php';
+            $ym = 'src/Game/ChienDauTruongLao.php';
             break;
 		case 'jswg':
-            $ym = 'game/wugong.php';
+            $ym = 'src/Game/VoKong.php';
             break;
 		case 'xxwg':
-            $ym = 'game/xxwg.php';
+            $ym = 'src/Game/HocVoKong.php';
             break;
         case 'startxiulian':
-            $ym = 'game/xiulian.php';
+            $ym = 'src/Game/TuLuyen.php';
             break;
         case 'endxiulian':
-            $ym = 'game/xiulian.php';
+            $ym = 'src/Game/TuLuyen.php';
             break;
         case 'task':
-            $ym = 'game/task.php';
+            $ym = 'src/Game/NhiemVu.php';
             break;
         case 'mytask':
-            $ym = 'game/playertask.php';
+            $ym = 'src/Game/NhiemVuNguoiChoi.php';
             break;
         case 'mytaskinfo':
-            $ym = 'game/playertaskinfo.php';
+            $ym = 'src/Game/ThongTinNhiemVu.php';
             break;
         case 'boss':
-            $ym = 'game/bossinfo.php';
+            $ym = 'src/Game/ThongTinTruongLao.php';
             break;
         case 'ypinfo':
-            $ym = 'game/ypinfo.php';
+            $ym = 'src/Game/ThongTinThuoc.php';
             break;
 		case 'ydinfo':
-            $ym = 'game/ydinfo.php';
+            $ym = 'src/Game/ThongTinDuocPham.php';
             break;
         case 'pvb':
-            $ym = 'game/boss.php';
+            $ym = 'src/Game/ChienDauTruongLao.php';
             break;
         case 'chongwu':
-            $ym = 'game/chongwu.php';
+            $ym = 'src/Game/SungVat.php';
             break;
         case 'jninfo':
-            $ym = 'game/jninfo.php';
+            $ym = 'src/Game/ThongTinKyNang.php';
             break;
         case "zbinfo_sys":
-            $ym = 'game/zbinfo_sys.php';
+            $ym = 'src/Game/ThongTinTrangBiHeThong.php';
             break;
         case "tupo":
-            $ym = 'game/tupo.php';
+            $ym = 'src/Game/DotPha.php';
             break;
         case "fangshi":
-            $ym = "game/fangshi.php";
+            $ym = "src/Game/PhongThi.php";
             break;
         case "club":
-            $ym = "game/club.php";
+            $ym = "src/Game/BangHoi.php";
             break;
         case "clublist":
-            $ym = "game/clublist.php";
+            $ym = "src/Game/DanhSachBangHoi.php";
             break;
         case "duihuan":
-            $ym = "game/duihuan.php";
+            $ym = "src/Game/DoiThuong.php";
             break;
         case "im":
-            $ym = "game/im.php";
+            $ym = "src/Game/TinNhanRieng.php";
             break;
 		case "shangdian":
-            $ym = "game/shangdian.php";
+            $ym = "src/Game/CuaHang.php";
             break;
 		case "qydt":
-            $ym = "game/qydt.php";
+            $ym = "src/Game/KhuVucBanDo.php";
 			break;
 		case "ditu":
             $ym = "dt/ditu.html";
@@ -337,10 +337,10 @@ if (isset($cmd)){
             $ym = "npc/muban/czbgm.php";
 			break;
 		case "tianfu":
-            $ym = "game/tianfu.php";
+            $ym = "src/Game/ThienPhu.php";
 			break;
 		case "taozhuang":
-            $ym = "game/taozhuang.php";
+            $ym = "src/Game/BoTrangBi.php";
 			break;
     }
     if (!isset($sid) || $sid=='' ){
@@ -410,7 +410,7 @@ if (isset($cmd)){
 <?php
     if (!$ym==''){
         echo$tpts;
-        if ($ym!="game/pvp.php"){
+        if ($ym!="src/Game/ChienDauNguoiChoi.php"){
             echo $pvpts;
         }
         include "$ym";
