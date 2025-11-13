@@ -190,8 +190,8 @@ if ($nguoiChoi->conSong()) {
 5. ✅ Tạo class QuaiVat và TrangBi
 6. ✅ Tạo compatibility layer
 7. ✅ Tạo file examples.php với ví dụ sử dụng
-8. ⏳ Di chuyển index.php vào public/
-9. ⏳ Refactor các class khác (BanDo, DaoCu, NhiemVu, v.v.)
+8. ✅ Refactor các class còn lại (BanDo, DaoCu, DuocPham, NhiemVu, TruongLao, KyNang, SungVat)
+9. ⏳ Di chuyển index.php vào public/
 10. ⏳ Cập nhật các file game/ để sử dụng class mới
 11. ⏳ Kiểm tra và test toàn bộ hệ thống
 12. ⏳ Loại bỏ code cũ sau khi đã chuyển đổi hoàn toàn
@@ -206,9 +206,17 @@ if ($nguoiChoi->conSong()) {
 - `src/Classes/NguoiChoi.php` - Class người chơi refactored
 - `src/Classes/QuaiVat.php` - Class quái vật refactored
 - `src/Classes/TrangBi.php` - Class trang bị refactored
+- `src/Classes/BanDo.php` - Class bản đồ refactored
+- `src/Classes/DaoCu.php` - Class đạo cụ refactored
+- `src/Classes/DuocPham.php` - Class dược phẩm refactored
+- `src/Classes/NhiemVu.php` - Class nhiệm vụ refactored
+- `src/Classes/TruongLao.php` - Class boss refactored
+- `src/Classes/KyNang.php` - Class kỹ năng refactored
+- `src/Classes/SungVat.php` - Class sủng vật refactored
 
 ### Helpers
 - `src/Helpers/NguoiChoiHelper.php` - Helper functions cho người chơi
+- `src/Helpers/BanDoHelper.php` - Helper functions cho bản đồ
 
 ### Config
 - `config/CauHinhGame.php` - Game constants và cấu hình
@@ -216,6 +224,28 @@ if ($nguoiChoi->conSong()) {
 ### Utilities
 - `compatibility.php` - Layer tương thích ngược với code cũ
 - `examples.php` - File ví dụ sử dụng code refactored
+
+## Mapping Database Fields sang Properties Mới
+
+### Bản Đồ (BanDo / clmid)
+| Database Field | Old Property | New Property | Mô Tả |
+|----------------|--------------|--------------|-------|
+| `mname` | `$mname` | `$tenBanDo` | Tên bản đồ |
+| `mgid` | `$mgid` | `$danhSachQuaiVat` | Danh sách quái vật |
+| `mid` | `$mid` | `$idBanDo` | ID bản đồ |
+| `mnpc` | `$mnpc` | `$danhSachNpc` | Danh sách NPC |
+| `mup` | `$upmid` | `$idBanDoPhiaLen` | ID bản đồ phía trên |
+| `mdown` | `$downmid` | `$idBanDoPhiaXuong` | ID bản đồ phía dưới |
+| `mleft` | `$leftmid` | `$idBanDoPhiaTrai` | ID bản đồ bên trái |
+| `mright` | `$rightmid` | `$idBanDoPhiaPhai` | ID bản đồ bên phải |
+| `mgtime` | `$mgtime` | `$thoiGianLamMoiQuaiVat` | Thời gian làm mới |
+| `midboss` | `$midboss` | `$idBoss` | ID boss |
+| `ms` | `$ms` | `$trangThai` | Trạng thái |
+| `midinfo` | `$midinfo` | `$moTaBanDo` | Mô tả |
+| `mqy` | `$mqy` | `$idKhuVuc` | ID khu vực |
+| `playerinfo` | `$playerinfo` | `$thongTinNguoiChoi` | Thông tin người chơi |
+| `ispvp` | `$ispvp` | `$laBanDoPvp` | Bản đồ PVP |
+| **game1.nowmid** | `$nowmid` | `$idBanDoHienTai` | **ID bản đồ hiện tại của người chơi** |
 
 ## Lưu Ý
 
