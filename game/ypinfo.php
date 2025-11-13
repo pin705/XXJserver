@@ -5,32 +5,37 @@
  * Date: 2021 /6/26
  * Time: 15:57
  */
+require_once __DIR__ . '/../src/Helpers/NguoiChoiHelper.php';
+require_once __DIR__ . '/../src/Helpers/DuocPhamHelper.php';
+use TuTaTuTien\Helpers as Helpers;
+
+$nguoiChoi = Helpers\layThongTinNguoiChoi($sid, $dblj);
 $yphp = '';
 $ypgj = '';
 $ypfy = '';
 $ypbj = '';
 $ypxx = '';
-$gonowmid = $encode->encode("cmd=gomid&newmid=$player->nowmid&sid=$sid");
-$yaopin = \player\getyaopinonce($ypid,$dblj);
-$playeryp = \player\getplayeryaopin($ypid,$sid,$dblj);
+$gonowmid = $encode->encode("cmd=gomid&newmid=$nguoiChoi->idBanDoHienTai&sid=$sid");
+$yaopin = Helpers\layThongTinDuocPham($ypid, $dblj);
+$playeryp = Helpers\layDuocPhamCuaNguoiChoi($ypid, $sid, $dblj);
 $setyp = '';
 $tishi='';
 if (isset($canshu)){
     switch ($canshu){
         case 'setyp1':
-            \player\changeplayersx('yp1',$ypid,$sid,$dblj);
+            Helpers\thayDoiThuocTinhNguoiChoi('yp1', $ypid, $sid, $dblj);
             $tishi = "Thiết trí dược phẩm 1 Thành công<br/>";
             break;
         case 'setyp2':
-            \player\changeplayersx('yp2',$ypid,$sid,$dblj);
+            Helpers\thayDoiThuocTinhNguoiChoi('yp2', $ypid, $sid, $dblj);
             $tishi = "Thiết trí dược phẩm 2 Thành công<br/>";
             break;
         case 'setyp3':
-            \player\changeplayersx('yp3',$ypid,$sid,$dblj);
+            Helpers\thayDoiThuocTinhNguoiChoi('yp3', $ypid, $sid, $dblj);
             $tishi = "Thiết trí dược phẩm 3 Thành công<br/>";
             break;
         case 'useyp':
-            $userypret = \player\useyaopin($ypid,1,$sid,$dblj);
+            $userypret = Helpers\suDungDuocPham($ypid, 1, $sid, $dblj);
             if ($userypret){
                 $tishi = "Sử dụng thành công<br/>";
             }else{
@@ -53,26 +58,26 @@ if ($playeryp){
     <a href="?cmd=$useyp">Sử dụng dược phẩm</a><hr>
 HTML;
 }
-if($yaopin->yphp!=0){
-    $yphp = "Khôi phục khí huyết：".$yaopin->yphp."<br/>";
+if($yaopin->sinhMenh!=0){
+    $yphp = "Khôi phục khí huyết：".$yaopin->sinhMenh."<br/>";
 }
-if ($yaopin->ypgj!=0){
-    $ypgj = "Công kích".$yaopin->ypgj."<br/>";
+if ($yaopin->congKich!=0){
+    $ypgj = "Công kích".$yaopin->congKich."<br/>";
 }
-if ($yaopin->ypfy!=0){
-    $ypfy = "Phòng ngự".$yaopin->ypfy."<br/>";
+if ($yaopin->phongNgu!=0){
+    $ypfy = "Phòng ngự".$yaopin->phongNgu."<br/>";
 }
-if ($yaopin->ypbj!=0){
-    $ypbj = "Bạo kích".$yaopin->ypbj."<br/>";
+if ($yaopin->baoKich!=0){
+    $ypbj = "Bạo kích".$yaopin->baoKich."<br/>";
 }
-if ($yaopin->ypxx!=0){
-    $ypxx = "Hút máu".$yaopin->ypxx."<br/>";
+if ($yaopin->hutMau!=0){
+    $ypxx = "Hút máu".$yaopin->hutMau."<br/>";
 }
 $ypsx = "<br/>".$yphp.$ypgj.$ypfy.$ypbj.$ypxx;
 $ypinfo = <<<HTML
 <IMG width='280' height='140' src='./images/yaopin.png'src="./images/rw.png" style="border-radius: 8px;">
 
-[{$yaopin->ypname}]$tishi
+[{$yaopin->tenDuocPham}]$tishi
 $ypsx
 $setyp
 <br/>
