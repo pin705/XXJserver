@@ -1,20 +1,16 @@
 <?php
-require_once __DIR__ . '/../src/Helpers/NguoiChoiHelper.php';
-require_once __DIR__ . '/../src/Helpers/QuaiVatHelper.php';
-require_once __DIR__ . '/../src/Helpers/TrangBiHelper.php';
-require_once __DIR__ . '/../src/Helpers/DaoCuHelper.php';
-require_once __DIR__ . '/../src/Helpers/DuocPhamHelper.php';
+require_once __DIR__ . '/../bootstrap.php';
 use TuTaTuTien\Helpers as Helpers;
+use TuTaTuTien\Core\GameHandler;
 
-$player = Helpers\layThongTinNguoiChoi($sid, $dblj);
-$backcmd=$encode->encode("cmd=gomid&newmid=$player->idBanDoHienTai&sid=$sid");
-if ($nowmid!=$player->idBanDoHienTai){
-    $html = <<<HTML
-        Mời bình thường chơi đùa！<br/>
-        <br/>
-        <a href="?cmd=$backcmd">Trở về trò chơi</a>
-HTML;
-    echo $html;
+$game = new GameHandler($dblj, $encode, $sid);
+$player = $game->getNguoiChoi();
+$backcmd = $game->getLinkQuayVeBanDo();
+
+// Validate bản đồ
+$validation = $game->validateBanDo($nowmid);
+if (!$validation['valid']) {
+    echo $validation['message'];
     exit();
 }
 if (isset($gid)){
