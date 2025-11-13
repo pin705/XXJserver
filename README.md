@@ -10,15 +10,19 @@ Dự án game tu tiên text-based được viết bằng PHP. Đã được refa
 
 **Đã hoàn thành:**
 - ✅ Tổ chức lại cấu trúc thư mục (src/, public/, config/, data/)
-- ✅ Refactor các class chính: NguoiChoi, QuaiVat, TrangBi
+- ✅ Refactor các class chính: NguoiChoi, QuaiVat, TrangBi, BanDo, DaoCu, DuocPham, NhiemVu, TruongLao, KyNang, SungVat (10 classes)
 - ✅ Đặt tên theo PSR-1/PSR-12 standards
 - ✅ Thêm PHPDoc comments tiếng Việt đầy đủ
 - ✅ Tạo helper functions với tên rõ ràng
 - ✅ Tạo file config cho constants
 - ✅ Compatibility layer với code cũ
 - ✅ Examples và documentation
+- ✅ Xóa 22+ files/directories không sử dụng
 
-Xem chi tiết trong [REFACTORING.md](REFACTORING.md)
+**Đang chờ:**
+- ⏳ Migration 36 files trong game/ sang code mới (xem [MIGRATION_GUIDE.md](MIGRATION_GUIDE.md))
+
+Xem chi tiết trong [REFACTORING.md](REFACTORING.md) và [SUMMARY.md](SUMMARY.md)
 
 ## 📁 Cấu Trúc Mới
 
@@ -59,7 +63,10 @@ Helpers\themKinhNghiem($sid, 1000, $pdo);
 
 ## 📖 Documentation
 
+- [README.md](README.md) - Tổng quan dự án
 - [REFACTORING.md](REFACTORING.md) - Hướng dẫn refactoring đầy đủ
+- [SUMMARY.md](SUMMARY.md) - Tổng kết refactoring
+- [MIGRATION_GUIDE.md](MIGRATION_GUIDE.md) - Hướng dẫn migrate game/ files
 - [examples.php](examples.php) - Ví dụ sử dụng code mới
 
 ## 🔄 Tương Thích
