@@ -28,6 +28,7 @@ Dự án game tu tiên text-based được viết bằng PHP. Đã được refa
 - ✅ Examples và documentation
 - ✅ Xóa 22+ files/directories không sử dụng
 - ✅ **Di chuyển 41 files từ game/ sang src/Game/ với tên có ý nghĩa** (xem [GAME_MIGRATION.md](GAME_MIGRATION.md))
+- ✅ **Hoàn tất migration: Xóa thư mục game/ cũ - tất cả files giờ đều dùng tên chuẩn trong src/Game/**
 
 **Đang chờ:**
 - ⏳ Migration nội dung 41 files trong src/Game/ sang code mới (xem [MIGRATION_GUIDE.md](MIGRATION_GUIDE.md))
@@ -43,12 +44,11 @@ XXJserver/
 │   ├── Classes/           # NguoiChoi, QuaiVat, TrangBi (10 classes)
 │   ├── Core/              # ⭐ GameHandler - Logic chung (MỚI)
 │   ├── Helpers/           # Helper functions (11 helpers)
-│   └── Game/              # Game logic files (41 files) ✨
+│   └── Game/              # ⭐ Game logic files - TÊN CHUẨN (41 files) ✨
 ├── config/                # CauHinhGame - Constants
 ├── data/                  # Game data (sẽ thêm)
 ├── public/                # Entry points (sẽ di chuyển)
 ├── class/                 # Code cũ (giữ tương thích)
-├── game/                  # Logic game cũ (giữ tương thích ngược)
 ├── SETUP.md              # ⭐ Hướng dẫn cài đặt & chạy (MỚI)
 ├── examples-bootstrap.php # ⭐ Ví dụ sử dụng mới (MỚI)
 ├── compatibility.php      # Backward compatibility

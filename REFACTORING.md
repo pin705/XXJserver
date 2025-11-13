@@ -11,6 +11,7 @@ XXJserver/
 ├── src/                    # Mã nguồn chính
 │   ├── Classes/           # Các class chính của game
 │   │   └── NguoiChoi.php # Class quản lý người chơi (refactored)
+│   ├── Game/              # Logic game với tên file chuẩn (41 files)
 │   └── Helpers/           # Các hàm tiện ích
 │       └── NguoiChoiHelper.php # Helper functions cho người chơi
 ├── public/                # Điểm vào ứng dụng (sẽ di chuyển index.php vào đây)
@@ -19,7 +20,6 @@ XXJserver/
 ├── data/                  # Dữ liệu game (mô tả vật phẩm, quái vật, v.v.)
 ├── class/                 # Thư mục cũ (giữ lại để tương thích ngược)
 │   └── player.php        # Class người chơi phiên bản cũ
-├── game/                  # Các file logic game
 └── index.php             # File entry point chính
 ```
 
