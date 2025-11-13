@@ -18,9 +18,10 @@ Dự án game tu tiên text-based được viết bằng PHP. Đã được refa
 - ✅ Compatibility layer với code cũ
 - ✅ Examples và documentation
 - ✅ Xóa 22+ files/directories không sử dụng
+- ✅ **Di chuyển 41 files từ game/ sang src/Game/ với tên có ý nghĩa** (xem [GAME_MIGRATION.md](GAME_MIGRATION.md))
 
 **Đang chờ:**
-- ⏳ Migration 36 files trong game/ sang code mới (xem [MIGRATION_GUIDE.md](MIGRATION_GUIDE.md))
+- ⏳ Migration nội dung 41 files trong src/Game/ sang code mới (xem [MIGRATION_GUIDE.md](MIGRATION_GUIDE.md))
 
 Xem chi tiết trong [REFACTORING.md](REFACTORING.md) và [SUMMARY.md](SUMMARY.md)
 
@@ -30,15 +31,17 @@ Xem chi tiết trong [REFACTORING.md](REFACTORING.md) và [SUMMARY.md](SUMMARY.m
 XXJserver/
 ├── src/                    # Code refactored mới
 │   ├── Classes/           # NguoiChoi, QuaiVat, TrangBi
-│   └── Helpers/           # Helper functions
+│   ├── Helpers/           # Helper functions
+│   └── Game/              # Game logic files (41 files) ✨ MỚI
 ├── config/                # CauHinhGame - Constants
 ├── data/                  # Game data (sẽ thêm)
 ├── public/                # Entry points (sẽ di chuyển)
 ├── class/                 # Code cũ (giữ tương thích)
-├── game/                  # Logic game hiện tại
+├── game/                  # Logic game cũ (giữ tương thích ngược)
 ├── compatibility.php      # Backward compatibility
 ├── examples.php           # Ví dụ sử dụng
-└── REFACTORING.md        # Tài liệu chi tiết
+├── REFACTORING.md        # Tài liệu chi tiết
+└── GAME_MIGRATION.md     # Tài liệu di chuyển game/ ✨ MỚI
 
 ```
 
@@ -67,6 +70,7 @@ Helpers\themKinhNghiem($sid, 1000, $pdo);
 - [REFACTORING.md](REFACTORING.md) - Hướng dẫn refactoring đầy đủ
 - [SUMMARY.md](SUMMARY.md) - Tổng kết refactoring
 - [MIGRATION_GUIDE.md](MIGRATION_GUIDE.md) - Hướng dẫn migrate game/ files
+- [GAME_MIGRATION.md](GAME_MIGRATION.md) - **MỚI**: Tài liệu di chuyển và đổi tên game files
 - [examples.php](examples.php) - Ví dụ sử dụng code mới
 
 ## 🔄 Tương Thích
