@@ -174,8 +174,20 @@ if (isset($cmd)){
                         $result = $stmt->execute(array($token,$sid,$username,'1','2000','100','0','35','35','12','5','0',$sex,'0',$firstmid,$nowdate,'1',$shenfen));
                         
                         if (!$result) {
-                            error_log("INSERT FAILED with shenfen: " . print_r($stmt->errorInfo(), true));
-                            throw new Exception("Insert failed");
+                            $errorInfo = $stmt->errorInfo();
+                            error_log("INSERT FAILED with shenfen: " . print_r($errorInfo, true));
+                            
+                            // Hiển thị lỗi chi tiết
+                            echo '<meta charset="utf-8">';
+                            echo "<h3>Lỗi tạo nhân vật (với shenfen):</h3>";
+                            echo "<p>SQLSTATE: {$errorInfo[0]}</p>";
+                            echo "<p>Error Code: {$errorInfo[1]}</p>";
+                            echo "<p>Error Message: {$errorInfo[2]}</p>";
+                            echo "<hr>";
+                            echo "<p>Đang thử tạo lại không có cột shenfen...</p>";
+                            
+                            // Thử không có shenfen
+                            throw new PDOException("Force fallback to without shenfen");
                         }
                         error_log("Character created successfully with shenfen column");
                     } catch (PDOException $e) {
@@ -186,10 +198,35 @@ if (isset($cmd)){
                         $result = $stmt->execute(array($token,$sid,$username,'1','2000','100','0','35','35','12','5','0',$sex,'0',$firstmid,$nowdate,'1'));
                         
                         if (!$result) {
-                            error_log("INSERT FAILED without shenfen: " . print_r($stmt->errorInfo(), true));
-                            die("Lỗi: Không thể tạo nhân vật. Vui lòng thử lại!");
+                            $errorInfo = $stmt->errorInfo();
+                            error_log("INSERT FAILED without shenfen: " . print_r($errorInfo, true));
+                            
+                            // Hiển thị lỗi chi tiết cho user
+                            echo '<meta charset="utf-8">';
+                            echo "<h2>❌ Lỗi: Không thể tạo nhân vật!</h2>";
+                            echo "<h3>Chi tiết lỗi:</h3>";
+                            echo "<p><strong>SQLSTATE:</strong> {$errorInfo[0]}</p>";
+                            echo "<p><strong>Error Code:</strong> {$errorInfo[1]}</p>";
+                            echo "<p><strong>Error Message:</strong> {$errorInfo[2]}</p>";
+                            echo "<hr>";
+                            echo "<h3>Thông tin debug:</h3>";
+                            echo "<p>Username: $username</p>";
+                            echo "<p>SID: $sid</p>";
+                            echo "<p>Token: " . substr($token, 0, 10) . "...</p>";
+                            echo "<p>Sex: $sex</p>";
+                            echo "<hr>";
+                            echo "<p><a href='src/Game/TaoNhanVat.php'>← Quay lại tạo nhân vật</a></p>";
+                            exit();
                         }
                         error_log("Character created successfully without shenfen column");
+                    } catch (Exception $e) {
+                        // Catch any other exception
+                        error_log("Unexpected error: " . $e->getMessage());
+                        echo '<meta charset="utf-8">';
+                        echo "<h2>Lỗi hệ thống:</h2>";
+                        echo "<p>" . $e->getMessage() . "</p>";
+                        echo "<p><a href='src/Game/TaoNhanVat.php'>← Quay lại</a></p>";
+                        exit();
                     }
 //Tiến vào tham số thiết trí
                     $gonowmid = $encode->encode("cmd=goto_map&newmid=$gameconfig->firstmid&sid=$sid");
