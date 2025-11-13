@@ -386,7 +386,7 @@ function istupo($sid,$dblj){
     $rangeslv = array(0, 30, 50, 70, 80, 90, 100, 110);
     $playernextlv = $player->ulv + 1;
     $rangesjj = array('Luyện khí', 'Trúc cơ', 'Kim Đan', 'Nguyên Anh', 'Hóa Thần', 'Luyện Hư', 'Hợp thể', 'Đại Thừa');
-    for ($i=0;$i < count($playernextlv);$i++){
+    for ($i=0;$i < count($rangeslv);$i++){
         if ($playernextlv >= $rangeslv[$i] && $playernextlv < $rangeslv[$i+1]){
             
             if($player->jingjie != $rangesjj[$i]){

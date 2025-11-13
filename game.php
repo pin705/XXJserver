@@ -45,7 +45,8 @@ else
     $_SESSION["post_sep"] = getMillisecond();
 }
 
-parse_str($Dcmd);
+parse_str($Dcmd, $parsedParams);
+extract($parsedParams);
 if (isset($cmd)){
 
     if ($cmd == 'create_player'){
@@ -85,7 +86,8 @@ if (isset($cmd)){
     }
     $Dcmd = $encode->decode($cmd);
 //    var_dump($Dcmd);
-    parse_str($Dcmd);
+    parse_str($Dcmd, $parsedParams);
+    extract($parsedParams);
     switch ($cmd){
         case 'create_character':
             $ym = 'src/Game/TaoNhanVat.php';

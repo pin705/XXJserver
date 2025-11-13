@@ -14,6 +14,15 @@ use TuTaTuTien\Helpers as Helpers;
 
 
 $player = Helpers\layThongTinNguoiChoi($sid,$dblj);//Thu hoạch người chơi tin tức
+
+// Kiểm tra nếu player không tồn tại
+if (!$player) {
+    echo '<meta charset="utf-8">';
+    echo "Không tìm thấy thông tin nhân vật! Vui lòng đăng nhập lại.<br/>";
+    echo '<a href="index.php">Quay về trang chủ</a>';
+    exit();
+}
+
 $lastmid = $player->idBanDoHienTai;
 
 if (isset($newmid)){
