@@ -1,6 +1,6 @@
 <?php
 $sqlname='root';
-$sqlpass='www.aae.ink';
+$sqlpass='6f7f374baf6fd4d4';
 $dbhost='localhost';
 $dbname='game';
 $dsn="mysql:host=$dbhost;dbname=$dbname;";

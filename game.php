@@ -105,6 +105,11 @@ if (isset($cmd)){
 
             if (isset($token) && isset($username) && isset($sex)){
 				
+				// Kiểm tra và set giá trị mặc định cho shenfen
+				if (!isset($shenfen)) {
+					$shenfen = 1; // Giá trị mặc định là Chiến sĩ
+				}
+				
 				//Phán đoán danh tự lặp lại
 				 $sql = "select * from game1 where uname=?";
                  $stmt = $dblj->prepare($sql);
@@ -128,15 +133,25 @@ if (isset($cmd)){
                 $sid = md5($username.$token.'229');//Ban đầu điểm phục sinh, phi thường trọng yếu, nhất định phải thiết trí đối
                 $sql="select * from game1 where token='$token'";
                 $cxjg = $dblj->query($sql);
-                $cxjg->bindColumn('sid',$player->sid);
+                $existingSid = '';
+                $cxjg->bindColumn('sid',$existingSid);
                 $ret = $cxjg->fetch(PDO::FETCH_ASSOC);
                 $nowdate = date('Y-m-d H:i:s');
-                if ($player->sid ==''){
+                if ($existingSid ==''){
                     $gameconfig = \player\getgameconfig($dblj);
                     $firstmid = $gameconfig->firstmid;
-                    $sql = "insert into game1(token,sid,uname,ulv,uyxb,uczb,uexp,uhp,umaxhp,ugj,ufy,uwx,usex,vip,nowmid,endtime,sfzx,shenfen) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-                    $stmt = $dblj->prepare($sql);
-                    $stmt->execute(array($token,$sid,$username,'1','2000','100','0','35','35','12','5','0',$sex,'0',$firstmid,$nowdate,$shenfen,$shenfen));//Tiến vào tham số thiết trí
+                    
+                    // Kiểm tra xem cột shenfen có tồn tại không
+                    try {
+                        $sql = "insert into game1(token,sid,uname,ulv,uyxb,uczb,uexp,uhp,umaxhp,ugj,ufy,uwx,usex,vip,nowmid,endtime,sfzx,shenfen) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                        $stmt = $dblj->prepare($sql);
+                        $stmt->execute(array($token,$sid,$username,'1','2000','100','0','35','35','12','5','0',$sex,'0',$firstmid,$nowdate,'1',$shenfen));//Tiến vào tham số thiết trí
+                    } catch (PDOException $e) {
+                        // Nếu cột shenfen không tồn tại, insert không có cột này
+                        $sql = "insert into game1(token,sid,uname,ulv,uyxb,uczb,uexp,uhp,umaxhp,ugj,ufy,uwx,usex,vip,nowmid,endtime,sfzx) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                        $stmt = $dblj->prepare($sql);
+                        $stmt->execute(array($token,$sid,$username,'1','2000','100','0','35','35','12','5','0',$sex,'0',$firstmid,$nowdate,'1'));//Tiến vào tham số thiết trí
+                    }
 //Tiến vào tham số thiết trí
                     $gonowmid = $encode->encode("cmd=goto_map&newmid=$gameconfig->firstmid&sid=$sid");
                     echo '<meta charset="utf-8" content="width=device-width,user-scalable=no" name="viewport">';
@@ -148,6 +163,11 @@ if (isset($cmd)){
                     $stmt->execute(array('【Hệ thống】',"Vạn người không được một{$username}Bước lên tiên đồ",'0'));//Hệ thống thông cáo
 					
                     header("refresh:2;url=?cmd=$gonowmid");//Trì hoãn thời gian
+                } else {
+                    // Người chơi đã có nhân vật, chuyển đến trang game
+                    $player = \player\getplayer($existingSid,$dblj);
+                    $gonowmid = $encode->encode("cmd=goto_map&newmid=$player->nowmid&sid=$existingSid");
+                    header("refresh:1;url=?cmd=$gonowmid");
                 }
                 exit();
             }

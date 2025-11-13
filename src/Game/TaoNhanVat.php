@@ -6,7 +6,7 @@ $html = <<<HTML
     <div align="center">
 	<form action=$selfym method="get">
         
-        <input type="hidden" name="cmd" value="cjplayer">
+        <input type="hidden" name="cmd" value="create_player">
         <input type="hidden" name="token" value='$token'>
         <p>Nhân vật tên：<br>
 		<input class="input" type="text" name="username" maxlength="7" style='border-radius: 8px;'>
