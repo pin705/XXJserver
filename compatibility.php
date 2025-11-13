@@ -157,3 +157,124 @@ function chuyenDoiSangPlayerCu($nguoiChoi)
     
     return $player;
 }
+
+// ============================================================
+// Compatibility wrappers cho các class mới được refactor
+// ============================================================
+
+// Include các file mới
+require_once __DIR__ . '/src/Classes/BanDo.php';
+require_once __DIR__ . '/src/Classes/DaoCu.php';
+require_once __DIR__ . '/src/Classes/NhiemVu.php';
+require_once __DIR__ . '/src/Helpers/BanDoHelper.php';
+require_once __DIR__ . '/src/Helpers/DaoCuHelper.php';
+require_once __DIR__ . '/src/Helpers/NhiemVuHelper.php';
+
+use TuTaTuTien\Helpers\BanDoHelper;
+use TuTaTuTien\Helpers\DaoCuHelper;
+use TuTaTuTien\Helpers\NhiemVuHelper;
+
+/**
+ * Wrapper cho hàm getmid cũ (lấy thông tin bản đồ)
+ * Gọi hàm mới layThongTinBanDo
+ * 
+ * @param int $mid ID bản đồ
+ * @param \PDO $dblj Kết nối database
+ * @return object Đối tượng clmid (tương thích với code cũ)
+ * @deprecated Sử dụng BanDoHelper\layThongTinBanDo() thay thế
+ */
+function getmid_new($mid, $dblj)
+{
+    $banDo = BanDoHelper\layThongTinBanDo($mid, $dblj);
+    
+    if (!$banDo) {
+        return null;
+    }
+    
+    // Chuyển đổi sang format cũ để tương thích
+    $clmid = new \stdClass();
+    $clmid->mname = $banDo->tenBanDo;
+    $clmid->mgid = $banDo->danhSachQuaiVat;
+    $clmid->mid = $banDo->idBanDo;
+    $clmid->mnpc = $banDo->danhSachNpc;
+    $clmid->upmid = $banDo->idBanDoPhiaLen;
+    $clmid->downmid = $banDo->idBanDoPhiaXuong;
+    $clmid->leftmid = $banDo->idBanDoPhiaTrai;
+    $clmid->rightmid = $banDo->idBanDoPhiaPhai;
+    $clmid->mgtime = $banDo->thoiGianLamMoiQuaiVat;
+    $clmid->midboss = $banDo->idBoss;
+    $clmid->ms = $banDo->trangThai;
+    $clmid->midinfo = $banDo->moTaBanDo;
+    $clmid->mqy = $banDo->idKhuVuc;
+    $clmid->playerinfo = $banDo->thongTinNguoiChoi;
+    $clmid->ispvp = $banDo->laBanDoPvp;
+    
+    return $clmid;
+}
+
+/**
+ * Wrapper cho hàm getplayerdaoju cũ
+ * Gọi hàm mới layDaoCuCuaNguoiChoi
+ * 
+ * @param string $sid Session ID
+ * @param int $djid ID đạo cụ
+ * @param \PDO $dblj Kết nối database
+ * @return object Đối tượng daoju (tương thích với code cũ)
+ * @deprecated Sử dụng DaoCuHelper\layDaoCuCuaNguoiChoi() thay thế
+ */
+function getplayerdaoju_new($sid, $djid, $dblj)
+{
+    $daoCu = DaoCuHelper\layDaoCuCuaNguoiChoi($sid, $djid, $dblj);
+    
+    if (!$daoCu) {
+        return null;
+    }
+    
+    // Chuyển đổi sang format cũ
+    $daoju = new \stdClass();
+    $daoju->djname = $daoCu->tenDaoCu;
+    $daoju->djzl = $daoCu->idDaoCuNguoiChoi;
+    $daoju->djinfo = $daoCu->moTaDaoCu;
+    $daoju->djid = $daoCu->idDaoCu;
+    $daoju->djsum = $daoCu->soLuong;
+    
+    return $daoju;
+}
+
+/**
+ * Wrapper cho hàm gettask cũ
+ * Gọi hàm mới layThongTinNhiemVu
+ * 
+ * @param int $rwid ID nhiệm vụ
+ * @param \PDO $dblj Kết nối database
+ * @return object Đối tượng task (tương thích với code cũ)
+ * @deprecated Sử dụng NhiemVuHelper\layThongTinNhiemVu() thay thế
+ */
+function gettask_new($rwid, $dblj)
+{
+    $nhiemVu = NhiemVuHelper\layThongTinNhiemVu($rwid, $dblj);
+    
+    if (!$nhiemVu) {
+        return null;
+    }
+    
+    // Chuyển đổi sang format cũ
+    $task = new \stdClass();
+    $task->rwname = $nhiemVu->tenNhiemVu;
+    $task->rwinfo = $nhiemVu->moTaNhiemVu;
+    $task->rwid = $nhiemVu->idNhiemVu;
+    $task->rwzl = $nhiemVu->loaiNhiemVu;
+    $task->rwyq = $nhiemVu->yeuCauNhiemVu;
+    $task->rwdj = $nhiemVu->daoCuThuong;
+    $task->rwzb = $nhiemVu->trangBiThuong;
+    $task->rwexp = $nhiemVu->kinhNghiemThuong;
+    $task->rwyxb = $nhiemVu->tienTroChoiThuong;
+    $task->rwcount = $nhiemVu->soLuongYeuCau;
+    $task->rwlx = $nhiemVu->loaiThuong;
+    $task->rwyp = $nhiemVu->duocPhamThuong;
+    $task->lastrwid = $nhiemVu->idNhiemVuTruoc;
+    $task->rwqy = $nhiemVu->idKhuVucNhiemVu;
+    
+    return $task;
+}
+
