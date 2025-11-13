@@ -169,9 +169,9 @@ if (isset($cmd)){
                     
                     // Kiểm tra xem cột shenfen có tồn tại không
                     try {
-                        $sql = "insert into game1(token,sid,uname,ulv,uyxb,uczb,uexp,uhp,umaxhp,ugj,ufy,uwx,usex,vip,nowmid,endtime,sfzx,shenfen) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                        $sql = "insert into game1(token,sid,uname,ulv,uyxb,uczb,uexp,uhp,umaxhp,ugj,ufy,uwx,usex,vip,nowmid,endtime,sfzx,shenfen,nowguaiwu) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
                         $stmt = $dblj->prepare($sql);
-                        $result = $stmt->execute(array($token,$sid,$username,'1','2000','100','0','35','35','12','5','0',$sex,'0',$firstmid,$nowdate,'1',$shenfen));
+                        $result = $stmt->execute(array($token,$sid,$username,'1','2000','100','0','35','35','12','5','0',$sex,'0',$firstmid,$nowdate,'1',$shenfen,'0'));
                         
                         if (!$result) {
                             $errorInfo = $stmt->errorInfo();
@@ -193,9 +193,9 @@ if (isset($cmd)){
                     } catch (PDOException $e) {
                         error_log("Failed to insert with shenfen, trying without: " . $e->getMessage());
                         // Nếu cột shenfen không tồn tại, insert không có cột này
-                        $sql = "insert into game1(token,sid,uname,ulv,uyxb,uczb,uexp,uhp,umaxhp,ugj,ufy,uwx,usex,vip,nowmid,endtime,sfzx) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                        $sql = "insert into game1(token,sid,uname,ulv,uyxb,uczb,uexp,uhp,umaxhp,ugj,ufy,uwx,usex,vip,nowmid,endtime,sfzx,nowguaiwu) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
                         $stmt = $dblj->prepare($sql);
-                        $result = $stmt->execute(array($token,$sid,$username,'1','2000','100','0','35','35','12','5','0',$sex,'0',$firstmid,$nowdate,'1'));
+                        $result = $stmt->execute(array($token,$sid,$username,'1','2000','100','0','35','35','12','5','0',$sex,'0',$firstmid,$nowdate,'1','0'));
                         
                         if (!$result) {
                             $errorInfo = $stmt->errorInfo();
