@@ -94,6 +94,22 @@ function layNhiemVuCuaNguoiChoi($idPhien, $idNhiemVu, $ketNoiDB)
 }
 
 /**
+ * Lấy danh sách nhiệm vụ của người chơi (trả về mảng)
+ * 
+ * @param string $sid Session ID của người chơi
+ * @param \PDO $dblj Đối tượng kết nối PDO database
+ * @return array Mảng chứa thông tin nhiệm vụ của người chơi
+ */
+function layDanhSachNhiemVuNguoiChoi($sid, $dblj)
+{
+    $sql = "SELECT * FROM playerrenwu WHERE sid = ?";
+    $stmt = $dblj->prepare($sql);
+    $stmt->execute([$sid]);
+    
+    return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+}
+
+/**
  * Lấy tất cả nhiệm vụ của người chơi
  * 
  * @param string $idPhien Session ID của người chơi
@@ -107,6 +123,46 @@ function layTatCaNhiemVuCuaNguoiChoi($idPhien, $ketNoiDB)
     $stmt->execute([$idPhien]);
     
     return $stmt->fetchAll(\PDO::FETCH_BOUND);
+}
+
+/**
+ * Thay đổi nhiệm vụ - cập nhật tiến độ nhiệm vụ dựa trên loại
+ * 
+ * @param int $rwzl Loại nhiệm vụ (1=đạo cụ, 2=quái vật, 3=khác)
+ * @param int $targetId ID của mục tiêu (đạo cụ hoặc quái vật)
+ * @param int $soLuong Số lượng tăng thêm
+ * @param string $sid Session ID của người chơi
+ * @param \PDO $dblj Đối tượng kết nối PDO database
+ * @return bool True nếu thành công
+ */
+function thayDoiNhiemVu($rwzl, $targetId, $soLuong, $sid, $dblj)
+{
+    // Lấy danh sách nhiệm vụ của người chơi
+    $sql = "SELECT * FROM playerrenwu WHERE sid = ? AND rwzl = ? AND rwyq = ? AND rwzt IN (1, 2)";
+    $stmt = $dblj->prepare($sql);
+    $stmt->execute([$sid, $rwzl, $targetId]);
+    $tasks = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    
+    foreach ($tasks as $task) {
+        $rwid = $task['rwid'];
+        $rwnowcount = $task['rwnowcount'];
+        $rwcount = $task['rwcount'];
+        
+        // Cập nhật số lượng hiện tại
+        $newCount = min($rwnowcount + $soLuong, $rwcount);
+        $sql = "UPDATE playerrenwu SET rwnowcount = ? WHERE sid = ? AND rwid = ?";
+        $stmt = $dblj->prepare($sql);
+        $stmt->execute([$newCount, $sid, $rwid]);
+        
+        // Nếu đã đủ, chuyển trạng thái sang hoàn thành (rwzt = 2)
+        if ($newCount >= $rwcount) {
+            $sql = "UPDATE playerrenwu SET rwzt = 2 WHERE sid = ? AND rwid = ?";
+            $stmt = $dblj->prepare($sql);
+            $stmt->execute([$sid, $rwid]);
+        }
+    }
+    
+    return true;
 }
 
 /**
