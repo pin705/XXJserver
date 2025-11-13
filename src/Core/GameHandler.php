@@ -10,6 +10,10 @@
 
 namespace TuTaTuTien\Core;
 
+require_once __DIR__ . '/../Classes/NguoiChoi.php';
+require_once __DIR__ . '/../Helpers/NguoiChoiHelper.php';
+require_once __DIR__ . '/../Helpers/BanDoHelper.php';
+
 use TuTaTuTien\Helpers as Helpers;
 use TuTaTuTien\Classes\NguoiChoi;
 
@@ -269,7 +273,7 @@ class GameHandler
             $yp1 = Helpers\layThongTinDuocPham($this->nguoiChoi->yp1, $this->db);
             if ($yp1) {
                 $result['yp1']['id'] = $yp1->id;
-                $result['yp1']['name'] = $yp1->yname ?? 'Dược phẩm 1';
+                $result['yp1']['name'] = isset($yp1->yname) ? $yp1->yname : 'Dược phẩm 1';
             }
         }
         
@@ -278,7 +282,7 @@ class GameHandler
             $yp2 = Helpers\layThongTinDuocPham($this->nguoiChoi->yp2, $this->db);
             if ($yp2) {
                 $result['yp2']['id'] = $yp2->id;
-                $result['yp2']['name'] = $yp2->yname ?? 'Dược phẩm 2';
+                $result['yp2']['name'] = isset($yp2->yname) ? $yp2->yname : 'Dược phẩm 2';
             }
         }
         
@@ -287,7 +291,7 @@ class GameHandler
             $yp3 = Helpers\layThongTinDuocPham($this->nguoiChoi->yp3, $this->db);
             if ($yp3) {
                 $result['yp3']['id'] = $yp3->id;
-                $result['yp3']['name'] = $yp3->yname ?? 'Dược phẩm 3';
+                $result['yp3']['name'] = isset($yp3->yname) ? $yp3->yname : 'Dược phẩm 3';
             }
         }
         

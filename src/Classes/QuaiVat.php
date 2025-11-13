@@ -9,6 +9,8 @@
 
 namespace TuTaTuTien\Classes;
 
+require_once __DIR__ . '/../../config/CauHinhGame.php';
+
 use TuTaTuTien\Config\CauHinhGame;
 
 /**
