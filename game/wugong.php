@@ -1,10 +1,18 @@
 <?php
-$player = \player\getplayer($sid,$dblj);
-$wgid = $player->wugong;
-$wgid = $player->wugong;
-$cxwg = \player\wgcx($wgid,$sid,$dblj);
+require_once __DIR__ . '/../src/Helpers/NguoiChoiHelper.php';
+require_once __DIR__ . '/../src/Helpers/TrangBiHelper.php';
+require_once __DIR__ . '/../src/Helpers/DaoCuHelper.php';
+require_once __DIR__ . '/../src/Helpers/DuocPhamHelper.php';
+require_once __DIR__ . '/../src/Helpers/SungVatHelper.php';
+require_once __DIR__ . '/../src/Helpers/NhiemVuHelper.php';
+use TuTaTuTien\Helpers as Helpers;
 
-$gonowmid = $encode->encode("cmd=gomid&newmid=$player->nowmid&sid=$sid");
+$player = \Helpers\layThongTinNguoiChoi($sid,$dblj);
+$wgid = $player->wugong;
+$wgid = $player->wugong;
+$cxwg = Helpers\layThongTinVoCong($wgid,$sid,$dblj);
+
+$gonowmid = $encode->encode("cmd=gomid&newmid=$player->idBanDoHienTai&sid=$sid");
 $strxl = $encode->encode("cmd=wgxiulian&canshu=1&wgid=$wgid&sid=$sid");
 $endxl = $encode->encode("cmd=jswg&wgid=$wgid&sid=$sid");//Kết thúc tu tiên
 $nowdate = date('Y-m-d H:i:s');
@@ -20,16 +28,16 @@ if ($cmd == 'wgxiulian'){
         $tishi = 'Đã trong tu luyện<br/>';
     }else{
         if ($canshu == 1){
-            $ret = \player\changeyxb(2,$xhms,$sid,$dblj);
+            $ret = Helpers\thayDoiTienTroChoi(2,$xhms,$sid,$dblj);
         }else{
-            $ret = \player\changeczb(2,$xhms,$sid,$dblj);
+            $ret = Helpers\thayDoiMaThach(2,$xhms,$sid,$dblj);
         }
         if ($ret){
-            \player\gaibianwg('xlsj',$nowdate,$wgid,$sid,$dblj);
-            \player\gaibianwg('xlzt',1,$wgid,$sid,$dblj);
+            Helpers\thayDoiVoCong('xlsj',$nowdate,$wgid,$sid,$dblj);
+            Helpers\thayDoiVoCong('xlzt',1,$wgid,$sid,$dblj);
             $tishi = 'Hắc hưu hắc hưu, thao luyện...<br/>';
             $xlsjc = 0;
-            $player = \player\getplayer($sid,$dblj);
+            $player = \Helpers\layThongTinNguoiChoi($sid,$dblj);
         }else{
             $tishi='Thất bại thất bại thất bại 404';
         }
@@ -51,7 +59,7 @@ if ($cmd == 'jswg'){//Kết thúc tu tiên
 		$zzz =$xlexp+$cxwg->wgxl;
 		if($zzz > $cxwg->wgxlmax){
 			$zj = $zzz - $cxwg->wgxlmax;
-			\player\gaibianwg('xlzt',0,$wgid,$sid,$dblj);
+			Helpers\thayDoiVoCong('xlzt',0,$wgid,$sid,$dblj);
 			$ret = $dblj->exec($sql);
 			$sql = "update playerwugong set wgxl =  $zj where wgid = '$wgid' and sid='$sid'";
 			$ret = $dblj->exec($sql);
@@ -63,7 +71,7 @@ if ($cmd == 'jswg'){//Kết thúc tu tiên
 		    $ret = $dblj->exec($sql);
 		}
         else{
-		\player\gaibianwg('xlzt',0,$wgid,$sid,$dblj);
+		Helpers\thayDoiVoCong('xlzt',0,$wgid,$sid,$dblj);
         $xlsjc = 'Kết thúc tu luyện...<br/>Thời gian tu luyện：'.$xlsjc;
         $tishi = 'nhận được  tu vi:'.$xlexp.''.$zj.'<br/>';
 		$wgsum = $cxwg->wgsum - 1 ;
@@ -78,7 +86,7 @@ if ($cmd == 'jswg'){//Kết thúc tu tiên
     }
 }
 
-$cxwg = \player\wgcx($wgid,$sid,$dblj);
+$cxwg = Helpers\layThongTinVoCong($wgid,$sid,$dblj);
 if ($cxwg->xlzt == 1){
     $tishi = '<font color="#A0A000">Luyện</font><font color="#F5A000">Võ</font><font color="#FFA000">Bên trong</font><br/>';
     $xlcz = "<a href=?cmd=$endxl>Kết thúc tu luyện</a><br/><br/>";
@@ -93,7 +101,7 @@ if ($cxwg->xlzt == 1){
 $xiuliancmd = $encode->encode("cmd=goxiulian&sid=$sid");
 $wgxl = $encode->encode("cmd=wgxl&sid=$sid");
 $wgxx = $encode->encode("cmd=xxwg&sid=$sid");
-$cxwg = \player\wgcx($wgid,$sid,$dblj);
+$cxwg = Helpers\layThongTinVoCong($wgid,$sid,$dblj);
 $wgys = $cxwg->wgys;
 $wu = $player->wugong;
 if ($wu==0){
@@ -106,8 +114,8 @@ if ($wu==0){
 $xlhtml = <<<HTML
 <IMG width='280' height='140' src='./images/wugong/$wgid.png' style="border-radius: 8px;">
 <a href="?cmd=$xiuliancmd" >Ngồi thiền tu luyện</a><a href="?cmd=$wgxl" >Võ công tu hành</a><a href="?cmd=$wgxx" >Bí tịch</a><br>
-Tu hành người chơi：$player->uname<br/>
-Người chơi đẳng cấp：$player->jingjie($player->ulv)<br/>
+Tu hành người chơi：$player->tenNhanVat<br/>
+Người chơi đẳng cấp：$player->canhGioi($player->capDo)<br/>
 ===============<br/>
 Tu hành võ công:$wuwugong<font color="$wgys">$cxwg->wgname</font><br>
 Trước mắt công lực:$gongli $cxwg->wgdj<br>

@@ -1,8 +1,16 @@
 <?php
+require_once __DIR__ . '/../src/Helpers/NguoiChoiHelper.php';
+require_once __DIR__ . '/../src/Helpers/TrangBiHelper.php';
+require_once __DIR__ . '/../src/Helpers/DaoCuHelper.php';
+require_once __DIR__ . '/../src/Helpers/DuocPhamHelper.php';
+require_once __DIR__ . '/../src/Helpers/SungVatHelper.php';
+require_once __DIR__ . '/../src/Helpers/NhiemVuHelper.php';
+use TuTaTuTien\Helpers as Helpers;
 
-$player = \player\getplayer($sid,$dblj);
 
-$gonowmid = $encode->encode("cmd=gomid&newmid=$player->nowmid&sid=$sid");
+$player = \Helpers\layThongTinNguoiChoi($sid,$dblj);
+
+$gonowmid = $encode->encode("cmd=gomid&newmid=$player->idBanDoHienTai&sid=$sid");
 $cwhtml='';
 $cwnamehtml= '';
 $chouqucmd = $encode->encode("cmd=xxwg&canshu=chouqu&sid=$sid");
@@ -83,13 +91,13 @@ if (isset($canshu)){
     switch ($canshu) {
         case 'chouqu':
 		
-            if (\player\changeczb(2, 200, $sid, $dblj)) {
+            if (Helpers\thayDoiMaThach(2, 200, $sid, $dblj)) {
 				$cqsjs = mt_rand(1,3);
 				$vip = $player->vip;
 				if($vip>0){
 					$cqsjs = mt_rand(1,10);
 				}
-                \player\cqwg($cqsjs,$sid,$dblj);
+                Helpers\xoaVoCong($cqsjs,$sid,$dblj);
 				$tscg .= "".$tskcg."";
             } else {
                 $tiss .= "<font style='color: #f70404;box-shadow: inset 2px -8px 16px 31px black;'>Xin liên lạc GM Tiến hành thể nghiệm</font><br>";
@@ -97,18 +105,18 @@ if (isset($canshu)){
             }
             break;
         case 'xuexi':
-            \player\changeplayersx('wugong',$wgid,$sid,$dblj);
-            $player = \player\getplayer($sid,$dblj);
+            Helpers\thayDoiThuocTinhNguoiChoi('wugong',$wgid,$sid,$dblj);
+            $player = \Helpers\layThongTinNguoiChoi($sid,$dblj);
             break;
         case 'biguan':
-            \player\changeplayersx('wugong',0,$sid,$dblj);
-            $player = \player\getplayer($sid,$dblj);
+            Helpers\thayDoiThuocTinhNguoiChoi('wugong',0,$sid,$dblj);
+            $player = \Helpers\layThongTinNguoiChoi($sid,$dblj);
             break;
         case 'fangsheng':
-            \player\delewugong($wgid,$sid,$dblj);
+            Helpers\xoaVoCong($wgid,$sid,$dblj);
             break;
         case 'cwinfo':
-            $cx = \player\wgcx($wgid,$sid,$dblj);
+            $cx = Helpers\layThongTinVoCong($wgid,$sid,$dblj);
 			
             $cwinfo = $encode->encode("cmd=xxwg&wgid=$player->wugong&canshu=cwinfo&sid=$sid");
 			$wgxx = $encode->encode("cmd=xxwg&sid=$sid");
@@ -136,7 +144,7 @@ HTML;
     }
 }
 
-$allcw = \player\wgsl($sid,$dblj);
+$allcw = Helpers\suLucVoCong($sid,$dblj);
 if ($allcw){
     foreach ($allcw as $cw){
         $wgid = $cw['wgid'];

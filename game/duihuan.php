@@ -1,4 +1,12 @@
 <?php
+require_once __DIR__ . '/../src/Helpers/NguoiChoiHelper.php';
+require_once __DIR__ . '/../src/Helpers/TrangBiHelper.php';
+require_once __DIR__ . '/../src/Helpers/DaoCuHelper.php';
+require_once __DIR__ . '/../src/Helpers/DuocPhamHelper.php';
+require_once __DIR__ . '/../src/Helpers/SungVatHelper.php';
+require_once __DIR__ . '/../src/Helpers/NhiemVuHelper.php';
+use TuTaTuTien\Helpers as Helpers;
+
 /**
  * Created by PhpStorm.
  * User: Administrator
@@ -93,8 +101,8 @@ $sjhtml =<<<HTML
 HTML;
  
 
-$player = \player\getplayer($sid,$dblj);
-$gonowmid = $encode->encode("cmd=gomid&newmid=$player->nowmid&sid=$sid");
+$player = \Helpers\layThongTinNguoiChoi($sid,$dblj);
+$gonowmid = $encode->encode("cmd=gomid&newmid=$player->idBanDoHienTai&sid=$sid");
 $tishi = '';
 if (isset($dhm)){
 		
@@ -119,7 +127,7 @@ if (isset($dhm)){
 	}
 	
   else{
-    $duihuan = \player\getduihuan($dhm,$dblj);
+    $duihuan = Helpers\layThongTinDoiHuan($dhm,$dblj);
     if ($duihuan){
         // $sql = "delete from duihuan WHERE dhm = '$dhm'";
         // $dblj->exec($sql);
@@ -128,9 +136,9 @@ if (isset($dhm)){
         $retallzb = explode(',',$duihuan->dhzb);
         foreach ($retallzb as $zb){
             if ($zb){
-                \player\addzb($sid,$zb,$dblj);
-                $zhuangbei = \player\getzbkzb($zb,$dblj);
-                $tishi .= "$zhuangbei->zbname<br/>";
+                Helpers\themTrangBi($sid,$zb,$dblj);
+                $zhuangbei = Helpers\layThongTinTrangBi($zb,$dblj);
+                $tishi .= "$zhuangbei->tenTrangBi<br/>";
             }
         }
         $djitem = explode(',',$duihuan->dhdj);
@@ -139,10 +147,10 @@ if (isset($dhm)){
                 $dj = explode('|',$djinfo);
                 $djid = $dj[0];
                 $djcount = $dj[1];
-                \player\adddj($sid,$djid,$djcount,$dblj);
-                $daoju = \player\getdaoju($djid,$dblj);
-                $tishi .= "{$daoju->djname}x{$djcount}<br/>";
-                \player\changerwyq1(1,$djid,$djcount,$sid,$dblj);
+                Helpers\themDaoCu($sid,$djid,$djcount,$dblj);
+                $daoju = Helpers\layThongTinDaoCu($djid,$dblj);
+                $tishi .= "{$daoju->tenDaoCu}x{$djcount}<br/>";
+                Helpers\thayDoiNhiemVu(1,$djid,$djcount,$sid,$dblj);
             }
         }
         $ypitem = explode(',',$duihuan->dhyp);
@@ -151,21 +159,21 @@ if (isset($dhm)){
                 $yp = explode('|',$ypinfo);
                 $ypid = $yp[0];
                 $ypcount = $yp[1];
-                \player\addyaopin($sid,$ypid,$ypcount,$dblj);
-                $yaopin = \player\getyaopinonce($ypid,$dblj);
-                $tishi .= "{$yaopin->ypname}x{$ypcount}<br/>";
+                Helpers\themDuocPham($sid,$ypid,$ypcount,$dblj);
+                $yaopin = Helpers\layThongTinDuocPham($ypid,$dblj);
+                $tishi .= "{$yaopin->tenDuocPham}x{$ypcount}<br/>";
             }
         }
         if ($duihuan->dhyxb){
-            \player\changeyxb(1,$duihuan->dhyxb,$sid,$dblj);
+            Helpers\thayDoiTienTroChoi(1,$duihuan->dhyxb,$sid,$dblj);
             $tishi .= "Linh thạch：$duihuan->dhyxb<br/>";
         }
         if ($duihuan->dhczb){
-            \player\changeczb(1,$duihuan->dhczb,$sid,$dblj);
+            Helpers\thayDoiMaThach(1,$duihuan->dhczb,$sid,$dblj);
             $tishi .= "Ma thạch：$duihuan->dhczb<br/>";
         }
         if ($duihuan->dhexp){
-            \player\changeexp($sid,$dblj,$duihuan->dhexp);
+            Helpers\themKinhNghiem($sid,$dblj,$duihuan->dhexp);
             $tishi .= "Kinh nghiệm：$duihuan->dhexp<br/>";
         }
 

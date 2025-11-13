@@ -1,4 +1,11 @@
 <?php
+require_once __DIR__ . '/../src/Helpers/NguoiChoiHelper.php';
+require_once __DIR__ . '/../src/Helpers/TrangBiHelper.php';
+require_once __DIR__ . '/../src/Helpers/DaoCuHelper.php';
+require_once __DIR__ . '/../src/Helpers/DuocPhamHelper.php';
+require_once __DIR__ . '/../src/Helpers/ClubHelper.php';
+use TuTaTuTien\Helpers as Helpers;
+
 /**
  * Created by PhpStorm.
  * User: Administrator
@@ -108,80 +115,80 @@ HTML;
  
  
 
-$player = \player\getplayer($sid,$dblj);
+$player = \Helpers\layThongTinNguoiChoi($sid,$dblj);
 $tupocmd = $encode->encode("cmd=tupo&canshu=tupo&sid=$sid");
-$gonowmid = $encode->encode("cmd=gomid&newmid=$player->nowmid&sid=$sid");
-$tupo = \player\istupo($sid,$dblj);
+$gonowmid = $encode->encode("cmd=gomid&newmid=$player->idBanDoHienTai&sid=$sid");
+$tupo = Helpers\kiemTraDieuKienTuPha($sid,$dblj);
 
 
 $tplshtml="";
-$tpls = $tpls = $player->ulv * $player->ulv * $player->ulv * 0.6;
+$tpls = $tpls = $player->capDo * $player->capDo * $player->capDo * 0.6;
 
 if ($tupo == 1 ){
-    $tpls = $player->ulv * $player->ulv * $player->ulv * 0.2;
+    $tpls = $player->capDo * $player->capDo * $player->capDo * 0.2;
 }
 if ($tupo == 3 ){
-    $tpls = $player->ulv * $player->ulv * $player->ulv * 0.2;
+    $tpls = $player->capDo * $player->capDo * $player->capDo * 0.2;
 }
 elseif($tupo == 2){
-    $tpls = $player->ulv * ($player->ulv+1) * 0.2;
+    $tpls = $player->capDo * ($player->capDo+1) * 0.2;
 }//Đột phá giai thừa cải thành 8 Cái giai thừa
 
 if ($tupo != 8 ){
-    $tplshtml =  "Đột phá cần linh thạch：$tpls/$player->uyxb<br><a href='?cmd=$tupocmd'>Điểm kích đột phá</a> <br/>";
+    $tplshtml =  "Đột phá cần linh thạch：$tpls/$player->tienTroChoi<br><a href='?cmd=$tupocmd'>Điểm kích đột phá</a> <br/>";
     // $upgj = 100;
     // $upfy = 100;
     // $uphp = 100;
-                        $uphp = 4+ round($player->ulv/1.2);
-                        $upgj = 2+ round($player->ulv/2.5);
-                        $upfy = 3+ round($player->ulv/2);
-	if($player->uexp >= $player->umaxexp){
+                        $uphp = 4+ round($player->capDo/1.2);
+                        $upgj = 2+ round($player->capDo/2.5);
+                        $upfy = 3+ round($player->capDo/2);
+	if($player->kinhNghiem >= $player->kinhNghiemToiDa){
     if (isset($canshu)){
         switch ($canshu){
             case"tupo":
-                $ret = \player\changeyxb(2,$tpls,$sid,$dblj);
+                $ret = Helpers\thayDoiTienTroChoi(2,$tpls,$sid,$dblj);
                 if ($ret){
                     $sjs = mt_rand(1,10);
                     if ($sjs <= 7){
-                        echo "Đại hắc kiểm$player->uname ，Đột phá thất bại<br/>";
+                        echo "Đại hắc kiểm$player->tenNhanVat ，Đột phá thất bại<br/>";
 						$ts .= "".$tssb."";
                         break;
                     }
                     if ($tupo == 2){
-                        $uphp = 2+ round($player->uhp/20);
-                        $upgj = 1+ round($player->ugj/100);
-                        $upfy = 1+ round($player->ufy/100);
+                        $uphp = 2+ round($player->sinhMenh/20);
+                        $upgj = 1+ round($player->congKich/100);
+                        $upfy = 1+ round($player->phongNgu/100);
                     }if ($sjs <= 6){
-                        echo "Kỳ tích giáng lâm$player->uname <br/>Linh quang nổi lên, phong quyển tàn vân, sấm sét vang dội<br/>Lão thiên chiếu cố nhận được  thuộc tính：<br/>Công kích+999<br/>Phòng ngự+999<br/>Khí huyết+999<br/>
+                        echo "Kỳ tích giáng lâm$player->tenNhanVat <br/>Linh quang nổi lên, phong quyển tàn vân, sấm sét vang dội<br/>Lão thiên chiếu cố nhận được  thuộc tính：<br/>Công kích+999<br/>Phòng ngự+999<br/>Khí huyết+999<br/>
 						<font color=#A2520B>Sữa</font><font color=#A1420D>Mẹ</font>：Tỉnh, chớ ngủ, quang quác Ô Lạp làm gì đâu！！<br/>";
                         break;
                     }
                     if ($tupo == 3){
-                        $uphp = 4+ round($player->ulv/1.2);
-                        $upgj = 2+ round($player->ulv/2.5);
-                        $upfy = 3+ round($player->ulv/2);
+                        $uphp = 4+ round($player->capDo/1.2);
+                        $upgj = 2+ round($player->capDo/2.5);
+                        $upfy = 3+ round($player->capDo/2);
                     }
 					// if ($sjs <= 7){
-                        // echo "Kỳ tích giáng lâm$player->uname <br/>Đáng tiếc không thành công！！<br/>";
+                        // echo "Kỳ tích giáng lâm$player->tenNhanVat <br/>Đáng tiếc không thành công！！<br/>";
                         // break;
                     // }
 					
 					elseif ($tupo == 1){
                         if ($sjs<8){
-                            echo "Thiên Lôi đánh xuống, thành công trúng đích【$player->uname 】Mặt càng đen hơn！<br/>";
+                            echo "Thiên Lôi đánh xuống, thành công trúng đích【$player->tenNhanVat 】Mặt càng đen hơn！<br/>";
                             break;
                         }
-                        $uphp = 4+ round($player->ulv/1.2);
-                        $upgj = 2+ round($player->ulv/2.5);
-                        $upfy = 3+ round($player->ulv/2);
+                        $uphp = 4+ round($player->capDo/1.2);
+                        $upgj = 2+ round($player->capDo/2.5);
+                        $upfy = 3+ round($player->capDo/2);
                     }
-                    \player\upplayerlv($sid,$dblj);
-                    \player\addplayersx("umaxhp",$uphp,$sid,$dblj);
-                    \player\addplayersx("ugj",$upgj,$sid,$dblj);
-                    \player\addplayersx("ufy",$upfy,$sid,$dblj);
-					\player\addplayersx("tf",5,$sid,$dblj);//Thiên phú tăng thêm 5
+                    Helpers\nangCapChoNguoiChoi($sid,$dblj);
+                    Helpers\themThuocTinhNguoiChoi("umaxhp",$uphp,$sid,$dblj);
+                    Helpers\themThuocTinhNguoiChoi("ugj",$upgj,$sid,$dblj);
+                    Helpers\themThuocTinhNguoiChoi("ufy",$upfy,$sid,$dblj);
+					Helpers\themThuocTinhNguoiChoi("tf",5,$sid,$dblj);//Thiên phú tăng thêm 5
 					
-                    $player = \player\getplayer($sid,$dblj);
+                    $player = \Helpers\layThongTinNguoiChoi($sid,$dblj);
                     echo "Linh quang nổi lên, phong quyển tàn vân, sấm sét vang dội。<br/>Đột phá thành công nhận được  thuộc tính：<br/>Công kích+$upgj<br/>Phòng ngự+$upfy<br/>Khí huyết+$uphp<br/>";
 					$ts .= "".$tscg."";
                 }
@@ -193,11 +200,11 @@ if ($tupo != 8 ){
         }
     }}
 	else{
-                    echo "<font color='#FF0000'>【Nghĩ P Ăn đâu, tu vi không đủ】</font><br/>==Đột phá cần tu vi：$player->umaxexp==<br/>";
+                    echo "<font color='#FF0000'>【Nghĩ P Ăn đâu, tu vi không đủ】</font><br/>==Đột phá cần tu vi：$player->kinhNghiemToiDa==<br/>";
 					$ts .= "".$tssb1."";
                 }
 }
-$zhanbi = round($player->uexp / $player->umaxexp *100) ;//Thanh tiến độ biểu hiện chiếm so
+$zhanbi = round($player->kinhNghiem / $player->kinhNghiemToiDa *100) ;//Thanh tiến độ biểu hiện chiếm so
 if ($zhanbi > 100){
         $zhanbi = 100;
 	 }
@@ -205,9 +212,9 @@ $tupohtml = <<<HTML
 ======Đột phá======<br/>
 $ts
 <link rel="stylesheet"  href="./css/css.css">
-Trước mắt đẳng cấp：$player->ulv<br/>
-Trước mắt cảnh giới：$player->jingjie $player->cengci<br/>
-Trước mắt tu vi：$player->uexp/$player->umaxexp<br/>
+Trước mắt đẳng cấp：$player->capDo<br/>
+Trước mắt cảnh giới：$player->canhGioi $player->tangCanhGioi<br/>
+Trước mắt tu vi：$player->kinhNghiem/$player->kinhNghiemToiDa<br/>
 <div class = "dise" width="100" height="100%">
 <img class = "skills"  width="$zhanbi%" height="100%"></img >
 </div>  

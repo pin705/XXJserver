@@ -1,9 +1,17 @@
 <?php
-$task = \player\getplayerrenwuonce($sid,$rwid,$dblj);
-$cs = \player\gettask($rwid,$dblj);
-$player = \player\getplayer($sid,$dblj);
+require_once __DIR__ . '/../src/Helpers/NguoiChoiHelper.php';
+require_once __DIR__ . '/../src/Helpers/TrangBiHelper.php';
+require_once __DIR__ . '/../src/Helpers/DaoCuHelper.php';
+require_once __DIR__ . '/../src/Helpers/DuocPhamHelper.php';
+require_once __DIR__ . '/../src/Helpers/SungVatHelper.php';
+require_once __DIR__ . '/../src/Helpers/NhiemVuHelper.php';
+use TuTaTuTien\Helpers as Helpers;
 
-$gonowmid = $encode->encode("cmd=gomid&newmid=$player->nowmid&sid=$sid");
+$task = Helpers\layThongTinNhiemVuCuaNguoiChoi($sid,$rwid,$dblj);
+$cs = Helpers\layThongTinNhiemVu($rwid,$dblj);
+$player = \Helpers\layThongTinNguoiChoi($sid,$dblj);
+
+$gonowmid = $encode->encode("cmd=gomid&newmid=$player->idBanDoHienTai&sid=$sid");
 $rwdjarr = explode(',',$task->rwdj);
 $rwjlhtml = 'Nhiệm vụ ban thưởng：<br/>';
 $rwhtml='';
@@ -12,9 +20,9 @@ if ($task->rwdj!=''){
         $djarr = explode('|',$rwdjarr[$i]);
         $djid = $djarr[0];
         $djcount = $djarr[1];
-        $rwdj = \player\getdaoju($djid,$dblj);
-        $djinfo = $encode->encode("cmd=djinfo&djid=$rwdj->djid&sid=$sid");
-        $rwjlhtml .="<div class='djys'><a href='?cmd=$djinfo'>$rwdj->djname</a>x$djcount</div>";
+        $rwdj = Helpers\layThongTinDaoCu($djid,$dblj);
+        $djinfo = $encode->encode("cmd=djinfo&djid=$rwdj->idDaoCu&sid=$sid");
+        $rwjlhtml .="<div class='djys'><a href='?cmd=$djinfo'>$rwdj->tenDaoCu</a>x$djcount</div>";
     }
 }
 if ($task->rwzb!=''){
@@ -37,15 +45,15 @@ if ($task->rwyxb!=''){
 
 
 //Phía dưới muốn tiến hành một cái thu phí truyền tống dựng
-$cs = \player\gettask($rwid,$dblj);//Truyền tống địa chỉ ID
+$cs = Helpers\layThongTinNhiemVu($rwid,$dblj);//Truyền tống địa chỉ ID
 $upmidlj = $encode->encode("cmd=gomid&newmid=$cs->rwqy&sid=$sid");//Truyền tống kết nối thu hoạch
-$dt = player\getmid($cs->rwqy,$dblj);
-//$xiaohao = round($player->ulv*2);//Tính toán linh thạch truyền tống tiêu hao
-$xiaohao = round($player->ulv*12+500);
-if ($player->uyxb>$xiaohao){
-                    \player\changeyxb(2,$xiaohao,$sid,$dblj);
-                    //\player\changeplayersx('uhp',$player->umaxhp,$sid,$dblj);Nơi này tăng máu
-                    $player = \player\getplayer($sid,$dblj);
+$dt = Helpers\layThongTinBanDo($cs->rwqy,$dblj);
+//$xiaohao = round($player->capDo*2);//Tính toán linh thạch truyền tống tiêu hao
+$xiaohao = round($player->capDo*12+500);
+if ($player->tienTroChoi>$xiaohao){
+                    Helpers\thayDoiTienTroChoi(2,$xiaohao,$sid,$dblj);
+                    //Helpers\thayDoiThuocTinhNguoiChoi('uhp',$player->sinhMenhToiDa,$sid,$dblj);Nơi này tăng máu
+                    $player = \Helpers\layThongTinNguoiChoi($sid,$dblj);
                     $sfhtml =<<<HTML
 					<a href='?cmd=$upmidlj'>Truyền tống[{$xiaohao}]</a><br>
 HTML;
@@ -59,19 +67,19 @@ HTML;
 
 switch ($task->rwzl){
     case 1://Thu thập
-        $daoju = \player\getplayerdaoju($sid,$task->rwyq,$dblj);
-        $rwyq = \player\getdaoju($cs->rwyq,$dblj);
-		//$cs = \player\gettask($rwid,$dblj);Truyền tống địa chỉ thu hoạch, ý là tìm tới SQL Nhiệm vụ bên trong nào đó đầu ID, phía dưới tiến hành nên đầu ID Nguyên tố phía trên tiến hành tra tìm từ mấu chốt
+        $daoju = Helpers\layThongTinDaoCuCuaNguoiChoi($sid,$task->rwyq,$dblj);
+        $rwyq = Helpers\layThongTinDaoCu($cs->rwyq,$dblj);
+		//$cs = Helpers\layThongTinNhiemVu($rwid,$dblj);Truyền tống địa chỉ thu hoạch, ý là tìm tới SQL Nhiệm vụ bên trong nào đó đầu ID, phía dưới tiến hành nên đầu ID Nguyên tố phía trên tiến hành tra tìm từ mấu chốt
 		//$upmidlj = $encode->encode("cmd=gomid&newmid=$cs->rwqy&sid=$sid");//Truyền tống kết nối thu hoạch<a href='?cmd=$upmidlj'>Truyền tống</a>
-        $rwhtml ="Thu thập$task->rwcount$rwyq->djname<br/>Tiến độ：$task->rwnowcount/$task->rwcount";
+        $rwhtml ="Thu thập$task->rwcount$rwyq->tenDaoCu<br/>Tiến độ：$task->rwnowcount/$task->rwcount";
         break;
     case 2://Đánh quái
-        $rwyq = \player\getyguaiwu($task->rwyq,$dblj);
+        $rwyq = Helpers\layThongTinMauQuaiVat($task->rwyq,$dblj);
 		//$upmidlj = $encode->encode("cmd=gomid&newmid=$cs->rwqy&sid=$sid");
-        $rwhtml ="Đánh giết$task->rwcount$rwyq->gname<br/>Tiến độ：$task->rwnowcount/$task->rwcount";
+        $rwhtml ="Đánh giết$task->rwcount$rwyq->tenQuaiVat<br/>Tiến độ：$task->rwnowcount/$task->rwcount";
         break;
     case 3://Đối thoại
-        $tjnpc = \player\getnpc($task->rwcount,$dblj);
+        $tjnpc = Helpers\layThongTinNpc($task->rwcount,$dblj);
         
 		//$upmidlj = $encode->encode("cmd=gomid&newmid=$cs->rwqy&sid=$sid");//Địa đồ
         $rwhtml ="Đi tìm$tjnpc->nname";

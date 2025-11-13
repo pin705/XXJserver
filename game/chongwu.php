@@ -1,7 +1,15 @@
 <?php
+require_once __DIR__ . '/../src/Helpers/NguoiChoiHelper.php';
+require_once __DIR__ . '/../src/Helpers/TrangBiHelper.php';
+require_once __DIR__ . '/../src/Helpers/DaoCuHelper.php';
+require_once __DIR__ . '/../src/Helpers/DuocPhamHelper.php';
+require_once __DIR__ . '/../src/Helpers/SungVatHelper.php';
+require_once __DIR__ . '/../src/Helpers/NhiemVuHelper.php';
+use TuTaTuTien\Helpers as Helpers;
 
-$player = \player\getplayer($sid,$dblj);
-$gonowmid = $encode->encode("cmd=gomid&newmid=$player->nowmid&sid=$sid");
+
+$player = \Helpers\layThongTinNguoiChoi($sid,$dblj);
+$gonowmid = $encode->encode("cmd=gomid&newmid=$player->idBanDoHienTai&sid=$sid");
 $cwhtml='';
 $cwnamehtml= '';
 $chouqucmd = $encode->encode("cmd=chongwu&canshu=chouqu&sid=$sid");
@@ -96,8 +104,8 @@ if (isset($canshu)){
 		 break;
 		
         case 'chouqu':
-            if (\player\changeczb(2, 50, $sid, $dblj)) {
-                \player\addchongwu($sid, $dblj);
+            if (Helpers\thayDoiMaThach(2, 50, $sid, $dblj)) {
+                Helpers\themSungVat($sid, $dblj);
 				$tscg .= "".$tskcg."";
             } else {
               //  echo "Ma thạch không đủ 50<br/>";
@@ -105,18 +113,18 @@ if (isset($canshu)){
             }
             break;
         case 'chuzhan':
-            \player\changeplayersx('cw',$cwid,$sid,$dblj);
-            $player = \player\getplayer($sid,$dblj);
+            Helpers\thayDoiThuocTinhNguoiChoi('cw',$cwid,$sid,$dblj);
+            $player = \Helpers\layThongTinNguoiChoi($sid,$dblj);
             break;
         case 'shouhui':
-            \player\changeplayersx('cw',0,$sid,$dblj);
-            $player = \player\getplayer($sid,$dblj);
+            Helpers\thayDoiThuocTinhNguoiChoi('cw',0,$sid,$dblj);
+            $player = \Helpers\layThongTinNguoiChoi($sid,$dblj);
             break;
         case 'fangsheng':
-            \player\delechongwu($cwid,$sid,$dblj);
+            Helpers\xoaSungVat($cwid,$sid,$dblj);
             break;
         case 'cwinfo':
-            $chongwu = \player\getchongwu($cwid, $dblj);
+            $chongwu = Helpers\layThongTinSungVat($cwid, $dblj);
             $pzarr = array('<font color=#00C000>Phổ thông</font>', '<font color=#1a80da>Ưu tú</font>', '<font color=#a08f0a>Trác tuyệt</font>', '<font color=#14b8b9>Phi phàm</font>', '<font color=#f16613>Hoàn mỹ</font>', '<font color=#ec0909>Nghịch thiên</font>');
             $cwpz = $pzarr[$chongwu->cwpz];
             $chongwu->cwpz = $chongwu->cwpz * 10;
@@ -152,7 +160,7 @@ HTML;
     }
 }
 
-$allcw = \player\getchongwuall($sid,$dblj);
+$allcw = Helpers\layTatCaSungVat($sid,$dblj);
 if ($allcw){
     foreach ($allcw as $cw){
         $cwid = $cw['cwid'];
@@ -169,7 +177,7 @@ if ($allcw){
             $gncmd = '<a style="background-color: #ef0a0a;color: #ecf3ea;border-radius:10px;">(Đã xuất chiến)</a>'.$shcmd;
         }
         $cwinfo = $encode->encode("cmd=chongwu&cwid=$cwid&canshu=cwinfo&sid=$sid");
-		$chongwu = \player\getchongwu($cwid, $dblj);
+		$chongwu = Helpers\layThongTinSungVat($cwid, $dblj);
         $sc = array('#00C000', '#1a80da', '#a08f0a', '#14b8b9', '#f16613', '#ec0909');
 		$pz = array('Phổ thông', 'Ưu tú', 'Trác tuyệt', 'Phi phàm', 'Hoàn mỹ', 'Nghịch thiên');
         $cwsc = $sc[$chongwu->cwpz];//Sủng vật sắc thái

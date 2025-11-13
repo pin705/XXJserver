@@ -1,7 +1,20 @@
 <?php
-$task = \player\gettask($rwid,$dblj);
-$player = \player\getplayer($sid,$dblj);
-$ptask = \player\getplayerrenwuonce($sid,$rwid,$dblj);
+require_once __DIR__ . '/../src/Helpers/NguoiChoiHelper.php';
+require_once __DIR__ . '/../src/Helpers/TrangBiHelper.php';
+require_once __DIR__ . '/../src/Helpers/DaoCuHelper.php';
+require_once __DIR__ . '/../src/Helpers/DuocPhamHelper.php';
+require_once __DIR__ . '/../src/Helpers/QuaiVatHelper.php';
+require_once __DIR__ . '/../src/Helpers/TruongLaoHelper.php';
+require_once __DIR__ . '/../src/Helpers/NhiemVuHelper.php';
+require_once __DIR__ . '/../src/Helpers/BanDoHelper.php';
+require_once __DIR__ . '/../src/Helpers/SungVatHelper.php';
+require_once __DIR__ . '/../src/Helpers/KyNangHelper.php';
+require_once __DIR__ . '/../src/Helpers/ClubHelper.php';
+use TuTaTuTien\Helpers as Helpers;
+
+$task = Helpers\layThongTinNhiemVu($rwid,$dblj);
+$player = \Helpers\layThongTinNguoiChoi($sid,$dblj);
+$ptask = Helpers\layThongTinNhiemVuCuaNguoiChoi($sid,$rwid,$dblj);
 $rwdjarr = explode(',',$task->rwdj);
 $rwyparr = explode(',',$task->rwyp);
 $rwjlhtml = 'Nhiệm vụ ban thưởng：<br/>';
@@ -11,7 +24,7 @@ $jlypidarr = array();
 $jlypslarr = array();
 $jlzbslarr = array();
 
-$gonowmid = $encode->encode("cmd=gomid&newmid=$player->nowmid&sid=$sid");
+$gonowmid = $encode->encode("cmd=gomid&newmid=$player->idBanDoHienTai&sid=$sid");
 $jieshourw = $encode->encode("cmd=task&nid=$nid&canshu=jieshou&rwid=$rwid&sid=$sid");
 $tijiaorw = $encode->encode("cmd=task&nid=$nid&canshu=tijiao&rwid=$rwid&sid=$sid");
 $rwhtml = '';
@@ -30,9 +43,9 @@ if ($task->rwdj!=''){
         $djcount = $djarr[1];
         array_push($jldjidarr,$djid);
         array_push($jldjslarr,$djcount);
-        $rwdj = \player\getdaoju($djid,$dblj);
-        $djinfo = $encode->encode("cmd=djinfo&djid=$rwdj->djid&sid=$sid");
-        $rwjlhtml .="<div class='djys'><a href='?cmd=$djinfo'>$rwdj->djname</a>x$djcount</div>";
+        $rwdj = Helpers\layThongTinDaoCu($djid,$dblj);
+        $djinfo = $encode->encode("cmd=djinfo&djid=$rwdj->idDaoCu&sid=$sid");
+        $rwjlhtml .="<div class='djys'><a href='?cmd=$djinfo'>$rwdj->tenDaoCu</a>x$djcount</div>";
     }
 }
 
@@ -43,9 +56,9 @@ if ($task->rwyp!=''){
         $ypcount = $yparr[1];
         array_push($jlypidarr,$ypid);
         array_push($jlypslarr,$ypcount);
-        $rwyp = \player\getyaopinonce($ypid,$dblj);
+        $rwyp = Helpers\layThongTinDuocPham($ypid,$dblj);
         $ypcmd = $encode->encode("cmd=ypinfo&ypid=$ypid&sid=$sid");
-        $rwjlhtml .= "<div class='ypys'><a href='?cmd=$ypcmd'>$rwyp->ypname</a>x$ypcount</div>";
+        $rwjlhtml .= "<div class='ypys'><a href='?cmd=$ypcmd'>$rwyp->tenDuocPham</a>x$ypcount</div>";
     }
 }
 
@@ -57,8 +70,8 @@ if ($task->rwzb!=''){
         $zbid = $ret[$i]['zbid'];
         $zbname = $ret[$i]['zbname'];
         array_push($jlzbslarr,$zbid);
-        $zbkzb = \player\getzbkzb($zbid,$dblj);
-        $zbcmd = $encode->encode("cmd=zbinfo_sys&zbid=$zbkzb->zbid&sid=$sid");
+        $zbkzb = Helpers\layThongTinTrangBi($zbid,$dblj);
+        $zbcmd = $encode->encode("cmd=zbinfo_sys&zbid=$zbkzb->idMauTrangBi&sid=$sid");
         $rwjlhtml.="<div class='zbys'><a href='?cmd=$zbcmd'>$zbname</a></div>";
     }
 }
@@ -85,10 +98,10 @@ if (isset($canshu)){
             $ret = $dblj->exec($sql);
             $tishi = 'Tiếp nhận thành công';
             if ($task->rwzl==1){
-                $daoju = \player\getplayerdaoju($sid,$task->rwyq,$dblj);
+                $daoju = Helpers\layThongTinDaoCuCuaNguoiChoi($sid,$task->rwyq,$dblj);
                 if ($daoju){
-                    if ($daoju->djsum>0){
-                        \player\changerwyq($rwid,$daoju->djsum,$sid,$dblj);
+                    if ($daoju->soLuong>0){
+                        Helpers\thayDoiNhiemVu($rwid,$daoju->soLuong,$sid,$dblj);
                     }
                 }
             }
@@ -102,19 +115,19 @@ if (isset($canshu)){
                 if ($ptask->rwnowcount>= $ptask->rwcount || $ptask->rwzl == 3){
                     $sql = "update playerrenwu set rwzt=3,rwnowcount=0 WHERE sid='$sid' AND rwid = $rwid";
                     $dblj->exec($sql);
-                    \player\changeexp($sid,$dblj,$task->rwexp);
-                    \player\changeyxb(1,$task->rwyxb,$sid,$dblj);
+                    Helpers\themKinhNghiem($sid,$dblj,$task->rwexp);
+                    Helpers\thayDoiTienTroChoi(1,$task->rwyxb,$sid,$dblj);
                     if ($ptask->rwzl==1){
-                        \player\deledjsum($ptask->rwyq,$ptask->rwcount,$sid,$dblj);
+                        Helpers\giamDaoCu($ptask->rwyq,$ptask->rwcount,$sid,$dblj);
                     }
                     for ($i=0;$i<count($jldjidarr);$i++){
-                        \player\adddj($sid,$jldjidarr[$i],$jldjslarr[$i],$dblj);
+                        Helpers\themDaoCu($sid,$jldjidarr[$i],$jldjslarr[$i],$dblj);
                     }
                     for ($i=0;$i<count($jlypidarr);$i++){
-                        \player\addyaopin($sid,$jlypidarr[$i],$jlypslarr[$i],$dblj);
+                        Helpers\themDuocPham($sid,$jlypidarr[$i],$jlypslarr[$i],$dblj);
                     }
                     foreach ($jlzbslarr as $jlzbid){
-                        \player\addzb($sid,$jlzbid,$dblj);
+                        Helpers\themTrangBi($sid,$jlzbid,$dblj);
                     }
                     echo "Nhiệm vụ hoàn thành, nhận được ：<br/>$rwjlhtml<a href=\"?cmd=$gonowmid\">Trở về trò chơi</a>";
                     exit();
@@ -128,26 +141,26 @@ if (isset($canshu)){
 
 switch ($task->rwzl){
     case 1://Thu thập
-        $rwyq = \player\getdaoju($task->rwyq,$dblj);
+        $rwyq = Helpers\layThongTinDaoCu($task->rwyq,$dblj);
 		
-        $rwhtml ="Thu thập$task->rwcount$rwyq->djname";
+        $rwhtml ="Thu thập$task->rwcount$rwyq->tenDaoCu";
         break;
     case 2://Đánh quái
-        $gwmid = new \player\clmid();
+        $gwmid = new Helpers\layThongTinBanDo();
 		
-        $rwyq = \player\getyguaiwu($task->rwyq,$dblj);
+        $rwyq = Helpers\layThongTinMauQuaiVat($task->rwyq,$dblj);
 		
-        $rwhtml ="Đánh giết$task->rwcount$rwyq->gname";
+        $rwhtml ="Đánh giết$task->rwcount$rwyq->tenQuaiVat";
 		
         break;
     case 3://Đối thoại
-        $tjnpc = \player\getnpc($task->rwcount,$dblj);
-		//$clmid = player\getmid($task->rwqy,$dblj); //Thu hoạch địa đồ tin tức, ở đây dư thừa
+        $tjnpc = Helpers\layThongTinNpc($task->rwcount,$dblj);
+		//$clmid = Helpers\layThongTinBanDo($task->rwqy,$dblj); //Thu hoạch địa đồ tin tức, ở đây dư thừa
 		//$upmidlj = $encode->encode("cmd=gomid&newmid=$task->rwqy&sid=$sid");//Địa đồ//Thu hoạch đến Nhiệm vụ Địa đồ, tiến hành nhảy chuyển。<--<a href='?cmd=$upmidlj'>Truyền tống</a>-->
         $rwhtml ="Đi tìm$tjnpc->nname";//Biểu hiện nhiệm vụ tình huống, nhảy chuyển nhiệm vụ khu vực, khu vực tại sql, renwu Bên trong viết rwqy
         break;
 }
-$ptask = \player\getplayerrenwuonce($sid,$rwid,$dblj);
+$ptask = Helpers\layThongTinNhiemVuCuaNguoiChoi($sid,$rwid,$dblj);
 $rwzthtml='';
     if ($ptask){
         if($ptask->rwzl != 3){

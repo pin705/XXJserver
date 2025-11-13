@@ -1,8 +1,15 @@
 <?php
-$player = player\getplayer($sid,$dblj);//Thu hoạch ngươi ID
-$gonowmid = $encode->encode("cmd=gomid&newmid=$player->nowmid&sid=$sid");//【Trở về trò chơi kết nối】
+require_once __DIR__ . '/../src/Helpers/NguoiChoiHelper.php';
+require_once __DIR__ . '/../src/Helpers/TrangBiHelper.php';
+require_once __DIR__ . '/../src/Helpers/DaoCuHelper.php';
+require_once __DIR__ . '/../src/Helpers/DuocPhamHelper.php';
+require_once __DIR__ . '/../src/Helpers/ClubHelper.php';
+use TuTaTuTien\Helpers as Helpers;
+
+$player = Helpers\layThongTinNguoiChoi($sid,$dblj);//Thu hoạch ngươi ID
+$gonowmid = $encode->encode("cmd=gomid&newmid=$player->idBanDoHienTai&sid=$sid");//【Trở về trò chơi kết nối】
 $qysd = $encode->encode("cmd=shangdian&canshu=gogoumai&sid=$sid");//【Cửa hàng kết nối】  PHP ，Lựa chọn văn bản , tăng thêm dấu hiệu , thân phận của ngươi
-$clmid = player\getmid($player->nowmid,$dblj); //Thu hoạch địa đồ tin tức
+$clmid = Helpers\layThongTinBanDo($player->idBanDoHienTai,$dblj); //Thu hoạch địa đồ tin tức
 if ($clmid->playerinfo != ''){
     $clmid->playerinfo .='<br/>';
 }
@@ -21,7 +28,7 @@ if ($clmid->playerinfo != ''){
     // $qyame = $cxallnpchtml[$i]['qyname'];
     // $mid = $cxallnpchtml[$i]['mid'];
     // if ($mid>0){
-        // $cxmid = \player\getmid($mid,$dblj);
+        // $cxmid = Helpers\layThongTinBanDo($mid,$dblj);
         // $mname = $cxmid->mname;
         // $br++;
         // $gomid = $encode->encode("cmd=gomid&newmid=$mid&sid=$sid");
@@ -43,17 +50,17 @@ if ($clmid->playerinfo != ''){
 
 
 $yrdthtml = '';
-$yrdt = \player\getmid($mid,$dblj);
-$cxallnpchtml = \player\getqy_dt($dblj);
+$yrdt = Helpers\layThongTinBanDo($mid,$dblj);
+$cxallnpchtml = Helpers\layDanhSachKhuVuc($dblj);
 
 $br = 0;
 for ($i=0;$i<count($cxallnpchtml);$i++){
      $qyame = $cxallnpchtml[$i]['qyname'];
-    $yrdt = \player\getmid($qyid,$dblj);
+    $yrdt = Helpers\layThongTinBanDo($qyid,$dblj);
     $mid = $cxallnpchtml[$i]['mid'];
 	
     if ($mid>0){
-        $cxmid = \player\getmid($mid,$dblj);
+        $cxmid = Helpers\layThongTinBanDo($mid,$dblj);
         $mname = $cxmid->mname;
 		
         $br++;
@@ -85,13 +92,13 @@ $upmidlj = $encode->encode("cmd=gomid&newmid=$clmid->upmid&sid=$sid");//Bên tr�
 $downmidlj = $encode->encode("cmd=gomid&newmid=$clmid->downmid&sid=$sid");
 $leftmidlj = $encode->encode("cmd=gomid&newmid=$clmid->leftmid&sid=$sid");
 $rightmidlj = $encode->encode("cmd=gomid&newmid=$clmid->rightmid&sid=$sid");
-$upmid = player\getmid($clmid->upmid,$dblj);
-$downmid = player\getmid($clmid->downmid,$dblj);
-$leftmid = player\getmid($clmid->leftmid,$dblj);
-$rightmid = player\getmid($clmid->rightmid,$dblj);
+$upmid = Helpers\layThongTinBanDo($clmid->upmid,$dblj);
+$downmid = Helpers\layThongTinBanDo($clmid->downmid,$dblj);
+$leftmid = Helpers\layThongTinBanDo($clmid->leftmid,$dblj);
+$rightmid = Helpers\layThongTinBanDo($clmid->rightmid,$dblj);
 $sx = ($clmid->leftmid)+4;
 $dt = $encode->encode("cmd=gomid&newmid=$sx&sid=$sid");//Bên trên địa đồ
-$dd = player\getmid($sx,$dblj);
+$dd = Helpers\layThongTinBanDo($sx,$dblj);
 $lukouhtml ='';
 if ($upmid->mname!=''){
     $lukouhtml .= <<<HTML
@@ -195,7 +202,7 @@ HTML;
 
 
 //Phía dưới là một cái tham số cất giữ, sau đó mở ra cái thứ hai web page
-//$player = player\getplayer($sid,$dblj);//Thu hoạch ngươi ID
+//$player = Helpers\layThongTinNguoiChoi($sid,$dblj);//Thu hoạch ngươi ID
 // $bb = $encode->encode("cmd=getbagyd&sid=$sid");
 // $sd = $encode->encode("cmd=shangdian&canshu=gogoumai&sid=$sid");
 $qydt = $encode->encode("cmd=qydt&sid=$sid");

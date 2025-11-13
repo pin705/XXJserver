@@ -1,13 +1,20 @@
 <?php
+require_once __DIR__ . '/../src/Helpers/NguoiChoiHelper.php';
+require_once __DIR__ . '/../src/Helpers/TrangBiHelper.php';
+require_once __DIR__ . '/../src/Helpers/DaoCuHelper.php';
+require_once __DIR__ . '/../src/Helpers/DuocPhamHelper.php';
+require_once __DIR__ . '/../src/Helpers/ClubHelper.php';
+use TuTaTuTien\Helpers as Helpers;
+
 /**
  * Created by PhpStorm.
  * User: Administrator
  * Date: 2016/8/26 0026
  * Time: 18:37
  */
-$clubplayer = \player\getclubplayer_once($sid,$dblj);
-$player = \player\getplayer($sid,$dblj);
-$gonowmid = $encode->encode("cmd=gomid&newmid=$player->nowmid&sid=$sid");
+$clubplayer = Helpers\layThongTinClubPlayer($sid,$dblj);
+$player = \Helpers\layThongTinNguoiChoi($sid,$dblj);
+$gonowmid = $encode->encode("cmd=gomid&newmid=$player->idBanDoHienTai&sid=$sid");
 $clubhtml= '';
 $clubmenu = '';
 $renzhihtml='';
@@ -19,16 +26,16 @@ if (isset($canshu)){
                 echo "Ngươi đã có môn phái<br/>";
                 break;
             }
-            $sql = "insert into clubplayer(clubid, uid, sid, uclv) VALUES ($clubid,$player->uid,'$sid',6)";
+            $sql = "insert into clubplayer(clubid, uid, sid, uclv) VALUES ($clubid,$player->idNguoiDung,'$sid',6)";
             $row = $dblj->exec($sql);
-            $clubplayer = \player\getclubplayer_once($sid,$dblj);
+            $clubplayer = Helpers\layThongTinClubPlayer($sid,$dblj);
             echo "Chúc mừng ngươi thành công gia nhập<br/>";
             break;
         case "outclub":
             if ($clubplayer){
                 $sql="delete from clubplayer WHERE sid='$sid'";
                 $row = $dblj->exec($sql);
-                $clubplayer = \player\getclubplayer_once($sid,$dblj);
+                $clubplayer = Helpers\layThongTinClubPlayer($sid,$dblj);
             }
             break;
         case "deleteclub":
@@ -50,12 +57,12 @@ if (isset($canshu)){
                     $retuid = $ret->fetchAll(PDO::FETCH_ASSOC);
                     foreach ($retuid as $uiditem){
                         $uid = $uiditem['uid'];
-                        if ($uid==$player->uid){
+                        if ($uid==$player->idNguoiDung){
                             continue;
                         }
-                        $otherplayer = \player\getplayer1($uid,$dblj);
+                        $otherplayer = \Helpers\layThongTinNguoiChoiTheoUid($uid,$dblj);
                         $ucmd = $encode->encode("cmd=club&canshu=zhiwei&zhiwei=$zhiwei&uid=$uid&sid=$sid");
-                        $playerlist .= "<a href='?cmd=$ucmd'>{$otherplayer->uname}</a><br/>";
+                        $playerlist .= "<a href='?cmd=$ucmd'>{$otherplayer->tenNhanVat}</a><br/>";
 
                     }
                    $renzhihtml =  "=========Lựa chọn nhậm chức nhân viên=========<br/>$playerlist<button onClick='javascript :history.back(-1);'>Trở lại</button><br/><a href='?cmd=$gonowmid'>Trở về trò chơi</a>";
@@ -107,8 +114,8 @@ if (isset($clubid) || $clubplayer){
         $clubmenu = "<a href='?cmd=$joincmd'>Xin gia nhập</a>";
     }
     noclub:
-    $club = \player\getclub($clubid,$dblj);
-    $cboss = \player\getplayer1($club->clubno1,$dblj);
+    $club = Helpers\layThongTinClub($clubid,$dblj);
+    $cboss = \Helpers\layThongTinNguoiChoiTheoUid($club->clubno1,$dblj);
     $cbosscmd = $encode->encode("cmd=getplayerinfo&uid=$club->clubno1&sid=$sid");
     $clublist = $encode->encode("cmd=clublist&sid=$sid");
     
@@ -136,14 +143,14 @@ if (isset($clubid) || $clubplayer){
                 $chenhao = "[Tinh anh]";
                 break;
         }
-        $otherplayer = \player\getplayer1($uid,$dblj);
+        $otherplayer = \Helpers\layThongTinNguoiChoiTheoUid($uid,$dblj);
         $ucmd = $encode->encode("cmd=getplayerinfo&uid=$uid&sid=$player->sid");
-        $playerlist .= "<a href='?cmd=$ucmd'>{$chenhao}{$otherplayer->uname}</a><br/>";
+        $playerlist .= "<a href='?cmd=$ucmd'>{$chenhao}{$otherplayer->tenNhanVat}</a><br/>";
     }
 
     $clubhtml =<<<HTML
 Môn phái:$club->clubname<br/>
-Người thành lập:<a href="?cmd=$cbosscmd" >$cboss->uname</a><br/>
+Người thành lập:<a href="?cmd=$cbosscmd" >$cboss->tenNhanVat</a><br/>
 Môn phái tài chính:Linh thạch[$club->clubyxb] Cực phẩm linh thạch[$club->clubczb]<br/>
 Kiến thiết độ:$club->clubexp<br/>
 Môn phái giới thiệu:<br/>$club->clubinfo<br/>

@@ -1,7 +1,14 @@
 <?php
+require_once __DIR__ . '/../src/Helpers/NguoiChoiHelper.php';
+require_once __DIR__ . '/../src/Helpers/TrangBiHelper.php';
+require_once __DIR__ . '/../src/Helpers/DaoCuHelper.php';
+require_once __DIR__ . '/../src/Helpers/DuocPhamHelper.php';
+require_once __DIR__ . '/../src/Helpers/ClubHelper.php';
+use TuTaTuTien\Helpers as Helpers;
 
-$player = \player\getplayer($sid,$dblj);
-$gonowmid = $encode->encode("cmd=gomid&newmid=$player->nowmid&sid=$sid");
+
+$player = \Helpers\layThongTinNguoiChoi($sid,$dblj);
+$gonowmid = $encode->encode("cmd=gomid&newmid=$player->idBanDoHienTai&sid=$sid");
 $payhtml='';
 $pdjcount = 0;
 $fy = "./game/fy.php";
@@ -16,14 +23,14 @@ switch ($fangshi){
         
         if (isset($canshu)){
             if ($canshu == "buy"){
-                $fsdj = \player\getfangshi_once("daoju",$payid,$dblj);
+                $fsdj = Helpers\layThongTinFangShi("daoju",$payid,$dblj);
                 try{
                     if (!$fsdj){
                         throw new PDOException("Đạo cụ đã bán sạch<br/>");//Cái kia sai lầm ném ra ngoài dị thường
                     }
-                    $playerdj = \player\getplayerdaoju($sid,$fsdj->djid,$dblj);
+                    $playerdj = Helpers\layThongTinDaoCuCuaNguoiChoi($sid,$fsdj->idDaoCu,$dblj);
                     if ($playerdj){
-                        $pdjcount = $playerdj->djsum;
+                        $pdjcount = $playerdj->soLuong;
                     }
                     $dblj->setAttribute(PDO::ATTR_AUTOCOMMIT, 0);
                     $dblj->setAttribute(PDO::ATTR_ERRMODE,  PDO::ERRMODE_EXCEPTION);
@@ -39,12 +46,12 @@ switch ($fangshi){
                     if(!$affected_rows)
                         throw new PDOException("Trong phường thị nên đạo cụ đếm không đủ<br/>");//Cái kia sai lầm ném ra ngoài dị thường
 
-                    $sql = "update `game1` set uyxb = uyxb + {$price} WHERE uid = {$fsdj->uid}";
+                    $sql = "update `game1` set uyxb = uyxb + {$price} WHERE uid = {$fsdj->idNguoiDung}";
                     $affected_rows=$dblj->exec($sql);
                     if(!$affected_rows)
                         throw new PDOException("Treo lên nên đạo cụ tu sĩ chưa thu được linh thạch<br/>");//Cái kia sai lầm ném ra ngoài dị thường
                     $djsum = $pdjcount + $buycount;
-                    $sql = "replace into `playerdaoju`(djname,djsum,uid,sid,djid,djinfo) VALUES('$fsdj->djname','$djsum','$player->uid','$sid',$fsdj->djid,'$fsdj->djinfo')";
+                    $sql = "replace into `playerdaoju`(djname,djsum,uid,sid,djid,djinfo) VALUES('$fsdj->tenDaoCu','$djsum','$player->idNguoiDung','$sid',$fsdj->idDaoCu,'$fsdj->djinfo')";
                     $affected_rows=$dblj->exec($sql);
                     if(!$affected_rows)
                         throw new PDOException("Truyền tống trận tại truyền tống đạo cụ thời điểm truyền tống thất bại<br/>");//Cái kia sai lầm ném ra ngoài dị thường
@@ -58,10 +65,10 @@ switch ($fangshi){
                 $dblj->setAttribute(PDO::ATTR_AUTOCOMMIT, 1);//Quan bế
                 $sql="delete from `fangshi_dj` where djcount = 0";
                 $dblj->exec($sql);
-                \player\changerwyq1(1,$fsdj->djid,1,$sid,$dblj);
+                Helpers\thayDoiNhiemVu(1,$fsdj->idDaoCu,1,$sid,$dblj);
             }
         }
-        $fsdjall = \player\getfangshi_all($fangshi,$dblj);
+        $fsdjall = Helpers\layTatCaFangShi($fangshi,$dblj);
         foreach ($fsdjall as $fsdj){
             $djid = $fsdj['djid'];
             $djname = $fsdj['djname'];
@@ -90,7 +97,7 @@ HTML;
         if (isset($canshu)){
             if ($canshu == "buy"){
                 try{
-                    $fszb = \player\getfangshi_once("zhuangbei",$payid,$dblj);
+                    $fszb = Helpers\layThongTinFangShi("zhuangbei",$payid,$dblj);
 					
 
                     if (!$fszb){
@@ -113,13 +120,13 @@ HTML;
                         throw new PDOException("Trang bị xuất hàng thất bại<br/>");//Cái kia sai lầm ném ra ngoài dị thường
 
 //                    -------------------------------------------------------------------------------
-                    $sql = "update `game1` set uyxb = uyxb+ $pay WHERE uid=$fszb->uid";
+                    $sql = "update `game1` set uyxb = uyxb+ $pay WHERE uid=$fszb->idNguoiDung";
                     $affected_rows = $dblj->exec($sql);
                     if(!$affected_rows && $pay>0)
                         throw new PDOException("Treo lên nên trang bị tu sĩ chưa thu được linh thạch<br/>");//Cái kia sai lầm ném ra ngoài dị thường
 
 //                    -------------------------------------------------------------------------------
-                    $sql = "update `playerzhuangbei` set sid = '$sid',uid=$player->uid WHERE zbnowid=$fszb->zbnowid";
+                    $sql = "update `playerzhuangbei` set sid = '$sid',uid=$player->idNguoiDung WHERE zbnowid=$fszb->idTrangBi";
                     $affected_rows = $dblj->exec($sql);
                     if(!$affected_rows)
                         throw new PDOException("Trang bị truyền tống thất bại<br/>");//Cái kia sai lầm ném ra ngoài dị thường
@@ -134,7 +141,7 @@ HTML;
             }
         }
         fszblist:
-        $fsdjall = \player\getfangshi_all($fangshi,$dblj);
+        $fsdjall = Helpers\layTatCaFangShi($fangshi,$dblj);
         foreach ($fsdjall as $fsdj){
             $zbnowid = $fsdj['zbnowid'];
             $zbname = $fsdj['zbname'];
@@ -175,7 +182,7 @@ HTML;
         if (isset($canshu)){
             if ($canshu == "buy"){
                 try{
-                    $sd = \player\getfangshi_once("shangdian",$payid,$dblj);
+                    $sd = Helpers\layThongTinFangShi("shangdian",$payid,$dblj);
 
                     if (!$sd){
                         echo "Trang bị đã bị bán ra<br/>";//Cái kia sai lầm ném ra ngoài dị thường
@@ -197,13 +204,13 @@ HTML;
                         throw new PDOException("Trang bị xuất hàng thất bại<br/>");//Cái kia sai lầm ném ra ngoài dị thường
 
 //                    -------------------------------------------------------------------------------
-                    $sql = "update `game1` set uyxb = uyxb+ $pay WHERE uid=$sd->uid";
+                    $sql = "update `game1` set uyxb = uyxb+ $pay WHERE uid=$sd->idNguoiDung";
                     $affected_rows = $dblj->exec($sql);
                     if(!$affected_rows && $pay>0)
                         throw new PDOException("Treo lên nên trang bị tu sĩ chưa thu được linh thạch<br/>");//Cái kia sai lầm ném ra ngoài dị thường
 
 //                    -------------------------------------------------------------------------------
-                    $sql = "update `playerzhuangbei` set sid = '$sid',uid=$player->uid WHERE zbnowid=$sd->zbnowid";
+                    $sql = "update `playerzhuangbei` set sid = '$sid',uid=$player->idNguoiDung WHERE zbnowid=$sd->idTrangBi";
                     $affected_rows = $dblj->exec($sql);
                     if(!$affected_rows)
                         throw new PDOException("Trang bị truyền tống thất bại<br/>");//Cái kia sai lầm ném ra ngoài dị thường
@@ -219,7 +226,7 @@ HTML;
         }
 		//Còn chờ sửa chữa, phía dưới dấu hiệu không hoàn thiện
         fssdlist:
-        $fsdjall = \player\getfangshi_all($fangshi,$dblj);
+        $fsdjall = Helpers\layTatCaFangShi($fangshi,$dblj);
         foreach ($fsdjall as $fsdj){
             $zbnowid = $fsdj['zbnowid'];
             $zbname = $fsdj['zbname'];
