@@ -1,38 +1,44 @@
 <?php
-$boss = \player\getboss($bossid,$dblj);
+require_once __DIR__ . '/../src/Helpers/TruongLaoHelper.php';
+require_once __DIR__ . '/../src/Helpers/TrangBiHelper.php';
+require_once __DIR__ . '/../src/Helpers/DaoCuHelper.php';
+require_once __DIR__ . '/../src/Helpers/DuocPhamHelper.php';
+use TuTaTuTien\Helpers as Helpers;
+
+$boss = Helpers\layThongTinBoss($bossid, $dblj);
 $pvb = $encode->encode("cmd=pvb&bossid=$bossid&sid=$sid");
 
-if($boss->bosshp>0){
+if($boss->sinhMenh>0){
         $dlhtml = '';
         $zbhtml = '';
         $djhtml = '';
         $yphtml = '';
-        if ($boss->bosszb!=''){
-            $zbarr = explode(',',$boss->bosszb);
+        if ($boss->trangBiRoi!=''){
+            $zbarr = explode(',',$boss->trangBiRoi);
             foreach($zbarr as $newstr){
-                $zbkzb = \player\getzbkzb($newstr,$dblj);
+                $zbkzb = Helpers\layThongTinTrangBi($newstr, $dblj);
 				//$zhuangbei = new \player\zhuangbei();
-                $zbcmd = $encode->encode("cmd=zbinfo_sys&zbid=$zbkzb->zbid&sid=$sid");
-                $zbhtml .= "<a href='?cmd=$zbcmd'><font color='{$zbkzb->zbys}'>$zbkzb->zbname</font></a>";
+                $zbcmd = $encode->encode("cmd=zbinfo_sys&zbid=$zbkzb->idMauTrangBi&sid=$sid");
+                $zbhtml .= "<a href='?cmd=$zbcmd'><font color='{$zbkzb->phamChat}'>$zbkzb->tenTrangBi</font></a>";
             }
             $dlhtml .=$zbhtml;
         }
-        if ($boss->bossdj!=''){
-            $djarr = explode(',',$boss->bossdj);
+        if ($boss->daoCuRoi!=''){
+            $djarr = explode(',',$boss->daoCuRoi);
             foreach($djarr as $newstr){
-                $dj = \player\getdaoju($newstr,$dblj);
-                $djinfo = $encode->encode("cmd=djinfo&djid=$dj->djid&sid=$sid");
-                $djhtml .= "<font class='djys'><a href='?cmd=$djinfo'>$dj->djname</a></font>";
+                $dj = Helpers\layThongTinDaoCu($newstr, $dblj);
+                $djinfo = $encode->encode("cmd=djinfo&djid=$dj->idDaoCu&sid=$sid");
+                $djhtml .= "<font class='djys'><a href='?cmd=$djinfo'>$dj->tenDaoCu</a></font>";
             }
             $dlhtml .=$djhtml;
         }
-        if ($boss->bossyp!=''){
-            $yparr = explode(',',$boss->bossyp);
+        if ($boss->duocPhamRoi!=''){
+            $yparr = explode(',',$boss->duocPhamRoi);
             foreach($yparr as $newstr){
-                $yp = \player\getyaopinonce($newstr,$dblj);
-                $ypinfo = $encode->encode("cmd=ypinfo&ypid=$yp->ypid&sid=$sid");
+                $yp = Helpers\layThongTinDuocPham($newstr, $dblj);
+                $ypinfo = $encode->encode("cmd=ypinfo&ypid=$yp->idDuocPham&sid=$sid");
 
-                $yphtml .= "<font class='ypys'><a href='?cmd=$ypinfo'>$yp->ypname</a></font>";
+                $yphtml .= "<font class='ypys'><a href='?cmd=$ypinfo'>$yp->tenDuocPham</a></font>";
             }
             $dlhtml .=$yphtml;
         }
@@ -46,8 +52,8 @@ if($boss->bosshp>0){
 HTML;
 }
 $bossinfohtml = <<<HTML
-[$boss->bossname]Công kích:{$boss->bossgj}Phòng ngự:$boss->bossfy<hr>
-$boss->bossinfo<hr>
+[$boss->tenBoss]Công kích:{$boss->congKich}Phòng ngự:$boss->phongNgu<hr>
+$boss->moTaBoss<hr>
 <div style="border: #dcd4a1; border-style: dashed; border-top-width: 1px;
 border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px">$dlhtml</div><hr>
 <br/>
