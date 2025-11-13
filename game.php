@@ -134,26 +134,62 @@ if (isset($cmd)){
                 }
                 $username = htmlspecialchars($username);
                 $sid = md5($username.$token.'229');//Ban đầu điểm phục sinh, phi thường trọng yếu, nhất định phải thiết trí đối
+                
+                // Debug: Log generated SID
+                error_log("Generated SID: $sid for username: $username, token: $token");
+                
                 $sql="select * from game1 where token='$token'";
                 $cxjg = $dblj->query($sql);
                 $existingSid = '';
                 $cxjg->bindColumn('sid',$existingSid);
                 $ret = $cxjg->fetch(PDO::FETCH_BOUND);
+                
+                // Debug: Check if player exists
+                error_log("Existing player check - existingSid: " . ($existingSid ? $existingSid : 'EMPTY') . ", ret: " . ($ret ? 'true' : 'false'));
+                
                 $nowdate = date('Y-m-d H:i:s');
+                
+                // Kiểm tra nếu đã có nhân vật với token này
+                if ($ret && $existingSid != '') {
+                    // Người chơi đã có nhân vật, chuyển đến trang game
+                    error_log("Player already exists with SID: $existingSid");
+                    $player = \player\getplayer($existingSid,$dblj);
+                    $gonowmid = $encode->encode("cmd=goto_map&newmid=$player->nowmid&sid=$existingSid");
+                    header("refresh:1;url=?cmd=$gonowmid");
+                    exit();
+                }
+                
+                // Tạo nhân vật mới
                 if ($existingSid ==''){
                     $gameconfig = \player\getgameconfig($dblj);
                     $firstmid = $gameconfig->firstmid;
+                    
+                    // Debug log
+                    error_log("Creating new character - SID: $sid, Username: $username, Token: $token");
                     
                     // Kiểm tra xem cột shenfen có tồn tại không
                     try {
                         $sql = "insert into game1(token,sid,uname,ulv,uyxb,uczb,uexp,uhp,umaxhp,ugj,ufy,uwx,usex,vip,nowmid,endtime,sfzx,shenfen) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
                         $stmt = $dblj->prepare($sql);
-                        $stmt->execute(array($token,$sid,$username,'1','2000','100','0','35','35','12','5','0',$sex,'0',$firstmid,$nowdate,'1',$shenfen));//Tiến vào tham số thiết trí
+                        $result = $stmt->execute(array($token,$sid,$username,'1','2000','100','0','35','35','12','5','0',$sex,'0',$firstmid,$nowdate,'1',$shenfen));
+                        
+                        if (!$result) {
+                            error_log("INSERT FAILED with shenfen: " . print_r($stmt->errorInfo(), true));
+                            throw new Exception("Insert failed");
+                        }
+                        error_log("Character created successfully with shenfen column");
                     } catch (PDOException $e) {
+                        error_log("Failed to insert with shenfen, trying without: " . $e->getMessage());
                         // Nếu cột shenfen không tồn tại, insert không có cột này
                         $sql = "insert into game1(token,sid,uname,ulv,uyxb,uczb,uexp,uhp,umaxhp,ugj,ufy,uwx,usex,vip,nowmid,endtime,sfzx) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
                         $stmt = $dblj->prepare($sql);
-                        $stmt->execute(array($token,$sid,$username,'1','2000','100','0','35','35','12','5','0',$sex,'0',$firstmid,$nowdate,'1'));//Tiến vào tham số thiết trí
+                        $result = $stmt->execute(array($token,$sid,$username,'1','2000','100','0','35','35','12','5','0',$sex,'0',$firstmid,$nowdate,'1'));
+                        
+                        if (!$result) {
+                            error_log("INSERT FAILED without shenfen: " . print_r($stmt->errorInfo(), true));
+                            die("Lỗi: Không thể tạo nhân vật. Vui lòng thử lại!");
+                        }
+                        error_log("Character created successfully without shenfen column");
                     }
 //Tiến vào tham số thiết trí
                     $gonowmid = $encode->encode("cmd=goto_map&newmid=$gameconfig->firstmid&sid=$sid");
@@ -166,13 +202,12 @@ if (isset($cmd)){
                     $stmt->execute(array('【Hệ thống】',"Vạn người không được một{$username}Bước lên tiên đồ",'0'));//Hệ thống thông cáo
 					
                     header("refresh:2;url=?cmd=$gonowmid");//Trì hoãn thời gian
-                } else {
-                    // Người chơi đã có nhân vật, chuyển đến trang game
-                    $player = \player\getplayer($existingSid,$dblj);
-                    $gonowmid = $encode->encode("cmd=goto_map&newmid=$player->nowmid&sid=$existingSid");
-                    header("refresh:1;url=?cmd=$gonowmid");
+                    exit();
                 }
-                exit();
+                
+                // Nếu code chạy đến đây nghĩa là có vấn đề
+                error_log("ERROR: Character creation logic issue - existingSid: $existingSid");
+                die("Lỗi hệ thống! Vui lòng liên hệ admin.");
             }
             break;
         case 'goto_map':
