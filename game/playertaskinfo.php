@@ -9,9 +9,9 @@ use TuTaTuTien\Helpers as Helpers;
 
 $task = Helpers\layThongTinNhiemVuCuaNguoiChoi($sid,$rwid,$dblj);
 $cs = Helpers\layThongTinNhiemVu($rwid,$dblj);
-$player = \Helpers\layThongTinNguoiChoi($sid,$dblj);
+$nguoiChoi = \Helpers\layThongTinNguoiChoi($sid,$dblj);
 
-$gonowmid = $encode->encode("cmd=gomid&newmid=$player->idBanDoHienTai&sid=$sid");
+$gonowmid = $encode->encode("cmd=gomid&newmid=$nguoiChoi->idBanDoHienTai&sid=$sid");
 $rwdjarr = explode(',',$task->rwdj);
 $rwjlhtml = 'Nhiệm vụ ban thưởng：<br/>';
 $rwhtml='';
@@ -48,12 +48,12 @@ if ($task->rwyxb!=''){
 $cs = Helpers\layThongTinNhiemVu($rwid,$dblj);//Truyền tống địa chỉ ID
 $upmidlj = $encode->encode("cmd=gomid&newmid=$cs->rwqy&sid=$sid");//Truyền tống kết nối thu hoạch
 $dt = Helpers\layThongTinBanDo($cs->rwqy,$dblj);
-//$xiaohao = round($player->capDo*2);//Tính toán linh thạch truyền tống tiêu hao
-$xiaohao = round($player->capDo*12+500);
-if ($player->tienTroChoi>$xiaohao){
+//$xiaohao = round($nguoiChoi->capDo*2);//Tính toán linh thạch truyền tống tiêu hao
+$xiaohao = round($nguoiChoi->capDo*12+500);
+if ($nguoiChoi->tienTroChoi>$xiaohao){
                     Helpers\thayDoiTienTroChoi(2,$xiaohao,$sid,$dblj);
-                    //Helpers\thayDoiThuocTinhNguoiChoi('uhp',$player->sinhMenhToiDa,$sid,$dblj);Nơi này tăng máu
-                    $player = \Helpers\layThongTinNguoiChoi($sid,$dblj);
+                    //Helpers\thayDoiThuocTinhNguoiChoi('uhp',$nguoiChoi->sinhMenhToiDa,$sid,$dblj);Nơi này tăng máu
+                    $nguoiChoi = \Helpers\layThongTinNguoiChoi($sid,$dblj);
                     $sfhtml =<<<HTML
 					<a href='?cmd=$upmidlj'>Truyền tống[{$xiaohao}]</a><br>
 HTML;

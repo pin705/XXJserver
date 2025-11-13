@@ -101,28 +101,28 @@ $sjhtml =<<<HTML
 HTML;
  
 
-$player = \Helpers\layThongTinNguoiChoi($sid,$dblj);
-$gonowmid = $encode->encode("cmd=gomid&newmid=$player->idBanDoHienTai&sid=$sid");
+$nguoiChoi = \Helpers\layThongTinNguoiChoi($sid,$dblj);
+$gonowmid = $encode->encode("cmd=gomid&newmid=$nguoiChoi->idBanDoHienTai&sid=$sid");
 $tishi = '';
 if (isset($dhm)){
 		
     $dhm = htmlspecialchars($dhm);
 	//Phía dưới viết chính là phán đoán nhận lấy VIP666 Gói quà tình huống
-        if ($dhm==vip666888 && $player->dhvip1==1){
+        if ($dhm==vip666888 && $nguoiChoi->dhvip1==1){
             $tishi =  'CDK đã nhập, không thể nhận lại！';
         }else{
         
-                if ($dhm==vip666 && $player->dhvip==1){
+                if ($dhm==vip666 && $nguoiChoi->dhvip==1){
             $tishi =  'CDK đã nhập, không thể nhận lại！';
         }
-		if ($dhm==vip666 && $player->dhvip==0){
+		if ($dhm==vip666 && $nguoiChoi->dhvip==0){
     		$dhm=vip666;
-    		$sql = "update game1 set dhvip = $player->dhvip + 1  WHERE sid='$sid'";//<!--Hối đoái thêm 1-->
+    		$sql = "update game1 set dhvip = $nguoiChoi->dhvip + 1  WHERE sid='$sid'";//<!--Hối đoái thêm 1-->
     		$dblj->exec($sql);
 	   }
-		if ($dhm==vip666888 && $player->dhvip1==0){
+		if ($dhm==vip666888 && $nguoiChoi->dhvip1==0){
     		$dhm=vip666888;
-    		$sql = "update game1 set dhvip1 = $player->dhvip1 + 1  WHERE sid='$sid'";//<!--Hối đoái thêm 1-->
+    		$sql = "update game1 set dhvip1 = $nguoiChoi->dhvip1 + 1  WHERE sid='$sid'";//<!--Hối đoái thêm 1-->
     		$dblj->exec($sql);
 	}
 	

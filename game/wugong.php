@@ -7,12 +7,12 @@ require_once __DIR__ . '/../src/Helpers/SungVatHelper.php';
 require_once __DIR__ . '/../src/Helpers/NhiemVuHelper.php';
 use TuTaTuTien\Helpers as Helpers;
 
-$player = \Helpers\layThongTinNguoiChoi($sid,$dblj);
-$wgid = $player->wugong;
-$wgid = $player->wugong;
+$nguoiChoi = \Helpers\layThongTinNguoiChoi($sid,$dblj);
+$wgid = $nguoiChoi->wugong;
+$wgid = $nguoiChoi->wugong;
 $cxwg = Helpers\layThongTinVoCong($wgid,$sid,$dblj);
 
-$gonowmid = $encode->encode("cmd=gomid&newmid=$player->idBanDoHienTai&sid=$sid");
+$gonowmid = $encode->encode("cmd=gomid&newmid=$nguoiChoi->idBanDoHienTai&sid=$sid");
 $strxl = $encode->encode("cmd=wgxiulian&canshu=1&wgid=$wgid&sid=$sid");
 $endxl = $encode->encode("cmd=jswg&wgid=$wgid&sid=$sid");//Kết thúc tu tiên
 $nowdate = date('Y-m-d H:i:s');
@@ -37,7 +37,7 @@ if ($cmd == 'wgxiulian'){
             Helpers\thayDoiVoCong('xlzt',1,$wgid,$sid,$dblj);
             $tishi = 'Hắc hưu hắc hưu, thao luyện...<br/>';
             $xlsjc = 0;
-            $player = \Helpers\layThongTinNguoiChoi($sid,$dblj);
+            $nguoiChoi = \Helpers\layThongTinNguoiChoi($sid,$dblj);
         }else{
             $tishi='Thất bại thất bại thất bại 404';
         }
@@ -103,7 +103,7 @@ $wgxl = $encode->encode("cmd=wgxl&sid=$sid");
 $wgxx = $encode->encode("cmd=xxwg&sid=$sid");
 $cxwg = Helpers\layThongTinVoCong($wgid,$sid,$dblj);
 $wgys = $cxwg->wgys;
-$wu = $player->wugong;
+$wu = $nguoiChoi->wugong;
 if ($wu==0){
 	$wuwugong = "Không có võ công！！";
 	$wumiji = "0 Bí tịch";
@@ -114,8 +114,8 @@ if ($wu==0){
 $xlhtml = <<<HTML
 <IMG width='280' height='140' src='./images/wugong/$wgid.png' style="border-radius: 8px;">
 <a href="?cmd=$xiuliancmd" >Ngồi thiền tu luyện</a><a href="?cmd=$wgxl" >Võ công tu hành</a><a href="?cmd=$wgxx" >Bí tịch</a><br>
-Tu hành người chơi：$player->tenNhanVat<br/>
-Người chơi đẳng cấp：$player->canhGioi($player->capDo)<br/>
+Tu hành người chơi：$nguoiChoi->tenNhanVat<br/>
+Người chơi đẳng cấp：$nguoiChoi->canhGioi($nguoiChoi->capDo)<br/>
 ===============<br/>
 Tu hành võ công:$wuwugong<font color="$wgys">$cxwg->wgname</font><br>
 Trước mắt công lực:$gongli $cxwg->wgdj<br>

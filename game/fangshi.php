@@ -7,8 +7,8 @@ require_once __DIR__ . '/../src/Helpers/ClubHelper.php';
 use TuTaTuTien\Helpers as Helpers;
 
 
-$player = \Helpers\layThongTinNguoiChoi($sid,$dblj);
-$gonowmid = $encode->encode("cmd=gomid&newmid=$player->idBanDoHienTai&sid=$sid");
+$nguoiChoi = \Helpers\layThongTinNguoiChoi($sid,$dblj);
+$gonowmid = $encode->encode("cmd=gomid&newmid=$nguoiChoi->idBanDoHienTai&sid=$sid");
 $payhtml='';
 $pdjcount = 0;
 $fy = "./game/fy.php";
@@ -51,7 +51,7 @@ switch ($fangshi){
                     if(!$affected_rows)
                         throw new PDOException("Treo lên nên đạo cụ tu sĩ chưa thu được linh thạch<br/>");//Cái kia sai lầm ném ra ngoài dị thường
                     $djsum = $pdjcount + $buycount;
-                    $sql = "replace into `playerdaoju`(djname,djsum,uid,sid,djid,djinfo) VALUES('$fsdj->tenDaoCu','$djsum','$player->idNguoiDung','$sid',$fsdj->idDaoCu,'$fsdj->djinfo')";
+                    $sql = "replace into `playerdaoju`(djname,djsum,uid,sid,djid,djinfo) VALUES('$fsdj->tenDaoCu','$djsum','$nguoiChoi->idNguoiDung','$sid',$fsdj->idDaoCu,'$fsdj->djinfo')";
                     $affected_rows=$dblj->exec($sql);
                     if(!$affected_rows)
                         throw new PDOException("Truyền tống trận tại truyền tống đạo cụ thời điểm truyền tống thất bại<br/>");//Cái kia sai lầm ném ra ngoài dị thường
@@ -126,7 +126,7 @@ HTML;
                         throw new PDOException("Treo lên nên trang bị tu sĩ chưa thu được linh thạch<br/>");//Cái kia sai lầm ném ra ngoài dị thường
 
 //                    -------------------------------------------------------------------------------
-                    $sql = "update `playerzhuangbei` set sid = '$sid',uid=$player->idNguoiDung WHERE zbnowid=$fszb->idTrangBi";
+                    $sql = "update `playerzhuangbei` set sid = '$sid',uid=$nguoiChoi->idNguoiDung WHERE zbnowid=$fszb->idTrangBi";
                     $affected_rows = $dblj->exec($sql);
                     if(!$affected_rows)
                         throw new PDOException("Trang bị truyền tống thất bại<br/>");//Cái kia sai lầm ném ra ngoài dị thường
@@ -210,7 +210,7 @@ HTML;
                         throw new PDOException("Treo lên nên trang bị tu sĩ chưa thu được linh thạch<br/>");//Cái kia sai lầm ném ra ngoài dị thường
 
 //                    -------------------------------------------------------------------------------
-                    $sql = "update `playerzhuangbei` set sid = '$sid',uid=$player->idNguoiDung WHERE zbnowid=$sd->idTrangBi";
+                    $sql = "update `playerzhuangbei` set sid = '$sid',uid=$nguoiChoi->idNguoiDung WHERE zbnowid=$sd->idTrangBi";
                     $affected_rows = $dblj->exec($sql);
                     if(!$affected_rows)
                         throw new PDOException("Trang bị truyền tống thất bại<br/>");//Cái kia sai lầm ném ra ngoài dị thường

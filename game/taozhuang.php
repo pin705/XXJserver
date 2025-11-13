@@ -1,16 +1,16 @@
 <?php
 
 //Khảo thí sáo trang
-$player = player\getplayer($sid,$dblj);
-$gonowmid = $encode->encode("cmd=gomid&newmid=$player->nowmid&sid=$sid");
+$nguoiChoi = player\getplayer($sid,$dblj);
+$gonowmid = $encode->encode("cmd=gomid&newmid=$nguoiChoi->nowmid&sid=$sid");
 
-$zb1 = player\getzb($player->tool1,$dblj);
-$zb2 = player\getzb($player->tool2,$dblj);
-$zb3 = player\getzb($player->tool3,$dblj);
-$zb4 = player\getzb($player->tool4,$dblj);
-$zb5 = player\getzb($player->tool5,$dblj);
-$zb6 = player\getzb($player->tool6,$dblj);
-$zb7 = player\getzb($player->tool7,$dblj);
+$zb1 = player\getzb($nguoiChoi->tool1,$dblj);
+$zb2 = player\getzb($nguoiChoi->tool2,$dblj);
+$zb3 = player\getzb($nguoiChoi->tool3,$dblj);
+$zb4 = player\getzb($nguoiChoi->tool4,$dblj);
+$zb5 = player\getzb($nguoiChoi->tool5,$dblj);
+$zb6 = player\getzb($nguoiChoi->tool6,$dblj);
+$zb7 = player\getzb($nguoiChoi->tool7,$dblj);
 
 $zhuangbei1 = $zb1->taozhuang;
 $zhuangbei2 = $zb2->taozhuang;
@@ -261,7 +261,7 @@ if($czb1*$czb2*$czb3*$czb4*$czb5*$czb6*$czb7 != 0){
 }
 
 $ztcmd = $encode->encode("cmd=zhuangtai&sid=$sid");
-$cwinfo = $encode->encode("cmd=chongwu&cwid=$player->cw&canshu=cwinfo&sid=$sid");
+$cwinfo = $encode->encode("cmd=chongwu&cwid=$nguoiChoi->cw&canshu=cwinfo&sid=$sid");
 $gm =  $encode->encode("cmd=czbgm&canshu2=gaiming2&sid=$sid");
 $sz =  $encode->encode("cmd=taozhuang&sid=$sid");
 //Khảo thí sáo trang

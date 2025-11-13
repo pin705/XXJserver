@@ -7,6 +7,8 @@ require_once __DIR__ . '/../src/Helpers/SungVatHelper.php';
 require_once __DIR__ . '/../src/Helpers/NhiemVuHelper.php';
 use TuTaTuTien\Helpers as Helpers;
 
+$nguoiChoi = Helpers\layThongTinNguoiChoi($sid, $dblj);
+
 //Nơi này nghĩ dựng cái thành công nhắc nhở khung
 $tscg = <<<HTML
 <html> 
@@ -93,7 +95,7 @@ $ydgj = '';
 $ydfy = '';
 $ydbj = '';
 $ydxx = '';
-$gonowmid = $encode->encode("cmd=gomid&newmid=$player->idBanDoHienTai&sid=$sid");
+$gonowmid = $encode->encode("cmd=gomid&newmid=$nguoiChoi->idBanDoHienTai&sid=$sid");
 $yaodan = Helpers\layThongTinDuocDan($ydid,$dblj);
 $playeryd = Helpers\layThongTinDuocDanCuaNguoiChoi($ydid,$sid,$dblj);
 $setyd = '';
@@ -172,7 +174,7 @@ if ($playeryd){
 $tshtml = <<<html
 	<a id="load" href="?cmd=$daoli"style="background-color:#7b156f;color: #ffffff;">Dựng ngược chậm nhai</a>
 html;
-	if($player->wugong==3){//Võ công sử dụng====Trên dưới điên đảo====
+	if($nguoiChoi->wugong==3){//Võ công sử dụng====Trên dưới điên đảo====
 		$wgdaoli = "$tshtml";
 	}
     $setyd = <<<HTML

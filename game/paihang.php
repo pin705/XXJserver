@@ -9,13 +9,13 @@ require_once __DIR__ . '/../src/Helpers/NguoiChoiHelper.php';
 require_once __DIR__ . '/../src/Helpers/ClubHelper.php';
 use TuTaTuTien\Helpers as Helpers;
 
-$gonowmid = $encode->encode("cmd=gomid&newmid=$player->nowmid&sid=$sid");
+$gonowmid = $encode->encode("cmd=gomid&newmid=$nguoiChoi->nowmid&sid=$sid");
 $sql = 'SELECT * FROM game1 ORDER BY ulv DESC,uexp ASC LIMIT 10';//danh sách thu hoạch
-$player = Helpers\layThongTinNguoiChoi($sid, $dblj);
+$nguoiChoi = Helpers\layThongTinNguoiChoi($sid, $dblj);
 $phcxjg = $dblj->query($sql);
 $phhtml='';
 $phlshtml='';
-$backcmd=$encode->encode("cmd=gomid&newmid=$player->idBanDoHienTai&sid=$sid");
+$backcmd=$encode->encode("cmd=gomid&newmid=$nguoiChoi->idBanDoHienTai&sid=$sid");
 if ($phcxjg){
     $ret = $phcxjg->fetchAll(PDO::FETCH_ASSOC);
     for ($i=0;$i < count($ret);$i++){
@@ -31,7 +31,7 @@ if ($phcxjg){
             $club = new \stdClass();
             $club->clubname ="";
         }
-        $ucmd = $encode->encode("cmd=getplayerinfo&uid=$uid&sid=$player->idPhien");
+        $ucmd = $encode->encode("cmd=getplayerinfo&uid=$uid&sid=$nguoiChoi->idPhien");
         $xuhao = $i+1;
         $phlshtml .="$xuhao.[$ulv]<a href='?cmd=$ucmd'>{$club->clubname}$uname</a><br/>";
     }

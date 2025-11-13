@@ -13,7 +13,7 @@ require_once __DIR__ . '/../src/Helpers/ClubHelper.php';
 use TuTaTuTien\Helpers as Helpers;
 
 $task = Helpers\layThongTinNhiemVu($rwid,$dblj);
-$player = \Helpers\layThongTinNguoiChoi($sid,$dblj);
+$nguoiChoi = \Helpers\layThongTinNguoiChoi($sid,$dblj);
 $ptask = Helpers\layThongTinNhiemVuCuaNguoiChoi($sid,$rwid,$dblj);
 $rwdjarr = explode(',',$task->rwdj);
 $rwyparr = explode(',',$task->rwyp);
@@ -24,7 +24,7 @@ $jlypidarr = array();
 $jlypslarr = array();
 $jlzbslarr = array();
 
-$gonowmid = $encode->encode("cmd=gomid&newmid=$player->idBanDoHienTai&sid=$sid");
+$gonowmid = $encode->encode("cmd=gomid&newmid=$nguoiChoi->idBanDoHienTai&sid=$sid");
 $jieshourw = $encode->encode("cmd=task&nid=$nid&canshu=jieshou&rwid=$rwid&sid=$sid");
 $tijiaorw = $encode->encode("cmd=task&nid=$nid&canshu=tijiao&rwid=$rwid&sid=$sid");
 $rwhtml = '';
