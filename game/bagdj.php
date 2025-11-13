@@ -5,31 +5,36 @@
  * Date: 2016/6/17
  * Time: 16:01
  */
-$gonowmid = $encode->encode("cmd=gomid&newmid=$player->nowmid&sid=$sid");
+require_once __DIR__ . '/../src/Helpers/NguoiChoiHelper.php';
+require_once __DIR__ . '/../src/Helpers/DaoCuHelper.php';
+use TuTaTuTien\Helpers as Helpers;
+
+$nguoiChoi = Helpers\layThongTinNguoiChoi($sid, $dblj);
+$gonowmid = $encode->encode("cmd=gomid&newmid=$nguoiChoi->idBanDoHienTai&sid=$sid");
 if (isset($canshu)){
     $getyxb = 0;
     if ($canshu == "maichu1"){
-        $ret = \player\deledjsum($djid,1,$sid,$dblj);
+        $ret = Helpers\xoaDaoCuCuaNguoiChoi($djid, 1, $sid, $dblj);
         if ($ret){
-            $daoju = \player\getdaoju($djid,$dblj);
-            \player\changeyxb(1,$daoju->djyxb,$sid,$dblj);
-            $getyxb = $daoju->djyxb;
+            $daoju = Helpers\layThongTinDaoCu($djid, $dblj);
+            Helpers\thayDoiTienTroChoi(1, $daoju->giaTien, $sid, $dblj);
+            $getyxb = $daoju->giaTien;
         }
     }
     if ($canshu == "maichu5"){
-        $ret = \player\deledjsum($djid,5,$sid,$dblj);
+        $ret = Helpers\xoaDaoCuCuaNguoiChoi($djid, 5, $sid, $dblj);
         if ($ret){
-            $daoju = \player\getdaoju($djid,$dblj);
-            \player\changeyxb(1,$daoju->djyxb*5 ,$sid,$dblj);
-            $getyxb = $daoju->djyxb*5;
+            $daoju = Helpers\layThongTinDaoCu($djid, $dblj);
+            Helpers\thayDoiTienTroChoi(1, $daoju->giaTien * 5, $sid, $dblj);
+            $getyxb = $daoju->giaTien * 5;
         }
     }
     if ($canshu == "maichu10"){
-        $ret = \player\deledjsum($djid,10,$sid,$dblj);
+        $ret = Helpers\xoaDaoCuCuaNguoiChoi($djid, 10, $sid, $dblj);
         if ($ret){
-            $daoju = \player\getdaoju($djid,$dblj);
-            \player\changeyxb(1,$daoju->djyxb*10 ,$sid,$dblj);
-            $getyxb = $daoju->djyxb*10;
+            $daoju = Helpers\layThongTinDaoCu($djid, $dblj);
+            Helpers\thayDoiTienTroChoi(1, $daoju->giaTien * 10, $sid, $dblj);
+            $getyxb = $daoju->giaTien * 10;
         }
     }
     echo "Bán  thành công, nhận được {$getyxb}Linh thạch<br/>";
@@ -48,10 +53,10 @@ for ($i=0;$i<count($retdj);$i++){
     $djsum = $retdj[$i]['djsum'];
     if ($djsum>0){
         $hangshu = $hangshu + 1;
-        $chakandj = $encode->encode("cmd=djinfo&djid=$djid&uid=$player->uid&sid=$sid");
-        $maichu1 = $encode->encode("cmd=getbagdj&canshu=maichu1&djid=$djid&uid=$player->uid&sid=$sid");
-        $maichu5 = $encode->encode("cmd=getbagdj&canshu=maichu5&djid=$djid&uid=$player->uid&sid=$sid");
-        $maichu10 = $encode->encode("cmd=getbagdj&canshu=maichu10&djid=$djid&uid=$player->uid&sid=$sid");
+        $chakandj = $encode->encode("cmd=djinfo&djid=$djid&uid=$nguoiChoi->idNguoiDung&sid=$sid");
+        $maichu1 = $encode->encode("cmd=getbagdj&canshu=maichu1&djid=$djid&uid=$nguoiChoi->idNguoiDung&sid=$sid");
+        $maichu5 = $encode->encode("cmd=getbagdj&canshu=maichu5&djid=$djid&uid=$nguoiChoi->idNguoiDung&sid=$sid");
+        $maichu10 = $encode->encode("cmd=getbagdj&canshu=maichu10&djid=$djid&uid=$nguoiChoi->idNguoiDung&sid=$sid");
         $djhtml .="[$hangshu]<a href='?cmd=$chakandj'>{$djname}x{$djsum}</a><a href='?cmd=$maichu1'>Bán  1</a>
 		<!--<a href='?cmd=$maichu5'>Bán  5</a><a href='?cmd=$maichu10'>Bán  10</a>-->
 		<br/>";

@@ -4,14 +4,18 @@
 /*
 Nơi này ta bố trí ba lô, chủ yếu là cửa hàng công năng cất giữ
 */
+require_once __DIR__ . '/../src/Helpers/NguoiChoiHelper.php';
+require_once __DIR__ . '/../src/Helpers/DuocPhamHelper.php';
+use TuTaTuTien\Helpers as Helpers;
 
+$nguoiChoi = Helpers\layThongTinNguoiChoi($sid, $dblj);
 
-$gonowmid = $encode->encode("cmd=gomid&newmid=$player->nowmid&sid=$sid");
+$gonowmid = $encode->encode("cmd=gomid&newmid=$nguoiChoi->idBanDoHienTai&sid=$sid");
 $getbagzbcmd = $encode->encode("cmd=getbagzb&sid=$sid");
 $getbagdjcmd = $encode->encode("cmd=getbagdj&sid=$sid");
 $getbagjncmd = $encode->encode("cmd=getbagjn&sid=$sid");
 $getbagydcmd = $encode->encode("cmd=getbagyd&sid=$sid");
-$yaodan = player\getplayeryaodanall($sid,$dblj);
+$yaodan = Helpers\layTatCaDuocDanCuaNguoiChoi($sid, $dblj);
 
 $allyd= '';
 $suoyin = 0;
@@ -24,11 +28,11 @@ if ($yaodan){
             $ydname = $yd['ydname'];
             $ydcmd = $encode->encode("cmd=ydinfo&ydid=$ydid&sid=$sid");
 			
-			$playeryd = \player\getplayeryaodan($ydid,$sid,$dblj);
+			$playeryd = Helpers\layDuocDanCuaNguoiChoi($ydid, $sid, $dblj);
 			
             $useyd = $encode->encode("cmd=ydinfo&canshu=useyd&ydid=$ydid&sid=$sid");
 			
-			$yaodan1 = \player\getyaodanonce($ydid,$dblj);//Dẫn vào nhan sắc văn kiện
+			$yaodan1 = Helpers\layThongTinDuocDan($ydid, $dblj);//Dẫn vào nhan sắc văn kiện
 			
             $allyd .= <<<HTML
             [$suoyin].<a href="?cmd=$ydcmd"><font color='{$yaodan1->ydys}'>{$ydname}</font>x$ydsum</a><a href="?cmd=$useyd">Sử dụng</a>

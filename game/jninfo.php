@@ -5,43 +5,49 @@
  * Date: 2016/8/11
  * Time: 18:54
  */
-$jineng = \player\getjineng_once($jnid,$dblj);
-$duihuan = $encode->encode("cmd=jninfo&canshu=duihuan&jnid=$jnid&sid=$sid");
-$gonowmid = $encode->encode("cmd=gomid&newmid=$player->nowmid&sid=$sid");
-$htmltishi = '';
-$playerjn = \player\getplayerjineng($jnid,$sid,$dblj);
+require_once __DIR__ . '/../src/Helpers/NguoiChoiHelper.php';
+require_once __DIR__ . '/../src/Helpers/KyNangHelper.php';
+require_once __DIR__ . '/../src/Helpers/DaoCuHelper.php';
+use TuTaTuTien\Helpers as Helpers;
 
-$daoju = \player\getplayerdaoju($sid,$jineng->jndj,$dblj);
-$dhdaoju = \player\getdaoju($jineng->jndj,$dblj);
+$nguoiChoi = Helpers\layThongTinNguoiChoi($sid, $dblj);
+$jineng = Helpers\layThongTinKyNang($jnid, $dblj);
+$duihuan = $encode->encode("cmd=jninfo&canshu=duihuan&jnid=$jnid&sid=$sid");
+$gonowmid = $encode->encode("cmd=gomid&newmid=$nguoiChoi->idBanDoHienTai&sid=$sid");
+$htmltishi = '';
+$playerjn = Helpers\layKyNangCuaNguoiChoi($jnid, $sid, $dblj);
+
+$daoju = Helpers\layDaoCuCuaNguoiChoi($sid, $jineng->idDaoCuCanThiet, $dblj);
+$dhdaoju = Helpers\layThongTinDaoCu($jineng->idDaoCuCanThiet, $dblj);
 if (!$daoju){
-    $daoju = \player\getdaoju($jineng->jndj,$dblj);
-    $daoju->djsum = 0;
+    $daoju = Helpers\layThongTinDaoCu($jineng->idDaoCuCanThiet, $dblj);
+    $daoju->soLuong = 0;
 }
 
 if (isset($canshu)){
     switch ($canshu){
         case 'duihuan':
-            $ret = \player\deledjsum($jineng->jndj,$jineng->djcount,$sid,$dblj);
+            $ret = Helpers\xoaDaoCuCuaNguoiChoi($jineng->idDaoCuCanThiet, $jineng->soLuongDaoCuCanThiet, $sid, $dblj);
             if ($ret){
-                \player\addjineng($jnid,1,$sid,$dblj);
+                Helpers\themKyNangChoNguoiChoi($jnid, 1, $sid, $dblj);
                 $htmltishi = "Hối đoái thành công<br/>";
-                $playerjn = \player\getplayerjineng($jnid,$sid,$dblj);
-                $daoju = \player\getplayerdaoju($sid,$jineng->jndj,$dblj);
+                $playerjn = Helpers\layKyNangCuaNguoiChoi($jnid, $sid, $dblj);
+                $daoju = Helpers\layDaoCuCuaNguoiChoi($sid, $jineng->idDaoCuCanThiet, $dblj);
             }else{
                 $htmltishi = "Đạo cụ số lượng không đủ<br/>";
             }
 
             break;
         case 'setjn1':
-            \player\changeplayersx('jn1',$jnid,$sid,$dblj);
+            Helpers\thayDoiThuocTinhNguoiChoi('jn1', $jnid, $sid, $dblj);
             $htmltishi = "Thiết trí phù lục 1 Thành công<br/>";
             break;
         case 'setjn2':
-            \player\changeplayersx('jn2',$jnid,$sid,$dblj);
+            Helpers\thayDoiThuocTinhNguoiChoi('jn2', $jnid, $sid, $dblj);
             $htmltishi = "Thiết trí phù lục 2 Thành công<br/>";
             break;
         case 'setjn3':
-            \player\changeplayersx('jn3',$jnid,$sid,$dblj);
+            Helpers\thayDoiThuocTinhNguoiChoi('jn3', $jnid, $sid, $dblj);
             $htmltishi = "Thiết trí phù lục 3 Thành công<br/>";
             break;
     }
@@ -49,7 +55,7 @@ if (isset($canshu)){
 
 }
 
-$dhhtml = "Hối đoái cần：$dhdaoju->djname($daoju->djsum/$jineng->djcount)<a href='?cmd=$duihuan'>Hối đoái</a><br/><br/>";
+$dhhtml = "Hối đoái cần：$dhdaoju->tenDaoCu($daoju->soLuong/$jineng->soLuongDaoCuCanThiet)<a href='?cmd=$duihuan'>Hối đoái</a><br/><br/>";
 if ($playerjn){
     $setjn1 = $encode->encode("cmd=jninfo&canshu=setjn1&jnid=$jnid&sid=$sid");
     $setjn2 = $encode->encode("cmd=jninfo&canshu=setjn2&jnid=$jnid&sid=$sid");
@@ -61,11 +67,11 @@ if ($playerjn){
 }
 
 ?>
-Kỹ năng tên：<?php echo $jineng->jnname; ?><br/>
-Công kích tăng thêm：<?php echo $jineng->jngj; ?>%<br/>
-Phòng ngự tăng thêm：<?php echo $jineng->jnfy; ?>%<br/>
-Bạo kích tăng thêm：<?php echo $jineng->jnbj; ?>%<br/>
-Hút máu tăng thêm：<?php echo $jineng->jnxx; ?>%<br/>
+Kỹ năng tên：<?php echo $jineng->tenKyNang; ?><br/>
+Công kích tăng thêm：<?php echo $jineng->congKich; ?>%<br/>
+Phòng ngự tăng thêm：<?php echo $jineng->phongNgu; ?>%<br/>
+Bạo kích tăng thêm：<?php echo $jineng->baoKich; ?>%<br/>
+Hút máu tăng thêm：<?php echo $jineng->hutMau; ?>%<br/>
 <?php echo $htmltishi; ?>
 <?php echo $dhhtml; ?>
 <br/>

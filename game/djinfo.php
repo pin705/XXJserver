@@ -1,10 +1,14 @@
 <?php
-$gonowmid = $encode->encode("cmd=gomid&newmid=$player->nowmid&sid=$sid");
-$ydaoju = \player\getdaoju($djid,$dblj);
-$daoju = \player\getdaoju($djid,$dblj);
+require_once __DIR__ . '/../src/Helpers/NguoiChoiHelper.php';
+require_once __DIR__ . '/../src/Helpers/DaoCuHelper.php';
+use TuTaTuTien\Helpers as Helpers;
+
+$nguoiChoi = Helpers\layThongTinNguoiChoi($sid, $dblj);
+$gonowmid = $encode->encode("cmd=gomid&newmid=$nguoiChoi->idBanDoHienTai&sid=$sid");
+$ydaoju = Helpers\layThongTinDaoCu($djid, $dblj);
+$daoju = Helpers\layThongTinDaoCu($djid, $dblj);
 $chushou = $encode->encode("cmd=djinfo&canshu=chushou&djid=$djid&sid=$sid");
-$daoju = \player\getplayerdaoju($sid,$djid,$dblj);
-$player = \player\getplayer($sid,$dblj);
+$daoju = Helpers\layDaoCuCuaNguoiChoi($sid, $djid, $dblj);
 $djhtml = '';
 if ($daoju){
     $self = $_SERVER['PHP_SELF'];
@@ -30,12 +34,12 @@ if(isset($canshu))
             $dblj->setAttribute(PDO::ATTR_AUTOCOMMIT, 0);
             $dblj->setAttribute(PDO::ATTR_ERRMODE,  PDO::ERRMODE_EXCEPTION);
             $dblj->beginTransaction();
-            $sql = "update `playerdaoju` set djsum= djsum - $djcount WHERE djid = $djid AND djsum >= $djcount AND uid = $player->uid AND sid='$sid'";
+            $sql = "update `playerdaoju` set djsum= djsum - $djcount WHERE djid = $djid AND djsum >= $djcount AND uid = $nguoiChoi->idNguoiDung AND sid='$sid'";
             $affected_rows=$dblj->exec($sql);
             if (!$affected_rows){
                 throw new PDOException("Trên người ngươi đạo cụ không đủ<br/>");//Cái kia sai lầm ném ra ngoài dị thường
             }
-            $sql = "insert into `fangshi_dj`(djid,djcount,uid,pay,djname,djinfo) VALUES ($djid,$djcount,$player->uid,$pay,'$daoju->djname','$daoju->djinfo')";
+            $sql = "insert into `fangshi_dj`(djid,djcount,uid,pay,djname,djinfo) VALUES ($djid,$djcount,$nguoiChoi->idNguoiDung,$pay,'$daoju->tenDaoCu','$daoju->moTa')";
             $affected_rows=$dblj->exec($sql);
             if (!$affected_rows){
                 throw new PDOException("Bán ra thất bại<br/>");//Cái kia sai lầm ném ra ngoài dị thường
@@ -47,10 +51,10 @@ if(isset($canshu))
             $dblj->rollBack();
         }
         $dblj->setAttribute(PDO::ATTR_AUTOCOMMIT, 1);//Quan bế
-        $daoju = \player\getplayerdaoju($sid,$djid,$dblj);
-        \player\changerwyq1(1,$djid,1,$sid,$dblj);
+        $daoju = Helpers\layDaoCuCuaNguoiChoi($sid, $djid, $dblj);
+        Helpers\capNhatNhiemVu(1, $djid, 1, $sid, $dblj);
     }
-    $gonowmid = $encode->encode("cmd=gomid&newmid=$player->nowmid&sid=$player->sid");
+    $gonowmid = $encode->encode("cmd=gomid&newmid=$nguoiChoi->idBanDoHienTai&sid=$nguoiChoi->idPhien");
 $fh =<<<HTML
 	<a href="#" onClick="javascript:history.back(-1);">Trở lại</a>
     <a href="game.php?cmd=$gonowmid" style="float:right;" >Trở về trò chơi</a> <br/>
@@ -58,15 +62,15 @@ HTML;
 
 ?>
 
-Đạo cụ tên：<?php echo $ydaoju->djname; ?><br/>
+Đạo cụ tên：<?php echo $ydaoju->tenDaoCu; ?><br/>
 <?php
     if ($daoju) {
-        echo "Đạo cụ số lượng:$daoju->djsum<br/>";
+        echo "Đạo cụ số lượng:$daoju->soLuong<br/>";
     }
 ?>
-Đạo cụ giá cả：<?php echo $ydaoju->djyxb;?>Linh thạch<br/>
+Đạo cụ giá cả：<?php echo $ydaoju->giaTien;?>Linh thạch<br/>
 Đạo cụ nói rõ：
-<?php echo $ydaoju->djinfo; ?>
+<?php echo $ydaoju->moTa; ?>
 <hr>
 <?php echo $djhtml; ?>
 <br/>

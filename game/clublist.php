@@ -5,10 +5,14 @@
  * Date: 2016/8/27 0027
  * Time: 11:49
  */
+require_once __DIR__ . '/../src/Helpers/NguoiChoiHelper.php';
+require_once __DIR__ . '/../src/Helpers/ClubHelper.php';
+use TuTaTuTien\Helpers as Helpers;
+
 $clublist = '';
-$allclub = \player\getclub_all($dblj);
-$player = \player\getplayer($sid,$dblj);
-$gonowmid = $encode->encode("cmd=gomid&newmid=$player->nowmid&sid=$sid");
+$allclub = Helpers\layTatCaClub($dblj);
+$nguoiChoi = Helpers\layThongTinNguoiChoi($sid, $dblj);
+$gonowmid = $encode->encode("cmd=gomid&newmid=$nguoiChoi->idBanDoHienTai&sid=$sid");
 
 if ($allclub){
     $i = 0;

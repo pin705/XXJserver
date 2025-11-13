@@ -5,21 +5,25 @@
  * Date: 2021/6/17
  * Time: 10:18
  */
+require_once __DIR__ . '/../src/Helpers/NguoiChoiHelper.php';
+require_once __DIR__ . '/../src/Helpers/BanDoHelper.php';
+use TuTaTuTien\Helpers as Helpers;
+
 //$sql = "select * from mid order by mid ASC";//Thu hoạch trước mắt địa đồ
 //$cxjg = $dblj->query($sql);
 
-$player = player\getplayer($sid,$dblj);
+$nguoiChoi = Helpers\layThongTinNguoiChoi($sid, $dblj);
 $map = '';
 
-$cxallmap = \player\getqy_all($dblj);
+$cxallmap = Helpers\layTatCaKhuVuc($dblj);
 $br = 0;
 for ($i=0;$i<count($cxallmap);$i++){
 
     $qyame = $cxallmap[$i]['qyname'];
     $mid = $cxallmap[$i]['mid'];
     if ($mid>0){
-        $cxmid = \player\getmid($mid,$dblj);
-        $mname = $cxmid->mname;
+        $banDo = Helpers\layThongTinBanDo($mid, $dblj);
+        $mname = $banDo->tenBanDo;
         $br++;
         $gomid = $encode->encode("cmd=gomid&newmid=$mid&sid=$sid");
         $map .=<<<HTML
@@ -33,7 +37,7 @@ HTML;
 }
 
 
-$gonowmid = $encode->encode("cmd=gomid&newmid=$player->nowmid&sid=$sid");
+$gonowmid = $encode->encode("cmd=gomid&newmid=$nguoiChoi->idBanDoHienTai&sid=$sid");
 $allmap = <<<HTML
 <IMG width='280' height='140' src='./images/rw.png'src="./images/rw.png" style="border-radius: 8px;">
 <!--<IMG width='280' height='50' src='./images/dt.jpg'>--><hr>
