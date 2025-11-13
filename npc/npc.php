@@ -1,7 +1,7 @@
 <?php
 
 $player = player\getplayer($sid,$dblj);
-$gonowmid = $encode->encode("cmd=gomid&newmid=$player->nowmid&sid=$sid");
+$gonowmid = $encode->encode("cmd=goto_map&newmid=$player->nowmid&sid=$sid");
 $taskhtml = '';
 $rwztt='';
 $npc = player\getnpc($nid,$dblj);
@@ -98,7 +98,7 @@ if ($npc->taskid!=''){
                 }
             }
         }
-        $rwcmd = $encode->encode("cmd=task&nid=$nid&rwid=$taskarr[$i]&sid=$sid");
+        $rwcmd = $encode->encode("cmd=quest&nid=$nid&rwid=$taskarr[$i]&sid=$sid");
         $taskhtml .=<<<HTML
         <a href="?cmd=$rwcmd">$task->rwname</a>$rwztt<br/>
 HTML;

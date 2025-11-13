@@ -24,9 +24,9 @@ $jlypidarr = array();
 $jlypslarr = array();
 $jlzbslarr = array();
 
-$gonowmid = $encode->encode("cmd=gomid&newmid=$player->idBanDoHienTai&sid=$sid");
-$jieshourw = $encode->encode("cmd=task&nid=$nid&canshu=jieshou&rwid=$rwid&sid=$sid");
-$tijiaorw = $encode->encode("cmd=task&nid=$nid&canshu=tijiao&rwid=$rwid&sid=$sid");
+$gonowmid = $encode->encode("cmd=goto_map&newmid=$player->idBanDoHienTai&sid=$sid");
+$jieshourw = $encode->encode("cmd=quest&nid=$nid&canshu=jieshou&rwid=$rwid&sid=$sid");
+$tijiaorw = $encode->encode("cmd=quest&nid=$nid&canshu=tijiao&rwid=$rwid&sid=$sid");
 $rwhtml = '';
 $tishi = '';
 if ($ptask){
@@ -44,7 +44,7 @@ if ($task->rwdj!=''){
         array_push($jldjidarr,$djid);
         array_push($jldjslarr,$djcount);
         $rwdj = Helpers\layThongTinDaoCu($djid,$dblj);
-        $djinfo = $encode->encode("cmd=djinfo&djid=$rwdj->idDaoCu&sid=$sid");
+        $djinfo = $encode->encode("cmd=item_info&djid=$rwdj->idDaoCu&sid=$sid");
         $rwjlhtml .="<div class='djys'><a href='?cmd=$djinfo'>$rwdj->tenDaoCu</a>x$djcount</div>";
     }
 }
@@ -57,7 +57,7 @@ if ($task->rwyp!=''){
         array_push($jlypidarr,$ypid);
         array_push($jlypslarr,$ypcount);
         $rwyp = Helpers\layThongTinDuocPham($ypid,$dblj);
-        $ypcmd = $encode->encode("cmd=ypinfo&ypid=$ypid&sid=$sid");
+        $ypcmd = $encode->encode("cmd=pill_info&ypid=$ypid&sid=$sid");
         $rwjlhtml .= "<div class='ypys'><a href='?cmd=$ypcmd'>$rwyp->tenDuocPham</a>x$ypcount</div>";
     }
 }
@@ -71,7 +71,7 @@ if ($task->rwzb!=''){
         $zbname = $ret[$i]['zbname'];
         array_push($jlzbslarr,$zbid);
         $zbkzb = Helpers\layThongTinTrangBi($zbid,$dblj);
-        $zbcmd = $encode->encode("cmd=zbinfo_sys&zbid=$zbkzb->idMauTrangBi&sid=$sid");
+        $zbcmd = $encode->encode("cmd=system_equipment_info&zbid=$zbkzb->idMauTrangBi&sid=$sid");
         $rwjlhtml.="<div class='zbys'><a href='?cmd=$zbcmd'>$zbname</a></div>";
     }
 }
@@ -156,7 +156,7 @@ switch ($task->rwzl){
     case 3://Đối thoại
         $tjnpc = Helpers\layThongTinNpc($task->rwcount,$dblj);
 		//$clmid = Helpers\layThongTinBanDo($task->rwqy,$dblj); //Thu hoạch địa đồ tin tức, ở đây dư thừa
-		//$upmidlj = $encode->encode("cmd=gomid&newmid=$task->rwqy&sid=$sid");//Địa đồ//Thu hoạch đến Nhiệm vụ Địa đồ, tiến hành nhảy chuyển。<--<a href='?cmd=$upmidlj'>Truyền tống</a>-->
+		//$upmidlj = $encode->encode("cmd=goto_map&newmid=$task->rwqy&sid=$sid");//Địa đồ//Thu hoạch đến Nhiệm vụ Địa đồ, tiến hành nhảy chuyển。<--<a href='?cmd=$upmidlj'>Truyền tống</a>-->
         $rwhtml ="Đi tìm$tjnpc->nname";//Biểu hiện nhiệm vụ tình huống, nhảy chuyển nhiệm vụ khu vực, khu vực tại sql, renwu Bên trong viết rwqy
         break;
 }

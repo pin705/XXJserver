@@ -15,7 +15,7 @@ $ypgj = '';
 $ypfy = '';
 $ypbj = '';
 $ypxx = '';
-$gonowmid = $encode->encode("cmd=gomid&newmid=$nguoiChoi->idBanDoHienTai&sid=$sid");
+$gonowmid = $encode->encode("cmd=goto_map&newmid=$nguoiChoi->idBanDoHienTai&sid=$sid");
 $yaopin = Helpers\layThongTinDuocPham($ypid, $dblj);
 $playeryp = Helpers\layDuocPhamCuaNguoiChoi($ypid, $sid, $dblj);
 $setyp = '';
@@ -45,10 +45,10 @@ if (isset($canshu)){
     }
 }
 if ($playeryp){
-    $setyp1 = $encode->encode("cmd=ypinfo&canshu=setyp1&ypid=$ypid&sid=$sid");
-    $setyp2 = $encode->encode("cmd=ypinfo&canshu=setyp2&ypid=$ypid&sid=$sid");
-    $setyp3 = $encode->encode("cmd=ypinfo&canshu=setyp3&ypid=$ypid&sid=$sid");
-    $useyp = $encode->encode("cmd=ypinfo&canshu=useyp&ypid=$ypid&sid=$sid");
+    $setyp1 = $encode->encode("cmd=pill_info&canshu=setyp1&ypid=$ypid&sid=$sid");
+    $setyp2 = $encode->encode("cmd=pill_info&canshu=setyp2&ypid=$ypid&sid=$sid");
+    $setyp3 = $encode->encode("cmd=pill_info&canshu=setyp3&ypid=$ypid&sid=$sid");
+    $useyp = $encode->encode("cmd=pill_info&canshu=useyp&ypid=$ypid&sid=$sid");
     $setyp = <<<HTML
     <br/><font size="2">Dược phẩm vị trí：
     <a href="?cmd=$setyp1">Vị trí 1</a>

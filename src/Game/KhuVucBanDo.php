@@ -7,13 +7,13 @@ require_once __DIR__ . '/../Helpers/ClubHelper.php';
 use TuTaTuTien\Helpers as Helpers;
 
 $player = Helpers\layThongTinNguoiChoi($sid,$dblj);//Thu hoạch ngươi ID
-$gonowmid = $encode->encode("cmd=gomid&newmid=$player->idBanDoHienTai&sid=$sid");//【Trở về trò chơi kết nối】
-$qysd = $encode->encode("cmd=shangdian&canshu=gogoumai&sid=$sid");//【Cửa hàng kết nối】  PHP ，Lựa chọn văn bản , tăng thêm dấu hiệu , thân phận của ngươi
+$gonowmid = $encode->encode("cmd=goto_map&newmid=$player->idBanDoHienTai&sid=$sid");//【Trở về trò chơi kết nối】
+$qysd = $encode->encode("cmd=shop&canshu=gogoumai&sid=$sid");//【Cửa hàng kết nối】  PHP ，Lựa chọn văn bản , tăng thêm dấu hiệu , thân phận của ngươi
 $clmid = Helpers\layThongTinBanDo($player->idBanDoHienTai,$dblj); //Thu hoạch địa đồ tin tức
 if ($clmid->playerinfo != ''){
     $clmid->playerinfo .='<br/>';
 }
-//$ydlist = $encode->encode("cmd=shangdian&nid&canshu=ydlist&sid=$sid");//Đây là không có viết xong, cũng không biết muốn viết cái gì
+//$ydlist = $encode->encode("cmd=shop&nid&canshu=ydlist&sid=$sid");//Đây là không có viết xong, cũng không biết muốn viết cái gì
 
 //Bắt đầu từ nơi này cái thứ nhất web page
 // $npchtml = <<<HTML
@@ -31,7 +31,7 @@ if ($clmid->playerinfo != ''){
         // $cxmid = Helpers\layThongTinBanDo($mid,$dblj);
         // $mname = $cxmid->mname;
         // $br++;
-        // $gomid = $encode->encode("cmd=gomid&newmid=$mid&sid=$sid");
+        // $gomid = $encode->encode("cmd=goto_map&newmid=$mid&sid=$sid");
         // $npchtml .=<<<HTML
         // <a href="?cmd=$gomid" >[$qyame]$mname</a>
 // HTML;
@@ -64,7 +64,7 @@ for ($i=0;$i<count($cxallnpchtml);$i++){
         $mname = $cxmid->mname;
 		
         $br++;
-        $gomid = $encode->encode("cmd=gomid&newmid=$mid&sid=$sid");
+        $gomid = $encode->encode("cmd=goto_map&newmid=$mid&sid=$sid");
         $yrdthtml .=<<<HTML
         <a href="?cmd=$gomid" >【$qyame $mname 】</a>
 HTML;
@@ -80,24 +80,24 @@ $yrdthtml = <<<HTML
 $yrdthtml
 <hr>
 HTML;
-$ztcmd = $encode->encode("cmd=zhuangtai&sid=$sid");
-$goliaotian = $encode->encode("cmd=liaotian&ltlx=all&sid=$sid");
-$gonowmid = $encode->encode("cmd=gomid&newmid=$clmid->mid&sid=$sid");
-$phcmd = $encode->encode("cmd=paihang&sid=$sid");
-$getbagcmd = $encode->encode("cmd=getbagzb&sid=$sid");
-$cwcmd = $encode->encode("cmd=chongwu&sid=$sid");
+$ztcmd = $encode->encode("cmd=character_status&sid=$sid");
+$goliaotian = $encode->encode("cmd=chat&ltlx=all&sid=$sid");
+$gonowmid = $encode->encode("cmd=goto_map&newmid=$clmid->mid&sid=$sid");
+$phcmd = $encode->encode("cmd=ranking&sid=$sid");
+$getbagcmd = $encode->encode("cmd=get_equipment_bag&sid=$sid");
+$cwcmd = $encode->encode("cmd=pet&sid=$sid");
 $cxall = '';
 
-$upmidlj = $encode->encode("cmd=gomid&newmid=$clmid->upmid&sid=$sid");//Bên trên địa đồ
-$downmidlj = $encode->encode("cmd=gomid&newmid=$clmid->downmid&sid=$sid");
-$leftmidlj = $encode->encode("cmd=gomid&newmid=$clmid->leftmid&sid=$sid");
-$rightmidlj = $encode->encode("cmd=gomid&newmid=$clmid->rightmid&sid=$sid");
+$upmidlj = $encode->encode("cmd=goto_map&newmid=$clmid->upmid&sid=$sid");//Bên trên địa đồ
+$downmidlj = $encode->encode("cmd=goto_map&newmid=$clmid->downmid&sid=$sid");
+$leftmidlj = $encode->encode("cmd=goto_map&newmid=$clmid->leftmid&sid=$sid");
+$rightmidlj = $encode->encode("cmd=goto_map&newmid=$clmid->rightmid&sid=$sid");
 $upmid = Helpers\layThongTinBanDo($clmid->upmid,$dblj);
 $downmid = Helpers\layThongTinBanDo($clmid->downmid,$dblj);
 $leftmid = Helpers\layThongTinBanDo($clmid->leftmid,$dblj);
 $rightmid = Helpers\layThongTinBanDo($clmid->rightmid,$dblj);
 $sx = ($clmid->leftmid)+4;
-$dt = $encode->encode("cmd=gomid&newmid=$sx&sid=$sid");//Bên trên địa đồ
+$dt = $encode->encode("cmd=goto_map&newmid=$sx&sid=$sid");//Bên trên địa đồ
 $dd = Helpers\layThongTinBanDo($sx,$dblj);
 $lukouhtml ='';
 if ($upmid->mname!=''){
@@ -203,9 +203,9 @@ HTML;
 
 //Phía dưới là một cái tham số cất giữ, sau đó mở ra cái thứ hai web page
 //$player = Helpers\layThongTinNguoiChoi($sid,$dblj);//Thu hoạch ngươi ID
-// $bb = $encode->encode("cmd=getbagyd&sid=$sid");
-// $sd = $encode->encode("cmd=shangdian&canshu=gogoumai&sid=$sid");
-$qydt = $encode->encode("cmd=qydt&sid=$sid");
+// $bb = $encode->encode("cmd=get_medicine_bag&sid=$sid");
+// $sd = $encode->encode("cmd=shop&canshu=gogoumai&sid=$sid");
+$qydt = $encode->encode("cmd=area_map&sid=$sid");
 $qydthtml =<<<HTML
          <div align="center">
          【<a href="?cmd=$qydt">Quái vật</a>|<a href="?cmd=$qydt">NPC</a>|<a href="?cmd=$qydt" style="

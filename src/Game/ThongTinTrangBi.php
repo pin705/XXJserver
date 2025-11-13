@@ -6,7 +6,7 @@ use TuTaTuTien\Helpers as Helpers;
 use TuTaTuTien\Classes\TrangBi;
 
 $player = Helpers\layThongTinNguoiChoi($sid, $dblj);
-$gonowmid = $encode->encode("cmd=gomid&newmid=$player->idBanDoHienTai&sid=$sid");
+$gonowmid = $encode->encode("cmd=goto_map&newmid=$player->idBanDoHienTai&sid=$sid");
 $zhuangbei = new TrangBi();
 if ($zbnowid!=0){
     $zhuangbei = Helpers\layThongTinTrangBiTheoId($zbnowid, $dblj);
@@ -74,11 +74,11 @@ if ($player->uid == $zhuangbei->uid){
             $upts = "Cường hóa thất bại, linh thạch không đủ<br/>";
         }
     }
-    $upgj = $encode->encode("cmd=upzb&upsx=zbgj&zbnowid=$zhuangbei->zbnowid&sid=$sid");
-    $upfy = $encode->encode("cmd=upzb&upsx=zbfy&zbnowid=$zhuangbei->zbnowid&sid=$sid");
-    $uphp = $encode->encode("cmd=upzb&upsx=zbhp&zbnowid=$zhuangbei->zbnowid&sid=$sid");
-    $upbj = $encode->encode("cmd=upzb&upsx=zbbj&zbnowid=$zhuangbei->zbnowid&sid=$sid");
-    $upxx = $encode->encode("cmd=upzb&upsx=zbxx&zbnowid=$zhuangbei->zbnowid&sid=$sid");
+    $upgj = $encode->encode("cmd=upgrade_equipment&upsx=zbgj&zbnowid=$zhuangbei->zbnowid&sid=$sid");
+    $upfy = $encode->encode("cmd=upgrade_equipment&upsx=zbfy&zbnowid=$zhuangbei->zbnowid&sid=$sid");
+    $uphp = $encode->encode("cmd=upgrade_equipment&upsx=zbhp&zbnowid=$zhuangbei->zbnowid&sid=$sid");
+    $upbj = $encode->encode("cmd=upgrade_equipment&upsx=zbbj&zbnowid=$zhuangbei->zbnowid&sid=$sid");
+    $upxx = $encode->encode("cmd=upgrade_equipment&upsx=zbxx&zbnowid=$zhuangbei->zbnowid&sid=$sid");
     $daoju = player\getplayerdaoju($sid,1,$dblj);
     $qhssum = '/0';
     if ($daoju){
@@ -107,19 +107,19 @@ HTML;
 if ($player->idNguoiDung == $zhuangbei->idNguoiDung && !in_array($zhuangbei->idTrangBi,$arr)){
 
     $player = Helpers\layThongTinNguoiChoi($sid, $dblj);
-    $delezb = $encode->encode("cmd=delezb&zbnowid=$zhuangbei->idTrangBi&sid=$sid");
+    $delezb = $encode->encode("cmd=delete_equipment&zbnowid=$zhuangbei->idTrangBi&sid=$sid");
     $self = $_SERVER['PHP_SELF'];
-    $setzbwz = $encode->encode("cmd=setzbwz&zbwz={$zhuangbei->viTriTrangBi}&zbnowid=$zhuangbei->idTrangBi&sid=$sid");
+    $setzbwz = $encode->encode("cmd=set_equipment_position&zbwz={$zhuangbei->viTriTrangBi}&zbnowid=$zhuangbei->idTrangBi&sid=$sid");
     $setzbwz = "<a href='?cmd=$setzbwz'>Mặc trang bị</a>";
 
     if ($zhuangbei->viTriTrangBi == 0){
-        $setzbwz1 = $encode->encode("cmd=setzbwz&zbwz=1&zbnowid=$zhuangbei->idTrangBi&sid=$sid");
-        $setzbwz2 = $encode->encode("cmd=setzbwz&zbwz=2&zbnowid=$zhuangbei->idTrangBi&sid=$sid");
-        $setzbwz3 = $encode->encode("cmd=setzbwz&zbwz=3&zbnowid=$zhuangbei->idTrangBi&sid=$sid");
-        $setzbwz4 = $encode->encode("cmd=setzbwz&zbwz=4&zbnowid=$zhuangbei->idTrangBi&sid=$sid");
-        $setzbwz5 = $encode->encode("cmd=setzbwz&zbwz=5&zbnowid=$zhuangbei->idTrangBi&sid=$sid");
-        $setzbwz6 = $encode->encode("cmd=setzbwz&zbwz=6&zbnowid=$zhuangbei->idTrangBi&sid=$sid");
-        $setzbwz7 = $encode->encode("cmd=setzbwz&zbwz=7&zbnowid=$zhuangbei->idTrangBi&sid=$sid");
+        $setzbwz1 = $encode->encode("cmd=set_equipment_position&zbwz=1&zbnowid=$zhuangbei->idTrangBi&sid=$sid");
+        $setzbwz2 = $encode->encode("cmd=set_equipment_position&zbwz=2&zbnowid=$zhuangbei->idTrangBi&sid=$sid");
+        $setzbwz3 = $encode->encode("cmd=set_equipment_position&zbwz=3&zbnowid=$zhuangbei->idTrangBi&sid=$sid");
+        $setzbwz4 = $encode->encode("cmd=set_equipment_position&zbwz=4&zbnowid=$zhuangbei->idTrangBi&sid=$sid");
+        $setzbwz5 = $encode->encode("cmd=set_equipment_position&zbwz=5&zbnowid=$zhuangbei->idTrangBi&sid=$sid");
+        $setzbwz6 = $encode->encode("cmd=set_equipment_position&zbwz=6&zbnowid=$zhuangbei->idTrangBi&sid=$sid");
+        $setzbwz7 = $encode->encode("cmd=set_equipment_position&zbwz=7&zbnowid=$zhuangbei->idTrangBi&sid=$sid");
 
         $setzbwz = "
     <a href='?cmd=$setzbwz1'>Trang bị tại【Vũ khí】Vị trí</a>

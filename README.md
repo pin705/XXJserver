@@ -8,6 +8,12 @@ Dự án game tu tiên text-based được viết bằng PHP. Đã được refa
 
 ## 🎯 Recent Improvements (Mới nhất)
 
+**✨ CMD Keys Update (2025-11-13):**
+- ✅ **Cập nhật tất cả CMD từ tiếng Trung sang tiếng Anh** (50+ commands)
+- ✅ Tên CMD rõ ràng, dễ hiểu: `gomid` → `goto_map`, `zbinfo` → `equipment_info`
+- ✅ Cập nhật 54 files (game.php, src/Game/, npc/)
+- ✅ Tài liệu đầy đủ trong [CMD_REFERENCE.md](CMD_REFERENCE.md)
+
 **✨ Code Quality & Extensibility (2025-11-13):**
 - ✅ Bootstrap file tự động load tất cả helpers/classes
 - ✅ GameHandler class tập trung logic game chung
@@ -29,6 +35,7 @@ Dự án game tu tiên text-based được viết bằng PHP. Đã được refa
 - ✅ Xóa 22+ files/directories không sử dụng
 - ✅ **Di chuyển 41 files từ game/ sang src/Game/ với tên có ý nghĩa** (xem [GAME_MIGRATION.md](GAME_MIGRATION.md))
 - ✅ **Hoàn tất migration: Xóa thư mục game/ cũ - tất cả files giờ đều dùng tên chuẩn trong src/Game/**
+- ✅ **Cập nhật CMD keys từ pinyin Trung sang tiếng Anh** (xem [CMD_REFERENCE.md](CMD_REFERENCE.md))
 
 **Đang chờ:**
 - ⏳ Migration nội dung 41 files trong src/Game/ sang code mới (xem [MIGRATION_GUIDE.md](MIGRATION_GUIDE.md))
@@ -95,6 +102,7 @@ php examples-bootstrap.php
 ## 📖 Documentation
 
 - [SETUP.md](SETUP.md) - **⭐ MỚI**: Hướng dẫn cài đặt và chạy game chi tiết
+- [CMD_REFERENCE.md](CMD_REFERENCE.md) - **⭐ MỚI**: Tài liệu tham khảo CMD đầy đủ
 - [README.md](README.md) - Tổng quan dự án
 - [REFACTORING.md](REFACTORING.md) - Hướng dẫn refactoring đầy đủ
 - [SUMMARY.md](SUMMARY.md) - Tổng kết refactoring

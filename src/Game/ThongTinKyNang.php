@@ -12,8 +12,8 @@ use TuTaTuTien\Helpers as Helpers;
 
 $nguoiChoi = Helpers\layThongTinNguoiChoi($sid, $dblj);
 $jineng = Helpers\layThongTinKyNang($jnid, $dblj);
-$duihuan = $encode->encode("cmd=jninfo&canshu=duihuan&jnid=$jnid&sid=$sid");
-$gonowmid = $encode->encode("cmd=gomid&newmid=$nguoiChoi->idBanDoHienTai&sid=$sid");
+$duihuan = $encode->encode("cmd=skill_info&canshu=duihuan&jnid=$jnid&sid=$sid");
+$gonowmid = $encode->encode("cmd=goto_map&newmid=$nguoiChoi->idBanDoHienTai&sid=$sid");
 $htmltishi = '';
 $playerjn = Helpers\layKyNangCuaNguoiChoi($jnid, $sid, $dblj);
 
@@ -57,9 +57,9 @@ if (isset($canshu)){
 
 $dhhtml = "Hối đoái cần：$dhdaoju->tenDaoCu($daoju->soLuong/$jineng->soLuongDaoCuCanThiet)<a href='?cmd=$duihuan'>Hối đoái</a><br/><br/>";
 if ($playerjn){
-    $setjn1 = $encode->encode("cmd=jninfo&canshu=setjn1&jnid=$jnid&sid=$sid");
-    $setjn2 = $encode->encode("cmd=jninfo&canshu=setjn2&jnid=$jnid&sid=$sid");
-    $setjn3 = $encode->encode("cmd=jninfo&canshu=setjn3&jnid=$jnid&sid=$sid");
+    $setjn1 = $encode->encode("cmd=skill_info&canshu=setjn1&jnid=$jnid&sid=$sid");
+    $setjn2 = $encode->encode("cmd=skill_info&canshu=setjn2&jnid=$jnid&sid=$sid");
+    $setjn3 = $encode->encode("cmd=skill_info&canshu=setjn3&jnid=$jnid&sid=$sid");
     $dhhtml .=
         '<a href="?cmd='.$setjn1.'">Trang bị phù lục 1</a>'.
         '<a href="?cmd='.$setjn2.'">Trang bị phù lục 2</a>'.

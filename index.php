@@ -96,7 +96,7 @@ if (isset($_POST[ 'submit']) && $_POST['submit']){
         $cxjg->bindColumn('sid',$sid);
         $cxjg->fetch(PDO::FETCH_ASSOC);
         if ($sid==null){
-            $cmd = "cmd=cj&token=$cxtoken";
+            $cmd = "cmd=create_character&token=$cxtoken";
         }else{
             $cmd = "cmd=login&sid=$sid";
             $nowdate = date('Y-m-d H:i:s');

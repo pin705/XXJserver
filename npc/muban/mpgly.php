@@ -60,7 +60,7 @@ HTML;
             $sql = "insert into clubplayer(clubid, uid, sid, uclv) VALUES (?,?,?,?)";
             $stmt = $dblj->prepare($sql);
             $stmt->execute(array($clubid,$player->uid,$sid,1));
-            $clubcmd = $encode->encode("cmd=club&sid=$sid");
+            $clubcmd = $encode->encode("cmd=guild&sid=$sid");
             $gnhtml.= "<br/>门派创建成功<br/><a href='?cmd=$clubcmd'>点击进入</a>";}
 			else {
 				$gnhtml = "<br/>魔石不足100，无法创建<br/>";

@@ -1,8 +1,8 @@
 <?php
-$gonowmid = $encode->encode("cmd=gomid&newmid=$player->nowmid&sid=$sid");
-$getbagzbcmd = $encode->encode("cmd=getbagzb&sid=$sid");
-$getbagdjcmd = $encode->encode("cmd=getbagdj&sid=$sid");
-$getbagjncmd = $encode->encode("cmd=getbagjn&sid=$sid");
+$gonowmid = $encode->encode("cmd=goto_map&newmid=$player->nowmid&sid=$sid");
+$getbagzbcmd = $encode->encode("cmd=get_equipment_bag&sid=$sid");
+$getbagdjcmd = $encode->encode("cmd=get_item_bag&sid=$sid");
+$getbagjncmd = $encode->encode("cmd=get_skill_bag&sid=$sid");
 $yaopin = player\getplayeryaopinall($sid,$dblj);
 $allyp= '';
 $suoyin = 0;
@@ -13,14 +13,14 @@ if ($yaopin){
             $suoyin += 1;
             $ypid = $yp['ypid'];
             $ypname = $yp['ypname'];
-            $ypcmd = $encode->encode("cmd=ypinfo&ypid=$ypid&sid=$sid");
+            $ypcmd = $encode->encode("cmd=pill_info&ypid=$ypid&sid=$sid");
             $allyp .= <<<HTML
             [$suoyin].<a href="?cmd=$ypcmd">{$ypname}x$ypsum</a><br/>
 HTML;
         }
     }
 }
-$getbagydcmd = $encode->encode("cmd=getbagyd&sid=$sid");
+$getbagydcmd = $encode->encode("cmd=get_medicine_bag&sid=$sid");
 $bagyphtml =<<<HTML
 
 <font size="2"><div class="menu"><a href="?cmd=$getbagzbcmd">Trang bị</a><a href="?cmd=$getbagdjcmd">Đạo cụ</a><a href="#" style="background-color: gray;">Dược phẩm</a><a href="?cmd=$getbagjncmd">Kỹ năng</a><a href="?cmd=$getbagydcmd">Đan dược</a></div></font><br>

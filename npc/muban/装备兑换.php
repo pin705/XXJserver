@@ -19,7 +19,7 @@ if (isset($canshu)){
                 $suoyin += 1;
                 $jnid = $jn['jnid'];
                 $jnname= $jn['jnname'];
-                $jncmd = $encode->encode("cmd=jninfo&jnid=$jnid&sid=$sid");
+                $jncmd = $encode->encode("cmd=skill_info&jnid=$jnid&sid=$sid");
                 $jnlist .= "[$suoyin]<a href='?cmd=$jncmd'>$jnname</a><br/>";
             }
             $gnhtml = $jnlist;

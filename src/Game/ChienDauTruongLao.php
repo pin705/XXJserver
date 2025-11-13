@@ -15,11 +15,11 @@ use TuTaTuTien\Helpers as Helpers;
 <?php
 $player = \Helpers\layThongTinNguoiChoi($sid,$dblj);
 $nowmid=$player->idBanDoHienTai;
-$gonowmid = $encode->encode("cmd=gomid&newmid=$player->idBanDoHienTai&sid=$player->sid");
-// $pgjcmd = $encode->encode("cmd=pvb&canshu=ptgj&bossid=$bossid&sid=$sid");Vốn có boss Công kích
+$gonowmid = $encode->encode("cmd=goto_map&newmid=$player->idBanDoHienTai&sid=$player->sid");
+// $pgjcmd = $encode->encode("cmd=boss_battle&canshu=ptgj&bossid=$bossid&sid=$sid");Vốn có boss Công kích
 
-$pgjcmd = $encode->encode("cmd=pvbgj&bossid=$bossid&sid=$player->sid&nowmid=$nowmid");
-// $pgjcmd = $encode->encode("cmd=pvbgj&bossid=$bossid&sid=$player->sid&nowmid=$nowmid");
+$pgjcmd = $encode->encode("cmd=boss_attack&bossid=$bossid&sid=$player->sid&nowmid=$nowmid");
+// $pgjcmd = $encode->encode("cmd=boss_attack&bossid=$bossid&sid=$player->sid&nowmid=$nowmid");
 $boss = Helpers\layThongTinBoss($bossid,$dblj);
 $yboss = Helpers\taoMoiBoss();
 $wgid = $player->wugong;
@@ -27,7 +27,7 @@ $cxwg = Helpers\layThongTinVoCong($wgid,$sid,$dblj);
 $wglx = $cxwg->wglx;
 // $cxmid = Helpers\layThongTinBanDo($player->idBanDoHienTai,$dblj);
 // $cxqy = Helpers\layThongTinKhuVuc($cxmid->mqy,$dblj);
-// $gorehpmid = $encode->encode("cmd=gomid&newmid=$cxqy->mid&sid=$player->sid");
+// $gorehpmid = $encode->encode("cmd=goto_map&newmid=$cxqy->mid&sid=$player->sid");
 if ($player->wugong!=''&&$wglx==1){
 	$tishi = "<a href='?cmd=$gonowmid'>$cxwg->wgname</a><br><br> ";
 }
@@ -39,9 +39,9 @@ if ($player->wugong!=''&&$wglx==1){
 	 $yboss = player\getyboss($yboss->bossid,$dblj);
  }
 $huode = '';
-$useyp1 = $encode->encode("cmd=pvb&canshu=useyp&ypid=$player->yp1&sid=$sid&bossid=$bossid&nowmid=$nowmid");
-$useyp2 = $encode->encode("cmd=pvb&canshu=useyp&ypid=$player->yp2&sid=$sid&bossid=$bossid&nowmid=$nowmid");
-$useyp3 = $encode->encode("cmd=pvb&canshu=useyp&ypid=$player->yp3&sid=$sid&bossid=$bossid&nowmid=$nowmid");
+$useyp1 = $encode->encode("cmd=boss_battle&canshu=useyp&ypid=$player->yp1&sid=$sid&bossid=$bossid&nowmid=$nowmid");
+$useyp2 = $encode->encode("cmd=boss_battle&canshu=useyp&ypid=$player->yp2&sid=$sid&bossid=$bossid&nowmid=$nowmid");
+$useyp3 = $encode->encode("cmd=boss_battle&canshu=useyp&ypid=$player->yp3&sid=$sid&bossid=$bossid&nowmid=$nowmid");
 $ypname1 = 'Dược phẩm 1';
 $ypname2 = 'Dược phẩm 2';
 $ypname3 = 'Dược phẩm 3';
@@ -270,7 +270,7 @@ HTML;
                 $zbid = $retzb[$sjdl]['zbid'];
                 $zbnowid = player\addzb($sid,$zbid,$dblj);
 				$zbys = Helpers\layThongTinTrangBi($zbid,$dblj);//Thu hoạch trang bị ID Địa chỉ, đây là dùng để thu hoạch sắc thái
-                $chakanzb = $encode->encode("cmd=chakanzb&zbnowid=$zbnowid&uid=$player->idNguoiDung&sid=$sid");
+                $chakanzb = $encode->encode("cmd=view_equipment&zbnowid=$zbnowid&uid=$player->idNguoiDung&sid=$sid");
 			    $huode .= "nhận được :".'<a href="?cmd='.$chakanzb.'"><font color='.$zbys->phamChat.' >'.$zbname .'</font></a><br>';//Trang bị yếu tố
 			        $zbpz = $zbys->congKich + $zbys->phongNgu + $zbys->hutMau +$zbys->baoKich ;//Viết một cái thông cáo, nhận được  trang bị
 					if ($zbpz >=5){
@@ -279,7 +279,7 @@ HTML;
 					
 $tz = <<<HTML
 
-					[{$player->tenNhanVat}]{$jisha}[{$boss->tenBoss}]nhận được <a href='?cmd=zbinfo_sys&zbid=$zbys->idMauTrangBi&sid=$sid' style="background-color: #f6f7f7;padding: 0px 0px;"><font style="color:{$zbys->phamChat}">[{$zbname}]</font></a>Khiến người ghen tị.
+					[{$player->tenNhanVat}]{$jisha}[{$boss->tenBoss}]nhận được <a href='?cmd=system_equipment_info&zbid=$zbys->idMauTrangBi&sid=$sid' style="background-color: #f6f7f7;padding: 0px 0px;"><font style="color:{$zbys->phamChat}">[{$zbname}]</font></a>Khiến người ghen tị.
 HTML;
                     $stmt->execute(array('【Phụ trương】',$tz,'0'));//Hệ thống thông cáo
 					}
@@ -502,7 +502,7 @@ $stmt->execute(array('【Mới nhất】',"Đoạt BOSS ,[{$player->tenNhanVat}]
 }
 
 
-$tp = $encode->encode("cmd=taopao&bossid=$bossid&sid=$sid");
+$tp = $encode->encode("cmd=flee&bossid=$bossid&sid=$sid");
 if ($cmd == 'taopao'){
 	$sji = mt_rand(1,100);
     if ($sji>= 80 ){

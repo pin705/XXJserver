@@ -4,7 +4,7 @@ use TuTaTuTien\Helpers as Helpers;
 
 $nguoiChoi = Helpers\layThongTinNguoiChoi($sid, $dblj);
 $_SERVER['PHP_SELF'];
-$gonowmid = $encode->encode("cmd=gomid&newmid=$nguoiChoi->idBanDoHienTai&sid=$nguoiChoi->idPhien");
+$gonowmid = $encode->encode("cmd=goto_map&newmid=$nguoiChoi->idBanDoHienTai&sid=$nguoiChoi->idPhien");
 if ($ltlx == "all"){
     $sql = 'SELECT * FROM ggliaotian ORDER BY id DESC LIMIT 10';//Nói chuyện phiếm danh sách thu hoạch 10
     $ltcxjg = $dblj->query($sql);
@@ -12,15 +12,15 @@ if ($ltlx == "all"){
 
     if ($ltcxjg){
         $ret = $ltcxjg->fetchAll(PDO::FETCH_ASSOC);
-        $goliaotian = $encode->encode("cmd=liaotian&ltlx=all&sid=$sid");
-        $imliaotian = $encode->encode("cmd=liaotian&ltlx=im&sid=$sid");
+        $goliaotian = $encode->encode("cmd=chat&ltlx=all&sid=$sid");
+        $imliaotian = $encode->encode("cmd=chat&ltlx=im&sid=$sid");
         $lthtml = "【Công cộng|<a href='?cmd=$imliaotian'>Nói chuyện riêng</a>】<div style='border: #dcd4a1; border-style: dashed; border-top-width: 1px;
 border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px'>";
         for ($i=0;$i < count($ret);$i++){
             $uname = $ret[count($ret) - $i-1]['name'];
             $umsg = $ret[count($ret) - $i-1]['msg'];
             $uid = $ret[count($ret) - $i-1]['uid'];
-            $ucmd = $encode->encode("cmd=getplayerinfo&uid=$uid&sid=$nguoiChoi->idPhien");
+            $ucmd = $encode->encode("cmd=get_player_info&uid=$uid&sid=$nguoiChoi->idPhien");
             if ($uid){
                 $lthtml .="<font color=#F4911A></font><font color=#F18E17></font><font color=#EE8B14></font><font color=#EB8811></font><a href='?cmd=$ucmd'>$uname</a>：$umsg<br/>";//Sửa chữa công cộng nói chuyện phiếm trước【Công cộng】
             }else{
@@ -51,8 +51,8 @@ if ($ltlx == 'im'){
 
     if ($ltcxjg){
         $ret = $ltcxjg->fetchAll(PDO::FETCH_ASSOC);
-        $goliaotian = $encode->encode("cmd=liaotian&ltlx=all&sid=$sid");
-        $imliaotian = $encode->encode("cmd=liaotian&ltlx=im&sid=$sid");
+        $goliaotian = $encode->encode("cmd=chat&ltlx=all&sid=$sid");
+        $imliaotian = $encode->encode("cmd=chat&ltlx=im&sid=$sid");
         $lthtml = "【<a href='?cmd=$goliaotian'>Công cộng</a>|Nói chuyện riêng】<br/>";
         for ($i=0;$i < count($ret);$i++){
             $uname = $ret[count($ret) - $i-1]['name'];
@@ -60,8 +60,8 @@ if ($ltlx == 'im'){
             $uid = $ret[count($ret) - $i-1]['uid'];
             $imuid = $ret[count($ret) - $i-1]['imuid'];
             $nguoiChoiKhac = Helpers\layThongTinNguoiChoiTheoUid($imuid, $dblj);
-            $ucmd = $encode->encode("cmd=getplayerinfo&uid=$uid&sid=$nguoiChoi->idPhien");
-            $imucmd = $encode->encode("cmd=getplayerinfo&uid=$imuid&sid=$nguoiChoi->idPhien");
+            $ucmd = $encode->encode("cmd=get_player_info&uid=$uid&sid=$nguoiChoi->idPhien");
+            $imucmd = $encode->encode("cmd=get_player_info&uid=$imuid&sid=$nguoiChoi->idPhien");
             if ($uid){
                 $lthtml .="[Nói chuyện riêng]<a href='?cmd=$ucmd'>$uname</a>-->><a href='?cmd=$imucmd'>$nguoiChoiKhac->tenNhanVat</a>:$umsg<br/>";
             }

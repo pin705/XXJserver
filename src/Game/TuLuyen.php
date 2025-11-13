@@ -8,10 +8,10 @@ require_once __DIR__ . '/../Helpers/NhiemVuHelper.php';
 use TuTaTuTien\Helpers as Helpers;
 
 $player = \Helpers\layThongTinNguoiChoi($sid,$dblj);
-$gonowmid = $encode->encode("cmd=gomid&newmid=$player->idBanDoHienTai&sid=$sid");
-$strxl = $encode->encode("cmd=startxiulian&canshu=1&sid=$sid");
-$strxl1 = $encode->encode("cmd=startxiulian&canshu=2&sid=$sid");
-$endxl = $encode->encode("cmd=endxiulian&sid=$sid");
+$gonowmid = $encode->encode("cmd=goto_map&newmid=$player->idBanDoHienTai&sid=$sid");
+$strxl = $encode->encode("cmd=start_cultivation&canshu=1&sid=$sid");
+$strxl1 = $encode->encode("cmd=start_cultivation&canshu=2&sid=$sid");
+$endxl = $encode->encode("cmd=end_cultivation&sid=$sid");
 $nowdate = date('Y-m-d H:i:s');
 $xlsjc='Chưa bắt đầu tu luyện';
 $tishi = '';
@@ -80,9 +80,9 @@ if ($player->sfxl == 1){
 	$tishi = 'Ngươi còn chưa có bắt đầu tu luyện...<br/>';
     $xlcz = "<a href=?cmd=$strxl>Sử dụng linh thạch tu luyện</a><a href=?cmd=$strxl1>Sử dụng ma thạch tu luyện</a><br/><br/>";
 }
-$xiuliancmd = $encode->encode("cmd=goxiulian&sid=$sid");
-$wgxl = $encode->encode("cmd=wgxl&sid=$sid");
-$wgxx = $encode->encode("cmd=xxwg&sid=$sid");
+$xiuliancmd = $encode->encode("cmd=goto_cultivation&sid=$sid");
+$wgxl = $encode->encode("cmd=martial_training&sid=$sid");
+$wgxx = $encode->encode("cmd=learn_martial_arts&sid=$sid");
 // $wgid = $player->wugong;
 // $cxwg = Helpers\layThongTinVoCong($wgid,$sid,$dblj);
 

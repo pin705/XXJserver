@@ -12,13 +12,13 @@ use TuTaTuTien\Helpers as Helpers;
 $clublist = '';
 $allclub = Helpers\layTatCaClub($dblj);
 $nguoiChoi = Helpers\layThongTinNguoiChoi($sid, $dblj);
-$gonowmid = $encode->encode("cmd=gomid&newmid=$nguoiChoi->idBanDoHienTai&sid=$sid");
+$gonowmid = $encode->encode("cmd=goto_map&newmid=$nguoiChoi->idBanDoHienTai&sid=$sid");
 
 if ($allclub){
     $i = 0;
     foreach ($allclub as $club){
         $i++;
-        $clubcmd = $encode->encode("cmd=club&clubid={$club['clubid']}&sid=$sid");
+        $clubcmd = $encode->encode("cmd=guild&clubid={$club['clubid']}&sid=$sid");
         $clublist .= "[$i]<a href='?cmd=$clubcmd' >{$club['clubname']}</a><br/>";
     }
 }

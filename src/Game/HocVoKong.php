@@ -10,10 +10,10 @@ use TuTaTuTien\Helpers as Helpers;
 
 $player = \Helpers\layThongTinNguoiChoi($sid,$dblj);
 
-$gonowmid = $encode->encode("cmd=gomid&newmid=$player->idBanDoHienTai&sid=$sid");
+$gonowmid = $encode->encode("cmd=goto_map&newmid=$player->idBanDoHienTai&sid=$sid");
 $cwhtml='';
 $cwnamehtml= '';
-$chouqucmd = $encode->encode("cmd=xxwg&canshu=chouqu&sid=$sid");
+$chouqucmd = $encode->encode("cmd=learn_martial_arts&canshu=chouqu&sid=$sid");
 //Nơi này nghĩ dựng cái thành công nhắc nhở khung
 $tskcg = <<<HTML
 <html> 
@@ -118,10 +118,10 @@ if (isset($canshu)){
         case 'cwinfo':
             $cx = Helpers\layThongTinVoCong($wgid,$sid,$dblj);
 			
-            $cwinfo = $encode->encode("cmd=xxwg&wgid=$player->wugong&canshu=cwinfo&sid=$sid");
-			$wgxx = $encode->encode("cmd=xxwg&sid=$sid");
-			$xiuliancmd = $encode->encode("cmd=goxiulian&sid=$sid");
-            $wgxl = $encode->encode("cmd=wgxl&sid=$sid");
+            $cwinfo = $encode->encode("cmd=learn_martial_arts&wgid=$player->wugong&canshu=cwinfo&sid=$sid");
+			$wgxx = $encode->encode("cmd=learn_martial_arts&sid=$sid");
+			$xiuliancmd = $encode->encode("cmd=goto_cultivation&sid=$sid");
+            $wgxl = $encode->encode("cmd=martial_training&sid=$sid");
             
 $cwhtml = <<<HTML
 			<IMG width='280' height='140' src='./images/wugong/$wgid.png' style="border-radius: 8px;">
@@ -150,18 +150,18 @@ if ($allcw){
         $wgid = $cw['wgid'];
         $czcmd='';
         if ($wgid!=$player->wugong){
-            $czcmd = $encode->encode("cmd=xxwg&canshu=xuexi&wgid=$wgid&sid=$sid");
-            $fscmd = $encode->encode("cmd=xxwg&canshu=fangsheng&wgid=$wgid&sid=$sid");
+            $czcmd = $encode->encode("cmd=learn_martial_arts&canshu=xuexi&wgid=$wgid&sid=$sid");
+            $fscmd = $encode->encode("cmd=learn_martial_arts&canshu=fangsheng&wgid=$wgid&sid=$sid");
             $czcmd = '<a href="?cmd='.$czcmd.'">Học tập</a>';
             $fscmd = '<a href="?cmd='.$fscmd.'">Vứt bỏ</a>';
             $gncmd = $czcmd.$fscmd;
         }else{
-            $shcmd = $encode->encode("cmd=xxwg&canshu=biguan&wgid=$wgid&sid=$sid");
+            $shcmd = $encode->encode("cmd=learn_martial_arts&canshu=biguan&wgid=$wgid&sid=$sid");
             $shcmd = '<a href="?cmd='.$shcmd.'">Bế quan</a>';
             $gncmd = '<a style="background-color: #27a2c7;color: #ffffff;border-radius:10px;">(Học tập bên trong)</a>'.$shcmd;
         }
 		
-        $wginfo = $encode->encode("cmd=xxwg&canshu=cwinfo&wgid=$wgid&sid=$sid");
+        $wginfo = $encode->encode("cmd=learn_martial_arts&canshu=cwinfo&wgid=$wgid&sid=$sid");
         $cwnamehtml.="$cwpinzhi".'<a style="color: '.$cw['wgys'].';" href="?cmd='.$wginfo.'"><font color='.$cwsc.'>'.$cw['wgname'].'</font></a>x'.$cw['wgsum'].''.$gncmd.'<br/>';
         
     }
@@ -172,9 +172,9 @@ $wgid = $player->wugong ;
 if($wgid==''){
 	$wgid = 0 ;
 }
-$xiuliancmd = $encode->encode("cmd=goxiulian&sid=$sid");
-$wgxl = $encode->encode("cmd=wgxl&sid=$sid");
-$wgxx = $encode->encode("cmd=xxwg&sid=$sid");
+$xiuliancmd = $encode->encode("cmd=goto_cultivation&sid=$sid");
+$wgxl = $encode->encode("cmd=martial_training&sid=$sid");
+$wgxx = $encode->encode("cmd=learn_martial_arts&sid=$sid");
 
 $tupian = <<<html
 <IMG width='280' height='140' src='./images/wugong/$wgid.png' style="border-radius: 8px;">

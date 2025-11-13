@@ -8,7 +8,7 @@ use TuTaTuTien\Helpers as Helpers;
 
 
 $player = \Helpers\layThongTinNguoiChoi($sid,$dblj);
-$gonowmid = $encode->encode("cmd=gomid&newmid=$player->idBanDoHienTai&sid=$sid");
+$gonowmid = $encode->encode("cmd=goto_map&newmid=$player->idBanDoHienTai&sid=$sid");
 $payhtml='';
 $pdjcount = 0;
 $fy = "./src/Game/PhongNgu.php";
@@ -75,15 +75,15 @@ switch ($fangshi){
             $djpay = $fsdj['pay'];
             $djcount = $fsdj['djcount'];
             $payid = $fsdj['payid'];
-            $goumaidj1 = $encode->encode("cmd=fangshi&fangshi=daoju&canshu=buy&payid=$payid&buycount=1&sid=$sid");
-            $goumaidj5 = $encode->encode("cmd=fangshi&fangshi=daoju&canshu=buy&payid=$payid&buycount=5&sid=$sid");
-            $goumaidj10 = $encode->encode("cmd=fangshi&fangshi=daoju&canshu=buy&payid=$payid&buycount=10&sid=$sid");
-            $djpaycmd = $encode->encode("cmd=djinfo&djid=$djid&sid=$sid");
+            $goumaidj1 = $encode->encode("cmd=arena&fangshi=daoju&canshu=buy&payid=$payid&buycount=1&sid=$sid");
+            $goumaidj5 = $encode->encode("cmd=arena&fangshi=daoju&canshu=buy&payid=$payid&buycount=5&sid=$sid");
+            $goumaidj10 = $encode->encode("cmd=arena&fangshi=daoju&canshu=buy&payid=$payid&buycount=10&sid=$sid");
+            $djpaycmd = $encode->encode("cmd=item_info&djid=$djid&sid=$sid");
             $payhtml .= "<a href='?cmd=$djpaycmd'>{$djname}x$djcount</a>Đơn giá:$djpay<a href='?cmd=$goumaidj1'>Mua 1</a>
 			<!--<a href='?cmd=$goumaidj5'>Mua 5</a> <a href='?cmd=$goumaidj10'>Mua 10</a>--><br/>";
         }
-        $zhuangbei = $encode->encode("cmd=fangshi&fangshi=zhuangbei&sid=$sid");
-		$shangdian = $encode->encode("cmd=fangshi&fangshi=shangdian&sid=$sid");
+        $zhuangbei = $encode->encode("cmd=arena&fangshi=zhuangbei&sid=$sid");
+		$shangdian = $encode->encode("cmd=arena&fangshi=shangdian&sid=$sid");
         $payhtml=<<<HTML
             【Đạo cụ|<a href="?cmd=$zhuangbei">Trang bị</a>|<a href="?cmd=$shangdian">Cửa hàng</a>】<br/>
             $payhtml
@@ -154,16 +154,16 @@ HTML;
             }else{
                 $zbqh='';
             }
-            $goumaizb = $encode->encode("cmd=fangshi&fangshi=zhuangbei&canshu=buy&payid=$payid&sid=$sid");
-            $zbpaycmd = $encode->encode("cmd=zbinfo&zbnowid=$zbnowid&sid=$sid");
+            $goumaizb = $encode->encode("cmd=arena&fangshi=zhuangbei&canshu=buy&payid=$payid&sid=$sid");
+            $zbpaycmd = $encode->encode("cmd=equipment_info&zbnowid=$zbnowid&sid=$sid");
             $payhtml .= "<div class=menu>
             <a href='?cmd=$zbpaycmd' style='color: $zbys; width: 210px;text-align: left;' >{$zbname}{$zbqh} <br/>Giá cả:$zbpay Linh Thạch</a>
             <a href='?cmd=$goumaizb'>Mua</a></div><br/>";
 
         }
-        $fangshi = $encode->encode("cmd=fangshi&fangshi=daoju&sid=$sid");
-		$zhuangbei = $encode->encode("cmd=fangshi&fangshi=zhuangbei&sid=$sid");
-		$shangdian = $encode->encode("cmd=fangshi&fangshi=shangdian&sid=$sid");
+        $fangshi = $encode->encode("cmd=arena&fangshi=daoju&sid=$sid");
+		$zhuangbei = $encode->encode("cmd=arena&fangshi=zhuangbei&sid=$sid");
+		$shangdian = $encode->encode("cmd=arena&fangshi=shangdian&sid=$sid");
         $payhtml=<<<HTML
 <link rel="stylesheet" href="./css/gamecss.css">
 【<a href="?cmd=$fangshi">Đạo cụ</a>|Trang bị|<a href="?cmd=$shangdian">Cửa hàng</a>】<br/>
@@ -238,16 +238,16 @@ HTML;
             }else{
                 $zbqh='';
             }
-            $goumaisd = $encode->encode("cmd=fangshi&fangshi=shangdian&canshu=buy&payid=$payid&sid=$sid");
-            $zbpaycmd = $encode->encode("cmd=zbinfo&zbnowid=$zbnowid&sid=$sid");
+            $goumaisd = $encode->encode("cmd=arena&fangshi=shangdian&canshu=buy&payid=$payid&sid=$sid");
+            $zbpaycmd = $encode->encode("cmd=equipment_info&zbnowid=$zbnowid&sid=$sid");
             //$payhtml .= "<a href='?cmd=$zbpaycmd' style='color: #f50808;'>{$zbname}{$zbqh}</a>Giá cả：<font color='#FF0000'>$zbpay</font><a href='?cmd=$goumaisd'>Mua</a><br/>";
             $payhtml .= "<div class=menu>
             <a href='?cmd=$zbpaycmd' style='color: $zbys; width: 210px;text-align: left;' >{$zbname}{$zbqh} <br/>Giá cả:$zbpzbpayay Linh Thạch</a>
             <a href='?cmd=$goumaisd'>Mua</a></div><br/>";
         }
-        $fangshi = $encode->encode("cmd=fangshi&fangshi=daoju&sid=$sid");
-		$zhuangbei = $encode->encode("cmd=fangshi&fangshi=zhuangbei&sid=$sid");
-		$shangdian = $encode->encode("cmd=fangshi&fangshi=sahngdian&sid=$sid");
+        $fangshi = $encode->encode("cmd=arena&fangshi=daoju&sid=$sid");
+		$zhuangbei = $encode->encode("cmd=arena&fangshi=zhuangbei&sid=$sid");
+		$shangdian = $encode->encode("cmd=arena&fangshi=sahngdian&sid=$sid");
         $payhtml=<<<HTML
             【<a href="?cmd=$fangshi">Đạo cụ</a>|<a href="?cmd=$zhuangbei">Trang bị</a>|Đóng cửa】<br/>
 			

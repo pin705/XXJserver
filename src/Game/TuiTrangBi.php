@@ -132,17 +132,17 @@ $sql = "select count(*) from playerzhuangbei where sid = '$sid'";
 $cxjg = $dblj->query($sql);
 $zbcount = $cxjg->fetchColumn();
 
-$gonowmid = $encode->encode("cmd=gomid&newmid=$player->idBanDoHienTai&sid=$sid");
+$gonowmid = $encode->encode("cmd=goto_map&newmid=$player->idBanDoHienTai&sid=$sid");
 $zbhtml = '';
 $fanye='';
 if ($yeshu!=0){
     $shangcanshu=$yeshu-10;
-    $shangyiye = $encode->encode("cmd=getbagzb&yeshu=$shangcanshu&sid=$sid");
+    $shangyiye = $encode->encode("cmd=get_equipment_bag&yeshu=$shangcanshu&sid=$sid");
     $fanye = '<a href="?cmd='.$shangyiye.'">Trang trước</a>';
 }
 if ($yeshu +10 < $zbcount){
     $xiacanshu=$yeshu+10;
-    $xiayiye = $encode->encode("cmd=getbagzb&yeshu=$xiacanshu&sid=$sid");
+    $xiayiye = $encode->encode("cmd=get_equipment_bag&yeshu=$xiacanshu&sid=$sid");
     $fanye .= '<a href="?cmd='.$xiayiye.'">Trang kế tiếp</a>';
 }
 if ($fanye!=''){
@@ -161,11 +161,11 @@ for ($i=0;$i<count($retzb);$i++){
     if($zbqh>0){
         $qhhtml="+".$zbqh;
     }
-    $chakanzb = $encode->encode("cmd=chakanzb&zbnowid=$zbnowid&uid=$player->idNguoiDung&sid=$sid");
+    $chakanzb = $encode->encode("cmd=view_equipment&zbnowid=$zbnowid&uid=$player->idNguoiDung&sid=$sid");
     if (!in_array($zbnowid,$arr)){
-        $mczb = $encode->encode("cmd=getbagzb&canshu=maichu&yeshu=$yeshu&zbnowid=$zbnowid&sid=$sid");
+        $mczb = $encode->encode("cmd=get_equipment_bag&canshu=maichu&yeshu=$yeshu&zbnowid=$zbnowid&sid=$sid");
 		$zhuangbei = Helpers\layThongTinTrangBiTheoId($zbnowid,$dblj);
-        $delezb = $encode->encode("cmd=delezb&zbnowid=$zbnowid&sid=$sid");
+        $delezb = $encode->encode("cmd=delete_equipment&zbnowid=$zbnowid&sid=$sid");
         $zbhtml .= <<<HTML
         [$hangshu].<a href="?cmd=$chakanzb"><font color='{$zhuangbei->phamChat}'>$zbname</font>$qhhtml</a><a href="?cmd=$mczb">Bán </a><a href="?cmd=$delezb">Phân giải</a><br/>
 HTML;
@@ -176,10 +176,10 @@ HTML;
 HTML;
     }
 }
-$getbagdjcmd = $encode->encode("cmd=getbagdj&sid=$sid");
-$getbagypcmd = $encode->encode("cmd=getbagyp&sid=$sid");
-$getbagjncmd = $encode->encode("cmd=getbagjn&sid=$sid");
-$getbagydcmd = $encode->encode("cmd=getbagyd&sid=$sid");
+$getbagdjcmd = $encode->encode("cmd=get_item_bag&sid=$sid");
+$getbagypcmd = $encode->encode("cmd=get_pill_bag&sid=$sid");
+$getbagjncmd = $encode->encode("cmd=get_skill_bag&sid=$sid");
+$getbagydcmd = $encode->encode("cmd=get_medicine_bag&sid=$sid");
 $toolhtml =<<<HTML
 
 <font size="2"><div class="menu"><a href="#" style="background-color: gray;">Trang bị</a><a href="?cmd=$getbagdjcmd">Đạo cụ</a><a href="?cmd=$getbagypcmd">Dược phẩm</a><a href="?cmd=$getbagjncmd">Kỹ năng</a>

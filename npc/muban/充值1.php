@@ -32,7 +32,7 @@ if (isset($canshu)){
                 $djname = $onedaoju['djname'];
                 $djid = $onedaoju['djid'];
                 $djjg = $onedaoju['djjg'];
-                $djcmd = $encode->encode("cmd=djinfo&djid=$djid&sid=$sid");
+                $djcmd = $encode->encode("cmd=item_info&djid=$djid&sid=$sid");
                 $gm1dj = $encode->encode("cmd=npc&nid=$nid&canshu=gogoumai&djcount=1&djid=$djid&sid=$sid");
                 $gm5dj = $encode->encode("cmd=npc&nid=$nid&canshu=gogoumai&djcount=5&djid=$djid&sid=$sid");
                 $gm10dj = $encode->encode("cmd=npc&nid=$nid&canshu=gogoumai&djcount=10&djid=$djid&sid=$sid");

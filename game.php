@@ -47,17 +47,17 @@ else
 parse_str($Dcmd);
 if (isset($cmd)){
 
-    if ($cmd == 'cjplayer'){
+    if ($cmd == 'create_player'){
         $Dcmd = $encode->encode($Dcmd);
         header("refresh:1;url=?cmd=$Dcmd");
         exit();
     }
-    if ($cmd == 'djinfo'){
+    if ($cmd == 'item_info'){
         $Dcmd = $encode->encode($Dcmd);
         header("refresh:1;url=?cmd=$Dcmd");
         exit();
     }
-    if ($cmd == 'zbinfo'){
+    if ($cmd == 'equipment_info'){
         $Dcmd = $encode->encode($Dcmd);
         header("refresh:1;url=?cmd=$Dcmd");
         exit();
@@ -67,17 +67,17 @@ if (isset($cmd)){
         header("refresh:1;url=?cmd=$Dcmd");
         exit();
     }
-    if ($cmd == 'duihuan'){
+    if ($cmd == 'exchange'){
         $Dcmd = $encode->encode($Dcmd);
         header("refresh:1;url=?cmd=$Dcmd");
         exit();
     }
-	if ($cmd == 'shangdian'){
+	if ($cmd == 'shop'){
         $Dcmd = $encode->encode($Dcmd);
         header("refresh:1;url=?cmd=$Dcmd");
         exit();
     }
-    if ($cmd == 'sendliaotian'){
+    if ($cmd == 'send_chat'){
         $Dcmd = $encode->encode($Dcmd);
         header("refresh:1;url=?cmd=$Dcmd");
         exit();
@@ -86,22 +86,22 @@ if (isset($cmd)){
 //    var_dump($Dcmd);
     parse_str($Dcmd);
     switch ($cmd){
-        case 'cj':
+        case 'create_character':
             $ym = 'src/Game/TaoNhanVat.php';
             break;
         case 'login';
             $player = \player\getplayer($sid,$dblj);
-            $gonowmid = $encode->encode("cmd=gomid&newmid=$player->nowmid&sid=$sid");
+            $gonowmid = $encode->encode("cmd=goto_map&newmid=$player->nowmid&sid=$sid");
             $nowdate = date('Y-m-d H:i:s');
             $sql = "update game1 set endtime='$nowdate',sfzx=1 WHERE sid='$sid'";
             $cxjg = $dblj->exec($sql);
             header("refresh:1;url=?cmd=$gonowmid");
             exit();
             break;
-        case 'zhuangtai';
+        case 'character_status';
             $ym = 'src/Game/TrangThaiNhanVat.php';
             break;
-        case 'cjplayer':
+        case 'create_player':
 
             if (isset($token) && isset($username) && isset($sex)){
 				
@@ -138,7 +138,7 @@ if (isset($cmd)){
                     $stmt = $dblj->prepare($sql);
                     $stmt->execute(array($token,$sid,$username,'1','2000','100','0','35','35','12','5','0',$sex,'0',$firstmid,$nowdate,$shenfen,$shenfen));//Tiến vào tham số thiết trí
 //Tiến vào tham số thiết trí
-                    $gonowmid = $encode->encode("cmd=gomid&newmid=$gameconfig->firstmid&sid=$sid");
+                    $gonowmid = $encode->encode("cmd=goto_map&newmid=$gameconfig->firstmid&sid=$sid");
                     echo '<meta charset="utf-8" content="width=device-width,user-scalable=no" name="viewport">';
 					
                     echo $username."<font color=#8EBE67>Hoan</font><font color=#9FB85B>Nghênh</font><font color=#B0B24F>Đến</font><font color=#C1AC43>Đến</font><font color=#D2A637>Tìm</font><font color=#E3A02B>Tiên</font><font color=#F49A1F>Kỷ, now loading……</font>";
@@ -152,10 +152,10 @@ if (isset($cmd)){
                 exit();
             }
             break;
-        case 'gomid':
+        case 'goto_map':
             $ym = 'src/Game/BanDoHienTai.php';
             break;
-        case 'getginfo':
+        case 'get_game_info':
             $ym = 'src/Game/ThongTinTroChoi.php';
             break;
         case 'pve':
@@ -164,13 +164,13 @@ if (isset($cmd)){
         case 'pvp':
             $ym = 'src/Game/ChienDauNguoiChoi.php';
             break;
-        case 'pvegj':
+        case 'pve_attack':
             $ym = 'src/Game/ChienDauQuaiVat.php';
             break;
-		case 'pvbgj':
+		case 'boss_attack':
             $ym = 'src/Game/ChienDauTruongLao.php';
             break;
-        case 'sendliaotian':
+        case 'send_chat':
             if (isset($ltlx) && isset($ltmsg)){
                 switch ($ltlx){
                     case 'all':
@@ -197,155 +197,155 @@ if (isset($cmd)){
                 }
             }
             break;
-        case 'liaotian':
+        case 'chat':
             $ym ='src/Game/TroChuyen.php';
             break;
-        case 'getplayerinfo':
+        case 'get_player_info':
             $ym ='src/Game/TrangThaiNguoiKhac.php';
             break;
-        case 'zbinfo':
+        case 'equipment_info':
             $ym = 'src/Game/ThongTinTrangBi.php';
             break;
         case 'npc':
             $ym = "npc/npc.php";
             break;
-        case 'paihang';
+        case 'ranking';
             $ym = 'src/Game/BangXepHang.php';
             break;
-        case 'chakanzb':
+        case 'view_equipment':
             $ym = 'src/Game/ThongTinTrangBi.php';
             break;
-        case 'djinfo':
+        case 'item_info':
             $ym = 'src/Game/ThongTinDaoCu.php';
             break;
-        case 'getbagzb':
+        case 'get_equipment_bag':
             $ym = 'src/Game/TuiTrangBi.php';
             break;
-        case 'getbagyp':
+        case 'get_pill_bag':
             $ym = 'src/Game/TuiDan.php';
             break;
-        case 'getbagyd':
+        case 'get_medicine_bag':
             $ym = 'src/Game/TuiDuocPham.php';
             break;
 		
-		case 'getbagjn':
+		case 'get_skill_bag':
             $ym = 'src/Game/TuiKyNang.php';
             break;
-        case 'xxzb':
+        case 'unequip':
             $ym = 'src/Game/TrangThaiNhanVat.php';
             break;
-        case 'setzbwz':
+        case 'set_equipment_position':
             $ym = 'src/Game/TrangThaiNhanVat.php';
             break;
-        case 'allmap':
+        case 'all_maps':
             $ym = 'src/Game/TatCaBanDo.php';
             break;
-        case 'delezb':
+        case 'delete_equipment':
             $ym = 'src/Game/TuiTrangBi.php';
             break;
-        case 'getbagdj':
+        case 'get_item_bag':
             $ym = 'src/Game/TuiDaoCu.php';
             break;
-        case 'upzb':
+        case 'upgrade_equipment':
             $ym = 'src/Game/ThongTinTrangBi.php';
             break;
-        case 'goxiulian':
+        case 'goto_cultivation':
             $ym = 'src/Game/TuLuyen.php';
             break;
-		case 'wgxiulian':
+		case 'martial_arts_training':
             $ym = 'src/Game/VoKong.php';
             break;
-		case 'wgxl':
+		case 'martial_training':
             $ym = 'src/Game/VoKong.php';
             break;
-		case 'taopao':
+		case 'flee':
             $ym = 'src/Game/ChienDauTruongLao.php';
             break;
-		case 'jswg':
+		case 'end_martial_training':
             $ym = 'src/Game/VoKong.php';
             break;
-		case 'xxwg':
+		case 'learn_martial_arts':
             $ym = 'src/Game/HocVoKong.php';
             break;
-        case 'startxiulian':
+        case 'start_cultivation':
             $ym = 'src/Game/TuLuyen.php';
             break;
-        case 'endxiulian':
+        case 'end_cultivation':
             $ym = 'src/Game/TuLuyen.php';
             break;
-        case 'task':
+        case 'quest':
             $ym = 'src/Game/NhiemVu.php';
             break;
-        case 'mytask':
+        case 'my_quests':
             $ym = 'src/Game/NhiemVuNguoiChoi.php';
             break;
-        case 'mytaskinfo':
+        case 'quest_info':
             $ym = 'src/Game/ThongTinNhiemVu.php';
             break;
-        case 'boss':
+        case 'boss_info':
             $ym = 'src/Game/ThongTinTruongLao.php';
             break;
-        case 'ypinfo':
+        case 'pill_info':
             $ym = 'src/Game/ThongTinThuoc.php';
             break;
-		case 'ydinfo':
+		case 'medicine_info':
             $ym = 'src/Game/ThongTinDuocPham.php';
             break;
-        case 'pvb':
+        case 'boss_battle':
             $ym = 'src/Game/ChienDauTruongLao.php';
             break;
-        case 'chongwu':
+        case 'pet':
             $ym = 'src/Game/SungVat.php';
             break;
-        case 'jninfo':
+        case 'skill_info':
             $ym = 'src/Game/ThongTinKyNang.php';
             break;
-        case "zbinfo_sys":
+        case "system_equipment_info":
             $ym = 'src/Game/ThongTinTrangBiHeThong.php';
             break;
-        case "tupo":
+        case "breakthrough":
             $ym = 'src/Game/DotPha.php';
             break;
-        case "fangshi":
+        case "arena":
             $ym = "src/Game/PhongThi.php";
             break;
-        case "club":
+        case "guild":
             $ym = "src/Game/BangHoi.php";
             break;
-        case "clublist":
+        case "guild_list":
             $ym = "src/Game/DanhSachBangHoi.php";
             break;
-        case "duihuan":
+        case "exchange":
             $ym = "src/Game/DoiThuong.php";
             break;
-        case "im":
+        case "private_message":
             $ym = "src/Game/TinNhanRieng.php";
             break;
-		case "shangdian":
+		case "shop":
             $ym = "src/Game/CuaHang.php";
             break;
-		case "qydt":
+		case "area_map":
             $ym = "src/Game/KhuVucBanDo.php";
 			break;
-		case "ditu":
+		case "map":
             $ym = "dt/ditu.html";
 			break;
-		case "gaiming":
+		case "change_name":
             $ym = "npc/muban/gaiming.php";
 			break;
-		case "czbgm":
+		case "recharge_gm":
             $ym = "npc/muban/czbgm.php";
 			break;
-		case "tianfu":
+		case "talent":
             $ym = "src/Game/ThienPhu.php";
 			break;
-		case "taozhuang":
+		case "equipment_set":
             $ym = "src/Game/BoTrangBi.php";
 			break;
     }
     if (!isset($sid) || $sid=='' ){
 
-        if ($cmd!='cj' && $cmd!=='cjplayer'){
+        if ($cmd!='create_character' && $cmd!=='create_player'){
             header("refresh:1;url=index.php");
             exit();
         }
@@ -355,7 +355,7 @@ if (isset($cmd)){
     }else{
 		 
 
-         if ($cmd != 'pve' && $cmd!='pvegj'){//Mở ra pve Logic, tăng thêm phán đoán thử nhìn một chút
+         if ($cmd != 'pve' && $cmd!='pve_attack'){//Mở ra pve Logic, tăng thêm phán đoán thử nhìn một chút
 		 
 		     // $guaiwu = player\getguaiwu($gid,$dblj);
 		     // $gwhp = $guaiwu->ghp ;
@@ -364,7 +364,7 @@ if (isset($cmd)){
              $dblj->exec($sql);//Quan bế kho số liệu
 		    }
 			
-		if ($cmd != 'pvb' && $cmd!='pvbgj'){
+		if ($cmd != 'boss_battle' && $cmd!='boss_attack'){
 			$sql = "delete from boss where sid='$sid'";
 		    $dblj->exec($sql);}
 		
@@ -377,7 +377,7 @@ if (isset($cmd)){
             $pvpts = "$pvper->uname Công kích ngươi：$pvpcmd<br/>";
         }//8 Mở ra 8 Cái giai đoạn phát động đột phá
         if (\player\istupo($sid,$dblj) !=8 && $player->uexp >= $player->umaxexp){
-            $tupocmd = $encode->encode("cmd=tupo&sid=$sid");//Phán đoán phát động
+            $tupocmd = $encode->encode("cmd=breakthrough&sid=$sid");//Phán đoán phát động
             $tupocmd = "<a href='?cmd=$tupocmd'><font color='#FF0000'>Đột phá</font></a>";
             $tpts =  "<strong style='background:#FFC100'><font color='#000000'>Đạt tu vi tối đa, cần Đột Phá nếu không sẽ không nhận thêm Kinh Nghiệm:$tupocmd<hr></font></strong>";
         }

@@ -1,15 +1,15 @@
 <?php
 $player = player\getplayer($sid,$dblj);
-$gonowmid = $encode->encode("cmd=gomid&newmid=$player->nowmid&sid=$sid");
-$tfxy =  $encode->encode("cmd=tianfu&canshuxy=xy&sid=$sid");
-$tfsb =  $encode->encode("cmd=tianfu&canshusb=xy&sid=$sid");
-$tffy =  $encode->encode("cmd=tianfu&canshufy=xy&sid=$sid");
-$tfhp =  $encode->encode("cmd=tianfu&canshuhp=xy&sid=$sid");
-$tfbj =  $encode->encode("cmd=tianfu&canshubj=xy&sid=$sid");
-$tfxx =  $encode->encode("cmd=tianfu&canshuxx=xy&sid=$sid");
-$tfgj =  $encode->encode("cmd=tianfu&canshugj=xy&sid=$sid");
-$ntgm =  $encode->encode("cmd=tianfu&nt=xy&sid=$sid");//Nghịch thiên cải mệnh
-$wbts =  $encode->encode("cmd=tianfu&wbts1=xy&sid=$sid");//Văn bản nhắc nhở
+$gonowmid = $encode->encode("cmd=goto_map&newmid=$player->nowmid&sid=$sid");
+$tfxy =  $encode->encode("cmd=talent&canshuxy=xy&sid=$sid");
+$tfsb =  $encode->encode("cmd=talent&canshusb=xy&sid=$sid");
+$tffy =  $encode->encode("cmd=talent&canshufy=xy&sid=$sid");
+$tfhp =  $encode->encode("cmd=talent&canshuhp=xy&sid=$sid");
+$tfbj =  $encode->encode("cmd=talent&canshubj=xy&sid=$sid");
+$tfxx =  $encode->encode("cmd=talent&canshuxx=xy&sid=$sid");
+$tfgj =  $encode->encode("cmd=talent&canshugj=xy&sid=$sid");
+$ntgm =  $encode->encode("cmd=talent&nt=xy&sid=$sid");//Nghịch thiên cải mệnh
+$wbts =  $encode->encode("cmd=talent&wbts1=xy&sid=$sid");//Văn bản nhắc nhở
 
 //Nhỏ hơn 30 Cấp không cách nào tiến vào
 $jzjr = <<<HTML
@@ -188,10 +188,10 @@ if (isset($canshuxx)){
 			 }
 	}
 }
-$ztcmd = $encode->encode("cmd=zhuangtai&sid=$sid");
-$cwinfo = $encode->encode("cmd=chongwu&cwid=$player->cw&canshu=cwinfo&sid=$sid");
+$ztcmd = $encode->encode("cmd=character_status&sid=$sid");
+$cwinfo = $encode->encode("cmd=pet&cwid=$player->cw&canshu=cwinfo&sid=$sid");
 $cwid = $cw['cwid'];
-$gm =  $encode->encode("cmd=czbgm&canshu2=gaiming2&sid=$sid");
+$gm =  $encode->encode("cmd=recharge_gm&canshu2=gaiming2&sid=$sid");
 $player = player\getplayer($sid,$dblj);
 $html = <<<HTML
 <link rel="stylesheet" href="./chajian/tishiwenben/css/style.css">

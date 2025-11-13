@@ -13,13 +13,13 @@ require_once __DIR__ . '/../Helpers/ClubHelper.php';
 use TuTaTuTien\Helpers as Helpers;
 
 $player =  Helpers\layThongTinNguoiChoi($sid,$dblj);
-$gonowmid = $encode->encode("cmd=gomid&newmid=$player->idBanDoHienTai&sid=$player->sid");
+$gonowmid = $encode->encode("cmd=goto_map&newmid=$player->idBanDoHienTai&sid=$player->sid");
 $cxmid = Helpers\layThongTinBanDo($player->idBanDoHienTai,$dblj);
 $cxqy = Helpers\layThongTinKhuVuc($cxmid->mqy,$dblj);
-$gorehpmid = $encode->encode("cmd=gomid&newmid=$cxqy->mid&sid=$player->sid");
+$gorehpmid = $encode->encode("cmd=goto_map&newmid=$cxqy->mid&sid=$player->sid");
 $rwts = '';
 $cwhtml='';
-$pgjcmd = $encode->encode("cmd=pvegj&gid=$gid&sid=$player->sid&nowmid=$nowmid");
+$pgjcmd = $encode->encode("cmd=pve_attack&gid=$gid&sid=$player->sid&nowmid=$nowmid");
 $guaiwu = Helpers\layThongTinQuaiVat($gid,$dblj);
 $yguaiwu = new Helpers\layThongTinQuaiVat();
 
@@ -31,9 +31,9 @@ $useyp1 = $encode->encode("cmd=pve&canshu=useyp&ypid=$player->yp1&sid=$sid&gid=$
 $useyp2 = $encode->encode("cmd=pve&canshu=useyp&ypid=$player->yp2&sid=$sid&gid=$gid&nowmid=$nowmid");
 $useyp3 = $encode->encode("cmd=pve&canshu=useyp&ypid=$player->yp3&sid=$sid&gid=$gid&nowmid=$nowmid");
 
-$usejn1 = $encode->encode("cmd=pvegj&canshu=usejn&jnid=$player->jn1&sid=$sid&gid=$gid&nowmid=$nowmid");
-$usejn2 = $encode->encode("cmd=pvegj&canshu=usejn&jnid=$player->jn2&sid=$sid&gid=$gid&nowmid=$nowmid");
-$usejn3 = $encode->encode("cmd=pvegj&canshu=usejn&jnid=$player->jn3&sid=$sid&gid=$gid&nowmid=$nowmid");
+$usejn1 = $encode->encode("cmd=pve_attack&canshu=usejn&jnid=$player->jn1&sid=$sid&gid=$gid&nowmid=$nowmid");
+$usejn2 = $encode->encode("cmd=pve_attack&canshu=usejn&jnid=$player->jn2&sid=$sid&gid=$gid&nowmid=$nowmid");
+$usejn3 = $encode->encode("cmd=pve_attack&canshu=usejn&jnid=$player->jn3&sid=$sid&gid=$gid&nowmid=$nowmid");
 
 $ypname1 = 'Dược phẩm 1';
 $ypname2 = 'Dược phẩm 2';
@@ -215,7 +215,7 @@ HTML;
                 $zbid = $retzb[$sjdl]['zbid'];
                 $zbnowid = player\addzb($sid,$zbid,$dblj);
 				$zbys = Helpers\layThongTinTrangBi($zbid,$dblj);//Thu hoạch trang bị ID Địa chỉ, đây là dùng để thu hoạch sắc thái
-                $chakanzb = $encode->encode("cmd=chakanzb&zbnowid=$zbnowid&uid=$player->idNguoiDung&sid=$sid");
+                $chakanzb = $encode->encode("cmd=view_equipment&zbnowid=$zbnowid&uid=$player->idNguoiDung&sid=$sid");
 			$huode .= "nhận được :".'<a href="?cmd='.$chakanzb.'"><font color='.$zbys->phamChat.' >'.$zbname .'</font></a><br>';//Trang bị yếu tố
 			        $zbpz = $zbys->congKich + $zbys->phongNgu + $zbys->hutMau +$zbys->baoKich ;//Viết một cái thông cáo, nhận được  trang bị
 					if ($zbpz >=5){

@@ -27,7 +27,7 @@ if (isset($newmid)){
         if ($player->sinhMenh<=0){
             $retmid = Helpers\layThongTinBanDo($player->idBanDoHienTai,$dblj);
             $retqy = Helpers\layThongTinKhuVuc($retmid->mqy,$dblj);
-            $gonowmid = $encode->encode("cmd=gomid&newmid=$retqy->mid&sid=$sid");
+            $gonowmid = $encode->encode("cmd=goto_map&newmid=$retqy->mid&sid=$sid");
             if ($newmid != $retqy->mid){
                 exit("Ngươi đã trọng thương mời trị liệu<br/>".'<a href="?cmd='.$gonowmid.'">Trở về trò chơi</a>');
             }
@@ -37,7 +37,7 @@ if (isset($newmid)){
 		// if ($player->sinhMenh<=0){
             // $retmid = Helpers\layThongTinBanDo($player->idBanDoHienTai,$dblj);
             // $retqy = Helpers\layThongTinKhuVuc($retmid->mqy,$dblj);
-            // $gonowmid = $encode->encode("cmd=gomid&newmid=$retqy->mid&sid=$sid");
+            // $gonowmid = $encode->encode("cmd=goto_map&newmid=$retqy->mid&sid=$sid");
             // if ($newmid != $retqy->mid){
                 // exit("Gặp được quái vật dây dưa, không cách nào thoát thân。<br/>".'<a href="?cmd='.$gonowmid.'">Trở về trò chơi</a>');
             // }
@@ -65,18 +65,18 @@ if ($clmid->ispvp){
 }
 
 
-$ztcmd = $encode->encode("cmd=zhuangtai&sid=$sid");
-$goliaotian = $encode->encode("cmd=liaotian&ltlx=all&sid=$sid");
-$gonowmid = $encode->encode("cmd=gomid&newmid=$clmid->mid&sid=$sid");
-$phcmd = $encode->encode("cmd=paihang&sid=$sid");
-$getbagcmd = $encode->encode("cmd=getbagzb&sid=$sid");
-$cwcmd = $encode->encode("cmd=chongwu&sid=$sid");
+$ztcmd = $encode->encode("cmd=character_status&sid=$sid");
+$goliaotian = $encode->encode("cmd=chat&ltlx=all&sid=$sid");
+$gonowmid = $encode->encode("cmd=goto_map&newmid=$clmid->mid&sid=$sid");
+$phcmd = $encode->encode("cmd=ranking&sid=$sid");
+$getbagcmd = $encode->encode("cmd=get_equipment_bag&sid=$sid");
+$cwcmd = $encode->encode("cmd=pet&sid=$sid");
 $cxall = '';
 
-$upmidlj = $encode->encode("cmd=gomid&newmid=$clmid->upmid&sid=$sid");//Bên trên địa đồ
-$downmidlj = $encode->encode("cmd=gomid&newmid=$clmid->downmid&sid=$sid");
-$leftmidlj = $encode->encode("cmd=gomid&newmid=$clmid->leftmid&sid=$sid");
-$rightmidlj = $encode->encode("cmd=gomid&newmid=$clmid->rightmid&sid=$sid");
+$upmidlj = $encode->encode("cmd=goto_map&newmid=$clmid->upmid&sid=$sid");//Bên trên địa đồ
+$downmidlj = $encode->encode("cmd=goto_map&newmid=$clmid->downmid&sid=$sid");
+$leftmidlj = $encode->encode("cmd=goto_map&newmid=$clmid->leftmid&sid=$sid");
+$rightmidlj = $encode->encode("cmd=goto_map&newmid=$clmid->rightmid&sid=$sid");
 $upmid = Helpers\layThongTinBanDo($clmid->upmid,$dblj);
 $downmid = Helpers\layThongTinBanDo($clmid->downmid,$dblj);
 $leftmid = Helpers\layThongTinBanDo($clmid->leftmid,$dblj);
@@ -97,7 +97,7 @@ if ($bossxl<0 && $clmid->midboss != 0 && $second > $clmid->ms){
 	$sql = "update boss set bosshp = bossmaxhp  WHERE bossid='$clmid->midboss'";//Cho boss Tăng máu, phía trên phán đoán làm mới thời gian
 	$dblj->exec($sql);
 	$boss = Helpers\layThongTinBoss($clmid->midboss,$dblj);
-    $bossinfo = $encode->encode("cmd=boss&bossid=$boss->bossid&sid=$sid");
+    $bossinfo = $encode->encode("cmd=boss_info&bossid=$boss->bossid&sid=$sid");
     $bosshtml = <<<HTML
 	<a style="color: #f80a0a;border-radius: 10px;" href="?cmd=$bossinfo">
 	$boss->tenBoss</a>
@@ -105,7 +105,7 @@ HTML;
 }
     if($bossxl>0 && $clmid->midboss != 0){
     $boss = Helpers\layThongTinBoss($clmid->midboss,$dblj);
-    $bossinfo = $encode->encode("cmd=boss&bossid=$boss->bossid&sid=$sid");
+    $bossinfo = $encode->encode("cmd=boss_info&bossid=$boss->bossid&sid=$sid");
     $bosshtml = <<<HTML
 	<a style="color: #f80a0a;border-radius: 10px;" href="?cmd=$bossinfo">
 	$boss->tenBoss</a>
@@ -204,7 +204,7 @@ $cxjg = $dblj->query($sql);
 $cxallguaiwu = $cxjg->fetchAll(PDO::FETCH_ASSOC);
 $gwhtml = '';
 for ($i = 0;$i<count($cxallguaiwu);$i++){
-    $gwcmd = $encode->encode("cmd=getginfo&gid=".$cxallguaiwu[$i]['id']."&gyid=".$cxallguaiwu[$i]['gyid']."&sid=$sid&nowmid=$player->idBanDoHienTai");
+    $gwcmd = $encode->encode("cmd=get_game_info&gid=".$cxallguaiwu[$i]['id']."&gyid=".$cxallguaiwu[$i]['gyid']."&sid=$sid&nowmid=$player->idBanDoHienTai");
     $gwhtml .="<a href='?cmd=$gwcmd'>".$cxallguaiwu[$i]['gname']."</a>";
 }
 
@@ -234,7 +234,7 @@ if ($cxjg){
                     $club = new Helpers\layThongTinClub();
                     $club->clubname ="";
                 }
-                $playercmd = $encode->encode("cmd=getplayerinfo&uid=$cxuid&sid=$sid");
+                $playercmd = $encode->encode("cmd=get_player_info&uid=$cxuid&sid=$sid");
                 $playerhtml .="<a href='?cmd=$playercmd'>{$club->clubname}$cxuname</a>";
             }
 
@@ -361,7 +361,7 @@ if ($ltcxjg){
         $uname = $ret[count($ret) - $i-1]['name'];
         $umsg = $ret[count($ret) - $i-1]['msg'];
         $uid = $ret[count($ret) - $i-1]['uid'];
-        $ucmd = $encode->encode("cmd=getplayerinfo&uid=$uid&sid=$player->sid");
+        $ucmd = $encode->encode("cmd=get_player_info&uid=$uid&sid=$player->sid");
         if ($uid){
             $lthtml .="<font color=#F4911A></font><font color=#F80000>$texiao</font><font color=#EE8B14></font><font color=#EB8811></font>
 			<a href='?cmd=$ucmd''>$uname</a>:$umsg<br>";
@@ -418,17 +418,17 @@ HTML;
 
 
 
-$mapcmd = $encode->encode("cmd=allmap&sid=$sid");
-$xiuliancmd = $encode->encode("cmd=goxiulian&sid=$sid");
-$mytask = $encode->encode("cmd=mytask&sid=$sid");
-$getbagjncmd = $encode->encode("cmd=getbagjn&sid=$sid");
-$fangshi = $encode->encode("cmd=fangshi&fangshi=daoju&sid=$sid");
-$shangdian = $encode->encode("cmd=shangdian&canshu=gogoumai&sid=$sid");
-$clubcmd = $encode->encode("cmd=club&sid=$sid");
-$duihuancmd = $encode->encode("cmd=duihuan&sid=$sid");
-$imcmd = $encode->encode("cmd=im&sid=$sid");
-$lb = $encode->encode("cmd=getbagyd&sid=$sid");
-$qydt = $encode->encode("cmd=qydt&sid=$sid");
+$mapcmd = $encode->encode("cmd=all_maps&sid=$sid");
+$xiuliancmd = $encode->encode("cmd=goto_cultivation&sid=$sid");
+$mytask = $encode->encode("cmd=my_quests&sid=$sid");
+$getbagjncmd = $encode->encode("cmd=get_skill_bag&sid=$sid");
+$fangshi = $encode->encode("cmd=arena&fangshi=daoju&sid=$sid");
+$shangdian = $encode->encode("cmd=shop&canshu=gogoumai&sid=$sid");
+$clubcmd = $encode->encode("cmd=guild&sid=$sid");
+$duihuancmd = $encode->encode("cmd=exchange&sid=$sid");
+$imcmd = $encode->encode("cmd=private_message&sid=$sid");
+$lb = $encode->encode("cmd=get_medicine_bag&sid=$sid");
+$qydt = $encode->encode("cmd=area_map&sid=$sid");
 $nowhtml = <<<HTML
 <font face=Thể chữ lệ color="ae2d61">
 <marquee direction="left" style="background: #ffffff;font-size:30 px">

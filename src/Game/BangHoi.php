@@ -14,7 +14,7 @@ use TuTaTuTien\Helpers as Helpers;
  */
 $clubplayer = Helpers\layThongTinClubPlayer($sid,$dblj);
 $player = \Helpers\layThongTinNguoiChoi($sid,$dblj);
-$gonowmid = $encode->encode("cmd=gomid&newmid=$player->idBanDoHienTai&sid=$sid");
+$gonowmid = $encode->encode("cmd=goto_map&newmid=$player->idBanDoHienTai&sid=$sid");
 $clubhtml= '';
 $clubmenu = '';
 $renzhihtml='';
@@ -61,7 +61,7 @@ if (isset($canshu)){
                             continue;
                         }
                         $otherplayer = \Helpers\layThongTinNguoiChoiTheoUid($uid,$dblj);
-                        $ucmd = $encode->encode("cmd=club&canshu=zhiwei&zhiwei=$zhiwei&uid=$uid&sid=$sid");
+                        $ucmd = $encode->encode("cmd=guild&canshu=zhiwei&zhiwei=$zhiwei&uid=$uid&sid=$sid");
                         $playerlist .= "<a href='?cmd=$ucmd'>{$otherplayer->tenNhanVat}</a><br/>";
 
                     }
@@ -70,18 +70,18 @@ if (isset($canshu)){
                 }
 
                 if ($clubplayer->uclv == 1){
-                    $no2cmd = $encode->encode("cmd=club&canshu=renzhi&zhiwei=2&sid=$sid");
-                    $no3cmd = $encode->encode("cmd=club&canshu=renzhi&zhiwei=3&sid=$sid");
-                    $no4cmd = $encode->encode("cmd=club&canshu=renzhi&zhiwei=4&sid=$sid");
-                    $no5cmd = $encode->encode("cmd=club&canshu=renzhi&zhiwei=5&sid=$sid");
-                    $no6cmd = $encode->encode("cmd=club&canshu=renzhi&zhiwei=6&sid=$sid");
+                    $no2cmd = $encode->encode("cmd=guild&canshu=renzhi&zhiwei=2&sid=$sid");
+                    $no3cmd = $encode->encode("cmd=guild&canshu=renzhi&zhiwei=3&sid=$sid");
+                    $no4cmd = $encode->encode("cmd=guild&canshu=renzhi&zhiwei=4&sid=$sid");
+                    $no5cmd = $encode->encode("cmd=guild&canshu=renzhi&zhiwei=5&sid=$sid");
+                    $no6cmd = $encode->encode("cmd=guild&canshu=renzhi&zhiwei=6&sid=$sid");
                     $renzhihtml = "<a href='?cmd=$no2cmd'>Nhậm chức Phó chưởng môn</a><br/><a href='?cmd=$no3cmd'>Nhậm chức trưởng lão</a><br/><a href='?cmd=$no4cmd'>Nhậm chức chấp sự</a><br/><a href='?cmd=$no5cmd'>Nhậm chức tinh anh</a><br/><a href='?cmd=$no6cmd'>Nhậm chức đệ tử</a><br/>";
                 }
                 if ($clubplayer->uclv == 2){
-                    $no3cmd = $encode->encode("cmd=club&canshu=renzhi&zhiwei=3&sid=$sid");
-                    $no4cmd = $encode->encode("cmd=club&canshu=renzhi&zhiwei=4&sid=$sid");
-                    $no5cmd = $encode->encode("cmd=club&canshu=renzhi&zhiwei=5&sid=$sid");
-                    $no6cmd = $encode->encode("cmd=club&canshu=renzhi&zhiwei=6&sid=$sid");
+                    $no3cmd = $encode->encode("cmd=guild&canshu=renzhi&zhiwei=3&sid=$sid");
+                    $no4cmd = $encode->encode("cmd=guild&canshu=renzhi&zhiwei=4&sid=$sid");
+                    $no5cmd = $encode->encode("cmd=guild&canshu=renzhi&zhiwei=5&sid=$sid");
+                    $no6cmd = $encode->encode("cmd=guild&canshu=renzhi&zhiwei=6&sid=$sid");
                     $renzhihtml = "<a href='?cmd=$no3cmd'>Nhậm chức trưởng lão</a><br/><a href='?cmd=$no4cmd'>Nhậm chức chấp sự</a><br/><a href='?cmd=$no5cmd'>Nhậm chức tinh anh</a><br/><a href='?cmd=$no6cmd'>Nhậm chức đệ tử</a><br/>";
                 }
             }
@@ -102,22 +102,22 @@ if (isset($clubid) || $clubplayer){
         }else{
             $clubid = $clubplayer->clubid;
         }
-        $outclubcmd = $encode->encode("cmd=club&canshu=outclub&sid=$sid");
+        $outclubcmd = $encode->encode("cmd=guild&canshu=outclub&sid=$sid");
         $clubmenu = "<a href='?cmd=$outclubcmd'>Rời Bang</a>";
         if ($clubplayer->uclv==1){
-            $outclubcmd = $encode->encode("cmd=club&canshu=deleteclub&sid=$sid");
-            $renzhicmd = $encode->encode("cmd=club&canshu=renzhi&sid=$sid");
+            $outclubcmd = $encode->encode("cmd=guild&canshu=deleteclub&sid=$sid");
+            $renzhicmd = $encode->encode("cmd=guild&canshu=renzhi&sid=$sid");
             $clubmenu = "<a href='?cmd=$renzhicmd'>Nhậm chức</a> <a href='?cmd=$outclubcmd'>Giải tán</a>";
         }
     }else{
-        $joincmd = $encode->encode("cmd=club&clubid=$clubid&canshu=joinclub&sid=$sid");
+        $joincmd = $encode->encode("cmd=guild&clubid=$clubid&canshu=joinclub&sid=$sid");
         $clubmenu = "<a href='?cmd=$joincmd'>Xin gia nhập</a>";
     }
     noclub:
     $club = Helpers\layThongTinClub($clubid,$dblj);
     $cboss = \Helpers\layThongTinNguoiChoiTheoUid($club->clubno1,$dblj);
-    $cbosscmd = $encode->encode("cmd=getplayerinfo&uid=$club->clubno1&sid=$sid");
-    $clublist = $encode->encode("cmd=clublist&sid=$sid");
+    $cbosscmd = $encode->encode("cmd=get_player_info&uid=$club->clubno1&sid=$sid");
+    $clublist = $encode->encode("cmd=guild_list&sid=$sid");
     
     $sql="select uid,uclv from clubplayer WHERE clubid=$clubid ORDER BY uclv ASC ";
     $ret = $dblj->query($sql);
@@ -144,7 +144,7 @@ if (isset($clubid) || $clubplayer){
                 break;
         }
         $otherplayer = \Helpers\layThongTinNguoiChoiTheoUid($uid,$dblj);
-        $ucmd = $encode->encode("cmd=getplayerinfo&uid=$uid&sid=$player->sid");
+        $ucmd = $encode->encode("cmd=get_player_info&uid=$uid&sid=$player->sid");
         $playerlist .= "<a href='?cmd=$ucmd'>{$chenhao}{$otherplayer->tenNhanVat}</a><br/>";
     }
 
@@ -170,7 +170,7 @@ HTML;
 }
 
 if (!$clubplayer){
-    $clublist = $encode->encode("cmd=clublist&sid=$sid");
+    $clublist = $encode->encode("cmd=guild_list&sid=$sid");
     $clubhtml =<<<HTML
 Chưa có môn phái！<br/>
 <a href="?cmd=$clublist">Gia nhập môn phái</a>

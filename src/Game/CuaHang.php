@@ -7,13 +7,13 @@ require_once __DIR__ . '/../Helpers/ClubHelper.php';
 use TuTaTuTien\Helpers as Helpers;
 
 $player = Helpers\layThongTinNguoiChoi($sid,$dblj);//Thu hoạch ngươi ID
-$gonowmid = $encode->encode("cmd=gomid&newmid=$player->idBanDoHienTai&sid=$sid");
+$gonowmid = $encode->encode("cmd=goto_map&newmid=$player->idBanDoHienTai&sid=$sid");
 
-$shangdian = $encode->encode("cmd=shangdian&canshu=gogoumai&sid=$sid");//  PHP ，Lựa chọn văn bản , tăng thêm dấu hiệu , thân phận của ngươi
+$shangdian = $encode->encode("cmd=shop&canshu=gogoumai&sid=$sid");//  PHP ，Lựa chọn văn bản , tăng thêm dấu hiệu , thân phận của ngươi
 
-$shangdian1 = $encode->encode("cmd=shangdian&canshu1=gogoumai1&sid=$sid");
+$shangdian1 = $encode->encode("cmd=shop&canshu1=gogoumai1&sid=$sid");
 
-$beibaocmd = $encode->encode("cmd=getbagyd&sid=$sid");
+$beibaocmd = $encode->encode("cmd=get_medicine_bag&sid=$sid");
 //$gmcmd = $encode->encode("cmd=npc&nid=$nid&canshu=gogoumai&sid=$sid");
 //$ydlist = $encode->encode("cmd=npc&nid=$nid&canshu=ydlist&sid=$sid");
 
@@ -143,8 +143,8 @@ if (isset($canshu)){
                 $ydid = $oneyaodan['ydid'];
                 $ydjg = $oneyaodan['ydjg'];
 				$ydys = $oneyaodan['ydys'];
-                $ydcmd = $encode->encode("cmd=ydinfo&ydid=$ydid&sid=$sid");//cmd=php Văn kiện& Văn kiện bên trong vật gì đó kiện&sid Là một cái địa chỉ Thân phận của ngươi
-                $gm1yd = $encode->encode("cmd=shangdian&canshu=gogoumai&ydcount=1&ydid=$ydid&sid=$sid");
+                $ydcmd = $encode->encode("cmd=medicine_info&ydid=$ydid&sid=$sid");//cmd=php Văn kiện& Văn kiện bên trong vật gì đó kiện&sid Là một cái địa chỉ Thân phận của ngươi
+                $gm1yd = $encode->encode("cmd=shop&canshu=gogoumai&ydcount=1&ydid=$ydid&sid=$sid");
                 //$gm5yd = $encode->encode("cmd=npc&nid=$nid&canshu=gogoumai&ydcount=5&ydid=$ydid&sid=$sid");
                 $gm10yd = $encode->encode("cmd=npc&nid=$nid&canshu=gogoumai&ydcount=10&ydid=$ydid&sid=$sid");
 			
@@ -190,8 +190,8 @@ if (isset($canshu1)){
                 $ydid = $oneyaodan['ydid'];
                 $ydjg = $oneyaodan['ydjgm'];
 				$ydys = $oneyaodan['ydys'];
-                $ydcmd = $encode->encode("cmd=ydinfo&ydid=$ydid&sid=$sid");//cmd=php Văn kiện& Văn kiện bên trong vật gì đó kiện&sid Là một cái địa chỉ Thân phận của ngươi
-                $gm1yd = $encode->encode("cmd=shangdian&canshu1=gogoumai1&ydcount=1&ydid=$ydid&sid=$sid");
+                $ydcmd = $encode->encode("cmd=medicine_info&ydid=$ydid&sid=$sid");//cmd=php Văn kiện& Văn kiện bên trong vật gì đó kiện&sid Là một cái địa chỉ Thân phận của ngươi
+                $gm1yd = $encode->encode("cmd=shop&canshu1=gogoumai1&ydcount=1&ydid=$ydid&sid=$sid");
                 //$gm5yd = $encode->encode("cmd=npc&nid=$nid&canshu=gogoumai&ydcount=5&ydid=$ydid&sid=$sid");
                 $gm10yd = $encode->encode("cmd=npc&nid=$nid&canshu=gogoumai&ydcount=10&ydid=$ydid&sid=$sid");
 			
@@ -216,9 +216,9 @@ HTML;
     }
 }
 //Phía dưới là một cái tham số cất giữ
-        $shangdian = $encode->encode("cmd=shangdian&canshu=gogoumai&sid=$sid");
-		$shangdian1 = $encode->encode("cmd=shangdian&canshu1=gogoumai1&sid=$sid");
-		$beibaocmd = $encode->encode("cmd=getbagyd&sid=$sid");
+        $shangdian = $encode->encode("cmd=shop&canshu=gogoumai&sid=$sid");
+		$shangdian1 = $encode->encode("cmd=shop&canshu1=gogoumai1&sid=$sid");
+		$beibaocmd = $encode->encode("cmd=get_medicine_bag&sid=$sid");
 		$player = Helpers\layThongTinNguoiChoi($sid,$dblj);
 
 $gnhtml =<<<HTML
