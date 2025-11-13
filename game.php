@@ -1,5 +1,6 @@
 ﻿<?php
 //error_reporting(0);
+require_once 'bootstrap.php'; // Load tất cả classes và helpers
 require_once 'class/player.php';
 require_once 'class/encode.php';
 include_once 'pdo.php';
