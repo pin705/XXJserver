@@ -144,7 +144,7 @@ function tinhChiSoTuTrangBi($nguoiChoi, $ketNoiDB)
         $idTrangBi = $nguoiChoi->$tenThuocTinh;
         
         if ($idTrangBi != 0) {
-            $trangBi = layThongTinTrangBi($idTrangBi, $ketNoiDB);
+            $trangBi = layThongTinTrangBiNguoiChoi($idTrangBi, $ketNoiDB);
             
             if ($trangBi) {
                 $nguoiChoi->congKich += $trangBi->congKich;
@@ -245,13 +245,13 @@ function tinhToanCanhGioiVaKinhNghiem($nguoiChoi)
 }
 
 /**
- * Lấy thông tin trang bị từ database
+ * Lấy thông tin trang bị của người chơi từ database
  * 
- * @param int $idTrangBi ID của trang bị
+ * @param int $idTrangBi ID của trang bị người chơi
  * @param \PDO $ketNoiDB Kết nối database
  * @return object|null Thông tin trang bị hoặc null nếu không tìm thấy
  */
-function layThongTinTrangBi($idTrangBi, $ketNoiDB)
+function layThongTinTrangBiNguoiChoi($idTrangBi, $ketNoiDB)
 {
     $sql = "SELECT zbgj, zbfy, zbbj, zbxx, zbhp FROM playerzhuangbei WHERE zbnowid = ?";
     $stmt = $ketNoiDB->prepare($sql);

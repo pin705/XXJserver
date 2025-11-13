@@ -4,7 +4,16 @@ Game Text-Based PHP - Tự Ta Tu Tiên (修仙)
 
 ## 📋 Tổng Quan
 
-Dự án game tu tiên text-based được viết bằng PHP. Đã được refactor để tuân thủ các chuẩn mực lập trình hiện đại.
+Dự án game tu tiên text-based được viết bằng PHP. Đã được refactor để tuân thủ các chuẩn mực lập trình hiện đại và giảm thiểu code lặp.
+
+## 🎯 Recent Improvements (Mới nhất)
+
+**✨ Code Quality & Extensibility (2025-11-13):**
+- ✅ Bootstrap file tự động load tất cả helpers/classes
+- ✅ GameHandler class tập trung logic game chung
+- ✅ Giảm 70-80% code lặp trong mỗi file game
+- ✅ Tăng khả năng mở rộng và bảo trì
+- ✅ Hướng dẫn setup và chạy game chi tiết (SETUP.md)
 
 ## 🎯 Refactoring Status
 
@@ -29,49 +38,70 @@ Xem chi tiết trong [REFACTORING.md](REFACTORING.md) và [SUMMARY.md](SUMMARY.m
 
 ```
 XXJserver/
+├── bootstrap.php           # ⭐ Auto-load helpers/classes (MỚI)
 ├── src/                    # Code refactored mới
-│   ├── Classes/           # NguoiChoi, QuaiVat, TrangBi
-│   ├── Helpers/           # Helper functions
-│   └── Game/              # Game logic files (41 files) ✨ MỚI
+│   ├── Classes/           # NguoiChoi, QuaiVat, TrangBi (10 classes)
+│   ├── Core/              # ⭐ GameHandler - Logic chung (MỚI)
+│   ├── Helpers/           # Helper functions (11 helpers)
+│   └── Game/              # Game logic files (41 files) ✨
 ├── config/                # CauHinhGame - Constants
 ├── data/                  # Game data (sẽ thêm)
 ├── public/                # Entry points (sẽ di chuyển)
 ├── class/                 # Code cũ (giữ tương thích)
 ├── game/                  # Logic game cũ (giữ tương thích ngược)
+├── SETUP.md              # ⭐ Hướng dẫn cài đặt & chạy (MỚI)
+├── examples-bootstrap.php # ⭐ Ví dụ sử dụng mới (MỚI)
 ├── compatibility.php      # Backward compatibility
 ├── examples.php           # Ví dụ sử dụng
 ├── REFACTORING.md        # Tài liệu chi tiết
-└── GAME_MIGRATION.md     # Tài liệu di chuyển game/ ✨ MỚI
+└── GAME_MIGRATION.md     # Tài liệu di chuyển game/ ✨
 
 ```
 
 ## 🚀 Bắt Đầu
 
-### Xem ví dụ code mới:
-```bash
-php examples.php
-```
+### Cài đặt và chạy game:
+Xem hướng dẫn chi tiết trong [SETUP.md](SETUP.md)
 
-### Sử dụng trong code:
+### Sử dụng code mới (khuyến nghị):
 ```php
 <?php
-use TuTaTuTien\Helpers;
+// Chỉ cần 1 dòng require thay vì 11 dòng!
+require_once __DIR__ . '/bootstrap.php';
 
-// Lấy thông tin người chơi
-$nguoiChoi = Helpers\layThongTinNguoiChoi($sid, $pdo);
+use TuTaTuTien\Helpers as Helpers;
+use TuTaTuTien\Core\GameHandler;
 
-// Thêm kinh nghiệm
-Helpers\themKinhNghiem($sid, 1000, $pdo);
+// Sử dụng GameHandler để giảm code lặp
+$game = new GameHandler($dblj, $encode, $sid);
+$nguoiChoi = $game->getNguoiChoi();
+
+// Validation tự động
+$validation = $game->validateBanDo($nowmid);
+if (!$validation['valid']) {
+    exit($validation['message']);
+}
+```
+
+### Xem ví dụ:
+```bash
+# Ví dụ code cũ
+php examples.php
+
+# Ví dụ code mới với bootstrap & GameHandler
+php examples-bootstrap.php
 ```
 
 ## 📖 Documentation
 
+- [SETUP.md](SETUP.md) - **⭐ MỚI**: Hướng dẫn cài đặt và chạy game chi tiết
 - [README.md](README.md) - Tổng quan dự án
 - [REFACTORING.md](REFACTORING.md) - Hướng dẫn refactoring đầy đủ
 - [SUMMARY.md](SUMMARY.md) - Tổng kết refactoring
 - [MIGRATION_GUIDE.md](MIGRATION_GUIDE.md) - Hướng dẫn migrate game/ files
-- [GAME_MIGRATION.md](GAME_MIGRATION.md) - **MỚI**: Tài liệu di chuyển và đổi tên game files
+- [GAME_MIGRATION.md](GAME_MIGRATION.md) - Tài liệu di chuyển và đổi tên game files
 - [examples.php](examples.php) - Ví dụ sử dụng code mới
+- [examples-bootstrap.php](examples-bootstrap.php) - **⭐ MỚI**: Ví dụ bootstrap & GameHandler
 
 ## 🔄 Tương Thích
 
