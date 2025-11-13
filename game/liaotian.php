@@ -1,7 +1,10 @@
 <?php
-$player = \player\getplayer($sid,$dblj);
+require_once __DIR__ . '/../src/Helpers/NguoiChoiHelper.php';
+use TuTaTuTien\Helpers as Helpers;
+
+$nguoiChoi = Helpers\layThongTinNguoiChoi($sid, $dblj);
 $_SERVER['PHP_SELF'];
-$gonowmid = $encode->encode("cmd=gomid&newmid=$player->nowmid&sid=$player->sid");
+$gonowmid = $encode->encode("cmd=gomid&newmid=$nguoiChoi->idBanDoHienTai&sid=$nguoiChoi->idPhien");
 if ($ltlx == "all"){
     $sql = 'SELECT * FROM ggliaotian ORDER BY id DESC LIMIT 10';//Nói chuyện phiếm danh sách thu hoạch 10
     $ltcxjg = $dblj->query($sql);
@@ -17,7 +20,7 @@ border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px'>";
             $uname = $ret[count($ret) - $i-1]['name'];
             $umsg = $ret[count($ret) - $i-1]['msg'];
             $uid = $ret[count($ret) - $i-1]['uid'];
-            $ucmd = $encode->encode("cmd=getplayerinfo&uid=$uid&sid=$player->sid");
+            $ucmd = $encode->encode("cmd=getplayerinfo&uid=$uid&sid=$nguoiChoi->idPhien");
             if ($uid){
                 $lthtml .="<font color=#F4911A></font><font color=#F18E17></font><font color=#EE8B14></font><font color=#EB8811></font><a href='?cmd=$ucmd'>$uname</a>：$umsg<br/>";//Sửa chữa công cộng nói chuyện phiếm trước【Công cộng】
             }else{
@@ -41,7 +44,7 @@ HTML;
 }
 if ($ltlx == 'im'){
 
-    $sql = "SELECT * FROM imliaotian WHERE uid= {$player->uid} or imuid = {$player->uid} ORDER BY id DESC LIMIT 10";//Nói chuyện phiếm danh sách thu hoạch 10
+    $sql = "SELECT * FROM imliaotian WHERE uid= {$nguoiChoi->idNguoiDung} or imuid = {$nguoiChoi->idNguoiDung} ORDER BY id DESC LIMIT 10";//Nói chuyện phiếm danh sách thu hoạch 10
     $ltcxjg = $dblj->query($sql);
     
     $lthtml='';
@@ -56,11 +59,11 @@ if ($ltlx == 'im'){
             $umsg = $ret[count($ret) - $i-1]['msg'];
             $uid = $ret[count($ret) - $i-1]['uid'];
             $imuid = $ret[count($ret) - $i-1]['imuid'];
-            $uplayer = \player\getplayer1($imuid,$dblj);
-            $ucmd = $encode->encode("cmd=getplayerinfo&uid=$uid&sid=$player->sid");
-            $imucmd = $encode->encode("cmd=getplayerinfo&uid=$imuid&sid=$player->sid");
+            $nguoiChoiKhac = Helpers\layThongTinNguoiChoiTheoUid($imuid, $dblj);
+            $ucmd = $encode->encode("cmd=getplayerinfo&uid=$uid&sid=$nguoiChoi->idPhien");
+            $imucmd = $encode->encode("cmd=getplayerinfo&uid=$imuid&sid=$nguoiChoi->idPhien");
             if ($uid){
-                $lthtml .="[Nói chuyện riêng]<a href='?cmd=$ucmd'>$uname</a>-->><a href='?cmd=$imucmd'>$uplayer->uname</a>:$umsg<br/>";
+                $lthtml .="[Nói chuyện riêng]<a href='?cmd=$ucmd'>$uname</a>-->><a href='?cmd=$imucmd'>$nguoiChoiKhac->tenNhanVat</a>:$umsg<br/>";
             }
         }
     }
