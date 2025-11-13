@@ -150,6 +150,13 @@ File này chứa tất cả các hằng số cấu hình của game:
 
 ## Hướng Dẫn Sử Dụng
 
+### Cài đặt và chạy ví dụ
+
+```bash
+# Chạy file ví dụ để xem code mới hoạt động
+php examples.php
+```
+
 ### Sử dụng class và function mới:
 
 ```php
@@ -180,11 +187,35 @@ if ($nguoiChoi->conSong()) {
 2. ✅ Refactor class NguoiChoi
 3. ✅ Tạo file cấu hình
 4. ✅ Tạo helper functions
-5. ⏳ Di chuyển index.php vào public/
-6. ⏳ Refactor các class khác (QuaiVat, TrangBi, v.v.)
-7. ⏳ Cập nhật các file game/ để sử dụng class mới
-8. ⏳ Kiểm tra và test toàn bộ hệ thống
-9. ⏳ Loại bỏ code cũ sau khi đã chuyển đổi hoàn toàn
+5. ✅ Tạo class QuaiVat và TrangBi
+6. ✅ Tạo compatibility layer
+7. ✅ Tạo file examples.php với ví dụ sử dụng
+8. ⏳ Di chuyển index.php vào public/
+9. ⏳ Refactor các class khác (BanDo, DaoCu, NhiemVu, v.v.)
+10. ⏳ Cập nhật các file game/ để sử dụng class mới
+11. ⏳ Kiểm tra và test toàn bộ hệ thống
+12. ⏳ Loại bỏ code cũ sau khi đã chuyển đổi hoàn toàn
+
+## Files Đã Tạo
+
+### Cấu trúc (Structure)
+- `.gitignore` - File ignore cho Git
+- `REFACTORING.md` - Tài liệu hướng dẫn refactoring (file này)
+
+### Classes  
+- `src/Classes/NguoiChoi.php` - Class người chơi refactored
+- `src/Classes/QuaiVat.php` - Class quái vật refactored
+- `src/Classes/TrangBi.php` - Class trang bị refactored
+
+### Helpers
+- `src/Helpers/NguoiChoiHelper.php` - Helper functions cho người chơi
+
+### Config
+- `config/CauHinhGame.php` - Game constants và cấu hình
+
+### Utilities
+- `compatibility.php` - Layer tương thích ngược với code cũ
+- `examples.php` - File ví dụ sử dụng code refactored
 
 ## Lưu Ý
 
