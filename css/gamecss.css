@@ -1,0 +1,190 @@
+﻿
+#ltmsg2{
+    float: left;
+    resize: none;
+}
+
+#btn{
+    display:inline-block;
+    background: #fff;
+    color:#ff7a01;
+	border:1px solid #ff7a01;
+    text-align: center;
+    width: 57px;
+    font-size: 0.8em;
+    line-height: 26px;
+    height:26px;border-radius: 5px;
+    max-width: 98%;
+}
+#mainfont{
+    font-size: 15px;width: 280px;text-align: center;margin-top: 15px;font-family: "楷体",sans-serif ;}
+.zbys{
+    color: #9f908c;
+}
+
+
+.bys{
+    color: #FF9900;
+}
+
+
+
+
+.zbys a:link,.zbys a:visited{
+    color: #9f008c;
+}
+.djys{
+    color: #2a409f;
+}
+.djys a:link,.djys a:visited{
+    color: #2a409f;
+}
+.djys a:hover{
+    color: #2a409f;
+    background-color: #81799f;
+}
+.hpys{
+    color: #9f182a;
+}
+.ypys{
+    color: #9f7211;
+}
+.ypys a:link,.ypys a:visited{
+    color: #9f7211;
+}
+.hsds{
+	color: #9f182a;
+	}
+.hsds a:link,.hsds a:visited{
+	color: #9f182a;
+}
+body {
+    padding: 20px;
+    margin: 0px;
+    font-size: 16px;
+    background-color: #97BCA8;
+    line-height:22px;
+}
+/*九-零-一-起玩-w-w-w-.-9-0-1-7-5-.-c-om*/
+a:link {
+    color: #0093E8;
+    display: inline-block;
+    margin: 4px 3px 2px 4px;
+}
+ul
+{
+    position: absolute;
+    list-style-type:none;
+    margin:0;
+    margin-left: 160px;;
+    margin-top: -110px;;
+    float:right;
+
+}
+a{
+	
+    color: #0093E8;
+    padding: 1px 10px;
+    border: 1px solid #e3e3e3;
+    border-radius: 3px;
+    text-decoration: none;
+    margin-right: 3px;
+}
+a:visited {
+    color: #0093E8;
+}
+
+a:hover,a:active,a:focus {
+    color: #FFFFFF;
+    background: #0093e8;
+}
+
+/*new样式*/
+/*footer样式*/
+.footer{width: 280px;margin: 10px auto;    background-color: rgba(247, 217, 172, 0.18);
+padding: 20px;text-align: center;border-radius: 10px;}
+/*    background-color: rgba(247, 217, 172, 0.18);====0.18===透明度*/
+/*main样式*/
+.main{width: 280px;
+    margin: 0 auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;}
+.xinxi{font-size:14px;color:#666;}
+.main button{background: #fff;border: 1px solid #e3e3e3;border-radius: 3px;padding: 1px 10px;color:#0093E8;font-size:16px;}
+/*注册登录样式*/
+.login{width: 280px;
+    margin: 10px auto;
+    text-align: center;}
+
+.btn-login{display:inline-block;
+    background: #ff7a01;
+    color:#fff;
+    text-align: center;
+    width: 75px;
+    font-size: 0.8em;
+    line-height: 30px;border-radius: 5px;
+    height:30px;
+    max-width: 98%;border:none;}
+.input{padding:10px;margin-top:15px;}
+/*登录页修复内容*/
+.fix{font-size:12px;color:#666;padding-left:15px;}
+.fix h2{font-size:14px;color:red;}
+.fix p{line-height:18px;margin:0;}
+.juzhong {text-align:center;}
+.dtjd{font-family: Arial; border: 2px solid 
+#379082; border-radius: 20px; padding: 0px 0px; 
+width: 280px;}
+	/*设置div===========分页========样式的整体布局*/
+	.page-icon{
+		margin:20px 0 0 0;/*设置距离顶部20像素*/
+		font-size:0;/*修复行内元素之间空隙间隔*/
+		text-align:center;/*设置内容居中显示*/
+	}
+	
+	/*设置共有的的样式布局，主要是进行代码优化，提高运行效率*/
+	.page-icon a,.page-disabled,.page-next{
+		border:1px solid #ccc;
+		border-radius:3px;
+		padding:4px 10px 5px;
+		font-size:14PX;/*修复行内元素之间空隙间隔*/
+		margin-right:10px;
+	}
+	
+	/*对 a 标签进行样式布局 */
+	.page-icon a{
+		text-decoration:none;/*取消链接的下划线*/
+		color:#005aa0;
+	}
+	
+	.page-current{
+		color:#ff6600;
+		padding:4px 10px 5px;
+		font-size:14PX;/*修复行内元素之间空隙间隔*/
+	}
+	
+	.page-disabled{
+		color:#ccc;
+	}
+	
+	.page-next i,.page-disabled i{
+		cursor:pointer;/*设置鼠标经过时的显示状态，这里设置的是显示状态为小手状态*/
+		display:inline-block;/*设置显示的方式为行内块元素*/
+		width:5px;
+		height:9px;
+		background-image:url(http://img.mukewang.com/547fdbc60001bab900880700.gif);/*获取图标的背景链接*/
+	}
+	.page-disabled i{
+		background-position:-80px -608px;
+		margin-right:3px;
+	}
+ 
+	.page-next i{
+		background-position:-62px -608px;
+		margin-left:3px;
+	}
+
+.menu {
+	display: flex;
+	text-align: center;
+}

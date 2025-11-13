@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title></title>
+<!--Tỉ lệ xích, Android pc<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=1.0" />-->
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=1.0" />
+<link rel="stylesheet" type="text/css" href="./chajian/tishikuang/style/dialog.css">
+</head> 
+<body>
+
+<div class="btn-container">
+    <input type="button" id="success" value="Thành công" />
+    <!-- <input type="button" id="error" value="Sai lầm" /> -->
+    <!-- <input type="button" id="load" value="Now loading" /> -->
+    <!-- <input type="button" id="tip" value="Nhắc nhở" /> -->
+</div>
+<script type="text/javascript">
+//Một giây sau mô phỏng điểm kích, tự động chấp hành điểm kích input
+	setTimeout(function() {
+		// IE
+		if(document.all) {
+			document.getElementById("success").click();
+		}
+		// Cái khác trình duyệt
+		else {
+			var e = document.createEvent("MouseEvents");
+			e.initEvent("click", true, true);
+			document.getElementById("success").dispatchEvent(e);
+		}
+	}, 1000);
+</script>
+<script src="./chajian/tishikuang/javascript/zepto.min.js"></script>
+<script type="text/javascript" src="./chajian/tishikuang/javascript/dialog.min.js"></script>
+
+
+<script type="text/javascript">
+// =============================================
+// @des:            
+// type:success Thành công error Sai lầm load Đang load tip Nhắc nhở tin tức
+// msg:Nội dung
+// delay：Biểu hiện thời gian
+// callBack(function):Về công hàm thuyên chuyển công tác số
+// @author:         shaotianyu
+// @time:           2017-03-19
+// =============================================
+// 
+// Ngầm thừa nhận giá trị
+// width:180, Anime vật chứa độ rộng*Độ rộng ngầm thừa nhận 180px
+// height:150,  Anime vật chứa độ cao*Độ rộng ngầm thừa nhận 150px
+// type:"success" Bắn ra anime loại hình*Thừa nhận làm success
+// msg:'Thao tác thành công', Bắn ra tin tức*Ngầm thừa nhận‘Thao tác thành công’
+// delay:0, Biểu hiện tiếp tục thời gian*Ngầm thừa nhận 0
+// bg:true, Phải chăng biểu hiện bối cảnh lồng chụp tầng*Ngầm thừa nhận có màu đen nhạt bối cảnh lồng chụp
+// bgWhite:false, Bối cảnh phải chăng là màu trắng*Ngầm thừa nhận không phải màu trắng
+// clickDomCancel:false, Điểm kích lồng chụp tầng, bắn ra hiệu quả lập tức biến mất*Ngầm thừa nhận false
+// callback:null, Chấp hành xong anime sau về công hàm thuyên chuyển công tác số*Ngầm thừa nhận null
+
+			   
+$('#success').click(function(){
+   popup({type:'success',msg:"Thao tác thành công",delay:1000,callBack:function(){
+	  console.log('callBack~~~');
+   }});
+})
+$('#error').click(function(){
+   popup({type:'error',msg:"Thao tác thất bại",delay:2000,bg:true,clickDomCancel:true});
+})
+$('#load').click(function(){
+   popup({type:'load',msg:"Xin chờ đợi",delay:1500,callBack:function(){
+	  popup({type:"success",msg:"Tăng thêm thành công",delay:1000});
+   }});
+})
+$('#tip').click(function(){
+   popup({type:'tip',msg:"Nhắc nhở tin tức",delay:null,bg:true,clickDomCancel:true});
+})
+</script>
+<script type="text/javascript" >
+window.onload = success
+$('#success').click(function(){
+   popup({type:'success',msg:"Thao tác thành công",delay:1000,callBack:function(){
+	  console.log('callBack~~~');
+   }});
+})
+  window.onload = $('#success')
+</script>
+</body>
+</html>
