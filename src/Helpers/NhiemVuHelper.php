@@ -9,6 +9,8 @@
 
 namespace TuTaTuTien\Helpers;
 
+require_once __DIR__ . '/../Classes/NhiemVu.php';
+
 use TuTaTuTien\Classes\NhiemVu;
 
 /**

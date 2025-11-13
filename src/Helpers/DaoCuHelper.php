@@ -9,6 +9,8 @@
 
 namespace TuTaTuTien\Helpers;
 
+require_once __DIR__ . '/../Classes/DaoCu.php';
+
 use TuTaTuTien\Classes\DaoCu;
 
 /**

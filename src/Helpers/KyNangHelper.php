@@ -10,6 +10,8 @@
 
 namespace TuTaTuTien\Helpers;
 
+require_once __DIR__ . '/../Classes/KyNang.php';
+
 use TuTaTuTien\Classes\KyNang;
 
 /**

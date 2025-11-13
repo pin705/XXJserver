@@ -10,6 +10,8 @@
 
 namespace TuTaTuTien\Helpers;
 
+require_once __DIR__ . '/../Classes/TruongLao.php';
+
 use TuTaTuTien\Classes\TruongLao;
 
 /**

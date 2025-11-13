@@ -10,6 +10,9 @@
 
 namespace TuTaTuTien\Helpers;
 
+require_once __DIR__ . '/../Classes/NguoiChoi.php';
+require_once __DIR__ . '/../../config/CauHinhGame.php';
+
 use TuTaTuTien\Classes\NguoiChoi;
 use TuTaTuTien\Config\CauHinhGame;
 

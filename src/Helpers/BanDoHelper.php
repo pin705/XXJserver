@@ -10,6 +10,8 @@
 
 namespace TuTaTuTien\Helpers;
 
+require_once __DIR__ . '/../Classes/BanDo.php';
+
 use TuTaTuTien\Classes\BanDo;
 
 /**

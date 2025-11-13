@@ -10,6 +10,8 @@
 
 namespace TuTaTuTien\Helpers;
 
+require_once __DIR__ . '/../Classes/QuaiVat.php';
+
 use TuTaTuTien\Classes\QuaiVat;
 
 /**
