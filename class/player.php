@@ -110,89 +110,43 @@ function getplayer($sid,$dblj){
 	$cxjg->bindColumn('wugong',$player->wugong);
 	$cxjg->bindColumn('shenfen',$player->shenfen);
 	
-    $cxjg->fetch(\PDO::FETCH_BOUND); // Sửa từ FETCH_BOUND sang FETCH_BOUND để bindColumn() hoạt động
+    $cxjg->fetch(\PDO::FETCH_ASSOC);
 	
-    if ($player->tool1!=0){
-        $zhuangbei = getzb($player->tool1,$dblj);
-        $player->ugj = $player->ugj + $zhuangbei->zbgj;
-        $player->ufy = $player->ufy + $zhuangbei->zbfy;
-        $player->ubj = $player->ubj + $zhuangbei->zbbj;
-        $player->uxx = $player->uxx + $zhuangbei->zbxx;
-        $player->umaxhp = $player->umaxhp + $zhuangbei->zbhp;	
+    $tools = [$player->tool1, $player->tool2, $player->tool3, $player->tool4, $player->tool5, $player->tool6, $player->tool7];
+    foreach ($tools as $toolId) {
+        if ($toolId != 0) {
+            $zhuangbei = getzb($toolId, $dblj);
+            $player->ugj += $zhuangbei->zbgj;
+            $player->ufy += $zhuangbei->zbfy;
+            $player->ubj += $zhuangbei->zbbj;
+            $player->uxx += $zhuangbei->zbxx;
+            $player->umaxhp += $zhuangbei->zbhp;
+        }
     }
-	    if ($player->tfgj!=0){//Thiên phú công kích tăng thêm
+
+    if ($player->tfgj!=0){//Thiên phú công kích tăng thêm
         $tfgj = $player->tfgj*5;
-        $player->ugj = $player->ugj + $tfgj;}
-		
-		    if ($player->tfbj!=0){//Thiên phú tăng thêm-Bạo kích
-            $tfbj = $player->tfbj*1.5;
-            $player->ubj = $player->ubj + $tfbj;}
-			
-			if ($player->tfxx!=0){//Thiên phú tăng thêm-Hút máu
-            $tfxx = $player->tfxx*2;
-            $player->uxx = $player->uxx + $tfxx;}
-			
-			if ($player->tfhp!=0){//Thiên phú tăng thêm-HP
-            $tfhp = $player->tfhp*10;
-            $player->umaxhp = $player->umaxhp + $tfhp;}
-			
-			if ($player->tffy!=0){//Thiên phú tăng thêm-Phòng ngự
-            $tffy = $player->tffy*5;
-            $player->ufy = $player->ufy + $tffy;}
-			
-        // $player->ufy = $player->ufy + $tfgj->zbfy;
-        // $player->ubj = $player->ubj + $tfgj->zbbj;
-        // $player->uxx = $player->uxx + $tfgj->zbxx;
-        // $player->umaxhp = $player->umaxhp + $tfgj->zbhp;	
-    
-	
-    if ($player->tool2!=0){
-        $zhuangbei = getzb($player->tool2,$dblj);
-        $player->ugj = $player->ugj + $zhuangbei->zbgj;
-        $player->ufy = $player->ufy + $zhuangbei->zbfy;
-        $player->ubj = $player->ubj + $zhuangbei->zbbj;
-        $player->uxx = $player->uxx + $zhuangbei->zbxx;
-        $player->umaxhp = $player->umaxhp + $zhuangbei->zbhp;
+        $player->ugj += $tfgj;
     }
-    if ($player->tool3!=0){
-        $zhuangbei = getzb($player->tool3,$dblj);
-        $player->ugj = $player->ugj + $zhuangbei->zbgj;
-        $player->ufy = $player->ufy + $zhuangbei->zbfy;
-        $player->ubj = $player->ubj + $zhuangbei->zbbj;
-        $player->uxx = $player->uxx + $zhuangbei->zbxx;
-        $player->umaxhp = $player->umaxhp + $zhuangbei->zbhp;
+
+    if ($player->tfbj!=0){//Thiên phú tăng thêm-Bạo kích
+        $tfbj = $player->tfbj*1.5;
+        $player->ubj += $tfbj;
     }
-    if ($player->tool4!=0){
-        $zhuangbei = getzb($player->tool4,$dblj);
-        $player->ugj = $player->ugj + $zhuangbei->zbgj;
-        $player->ufy = $player->ufy + $zhuangbei->zbfy;
-        $player->ubj = $player->ubj + $zhuangbei->zbbj;
-        $player->uxx = $player->uxx + $zhuangbei->zbxx;
-        $player->umaxhp = $player->umaxhp + $zhuangbei->zbhp;
+
+    if ($player->tfxx!=0){//Thiên phú tăng thêm-Hút máu
+        $tfxx = $player->tfxx*2;
+        $player->uxx += $tfxx;
     }
-    if ($player->tool5!=0){
-        $zhuangbei = getzb($player->tool5,$dblj);
-        $player->ugj = $player->ugj + $zhuangbei->zbgj;
-        $player->ufy = $player->ufy + $zhuangbei->zbfy;
-        $player->ubj = $player->ubj + $zhuangbei->zbbj;
-        $player->uxx = $player->uxx + $zhuangbei->zbxx;
-        $player->umaxhp = $player->umaxhp + $zhuangbei->zbhp;
+
+    if ($player->tfhp!=0){//Thiên phú tăng thêm-HP
+        $tfhp = $player->tfhp*10;
+        $player->umaxhp += $tfhp;
     }
-    if ($player->tool6!=0){
-        $zhuangbei = getzb($player->tool6,$dblj);
-        $player->ugj = $player->ugj + $zhuangbei->zbgj;
-        $player->ufy = $player->ufy + $zhuangbei->zbfy;
-        $player->ubj = $player->ubj + $zhuangbei->zbbj;
-        $player->uxx = $player->uxx + $zhuangbei->zbxx;
-        $player->umaxhp = $player->umaxhp + $zhuangbei->zbhp;
-    }
-    if ($player->tool7!=0){
-        $zhuangbei = getzb($player->tool7,$dblj);
-        $player->ugj = $player->ugj + $zhuangbei->zbgj;
-        $player->ufy = $player->ufy + $zhuangbei->zbfy;
-        $player->ubj = $player->ubj + $zhuangbei->zbbj;
-        $player->uxx = $player->uxx + $zhuangbei->zbxx;
-        $player->umaxhp = $player->umaxhp + $zhuangbei->zbhp;
+
+    if ($player->tffy!=0){//Thiên phú tăng thêm-Phòng ngự
+        $tffy = $player->tffy*5;
+        $player->ufy += $tffy;
     }
     $rangeslv = array(0, 30, 50, 70, 80, 90, 100, 110);
     $rangesexp = array(2.5, 5, 7.5, 10, 12.5, 15, 17.5);
@@ -219,7 +173,7 @@ function getplayer1($uid,$dblj){
     $sql="select * from game1 where uid='$uid'";
     $cxjg = $dblj->query($sql);
     $cxjg->bindColumn('sid',$player->sid);
-    $cxjg->fetch(\PDO::FETCH_BOUND);
+    $cxjg->fetch(\PDO::FETCH_ASSOC);
     $player = getplayer($player->sid,$dblj);
     return $player;
 }
@@ -267,7 +221,7 @@ function getguaiwu($gid,$dblj){//Thu hoạch quái vật
     $cxjg->bindColumn('gbj',$guaiwu->gbj);
     $cxjg->bindColumn('gxx',$guaiwu->gxx);
     $cxjg->bindColumn('gyid',$guaiwu->gyid);
-    $cxjg->fetch(\PDO::FETCH_BOUND);
+    $cxjg->fetch(\PDO::FETCH_ASSOC);
 
     $rangeslv = array(0, 30, 50, 70, 80, 90, 100, 110);
     $rangesjj = array('Luyện khí', 'Trúc cơ', 'Kim Đan', 'Nguyên Anh', 'Hóa Thần', 'Luyện Hư', 'Hợp thể', 'Đại Thừa');
@@ -305,7 +259,7 @@ function getyguaiwu($gyid,$dblj){//Thu hoạch quái vật kho quái vật
         $cxjg->bindColumn('dljv',$guaiwu->dljv);
         $cxjg->bindColumn('ypjv',$guaiwu->ypjv);
         $cxjg->bindColumn('djjv',$guaiwu->djjv);
-        $cxjg->fetch(\PDO::FETCH_BOUND);
+        $cxjg->fetch(\PDO::FETCH_ASSOC);
     }
     return $guaiwu;
 }
@@ -333,7 +287,7 @@ function getyboss($bossid,$dblj){//Thu hoạch quái vật kho boss,boss, thêm 
        $cxjg->bindColumn('dljv',$boss->dljv);
         $cxjg->bindColumn('ypjv',$boss->ypjv);
         $cxjg->bindColumn('djjv',$boss->djjv);
-        $cxjg->fetch(\PDO::FETCH_BOUND);
+        $cxjg->fetch(\PDO::FETCH_ASSOC);
     }
     return $boss;
 }
@@ -378,7 +332,7 @@ function getmid($mid,$dblj){
     $cxjg->bindColumn('mqy',$clmid->mqy);
     $cxjg->bindColumn('playerinfo',$clmid->playerinfo);
     $cxjg->bindColumn('ispvp',$clmid->ispvp);
-    $cxjg->fetch(\PDO::FETCH_BOUND);
+    $cxjg->fetch(\PDO::FETCH_ASSOC);
     return $clmid;
 }
 function istupo($sid,$dblj){
@@ -386,7 +340,7 @@ function istupo($sid,$dblj){
     $rangeslv = array(0, 30, 50, 70, 80, 90, 100, 110);
     $playernextlv = $player->ulv + 1;
     $rangesjj = array('Luyện khí', 'Trúc cơ', 'Kim Đan', 'Nguyên Anh', 'Hóa Thần', 'Luyện Hư', 'Hợp thể', 'Đại Thừa');
-    for ($i=0;$i < count($rangeslv);$i++){
+    for ($i=0;$i < count($rangeslv)-1;$i++){
         if ($playernextlv >= $rangeslv[$i] && $playernextlv < $rangeslv[$i+1]){
             
             if($player->jingjie != $rangesjj[$i]){
@@ -517,7 +471,7 @@ function getnpc($nid,$dblj){
     $cxjg->bindColumn('taskid',$npc->taskid);
     $cxjg->bindColumn('muban',$npc->muban);
 	$cxjg->bindColumn('rwqy',$npc->qy);
-    $cxjg->fetch(\PDO::FETCH_BOUND);
+    $cxjg->fetch(\PDO::FETCH_ASSOC);
     return $npc;
 }
 class zhuangbei{
@@ -555,7 +509,7 @@ function getzb($zbnowid,$dblj){
     $cxjg->bindColumn('zbtool',$zhuangbei->tool);
 	$cxjg->bindColumn('zbys',$zhuangbei->zbys);
 	//$cxjg->bindColumn('tz',$zhuangbei->tz);
-    $cxjg->fetch(\PDO::FETCH_BOUND);
+    $cxjg->fetch(\PDO::FETCH_ASSOC);
     return $zhuangbei;
 }
 function getzbkzb($zbid,$dblj){
@@ -573,7 +527,7 @@ function getzbkzb($zbid,$dblj){
     $cxjg->bindColumn('zbtool',$zb->tool);
 	$cxjg->bindColumn('zbys',$zb->zbys);
 	$cxjg->bindColumn('zblv',$zb->zblv);
-    $cxjg->fetch(\PDO::FETCH_BOUND);
+    $cxjg->fetch(\PDO::FETCH_ASSOC);
     return $zb;
 }
 function addzb($sid,$zbid,$dblj){
@@ -598,7 +552,7 @@ function adddj($sid,$djid,$djsum,$dblj){
     $player = getplayer($sid,$dblj);
     $sql = "select * from playerdaoju where sid='$sid' and djid = $djid";
     $cxjg = $dblj->query($sql);
-    $ret = $cxjg->fetch(\PDO::FETCH_BOUND);
+    $ret = $cxjg->fetch(\PDO::FETCH_ASSOC);
     if ($ret){
         $sql = "update playerdaoju set djsum = djsum + $djsum where sid='$sid' and djid = $djid";
         $dblj->exec($sql);
@@ -636,7 +590,7 @@ function getplayerdaoju($sid,$djid,$dblj){
     $cxjg->bindColumn('djinfo',$daoju->djinfo);
     $cxjg->bindColumn('djid',$daoju->djid);
     $cxjg->bindColumn('djsum',$daoju->djsum);
-    $ret = $cxjg->fetch(\PDO::FETCH_BOUND);
+    $ret = $cxjg->fetch(\PDO::FETCH_ASSOC);
     
     if ($ret){
         return $daoju;
@@ -671,7 +625,7 @@ function getdaoju($djid,$dblj){
     $cxjg->bindColumn('djinfo',$daoju->djinfo);
     $cxjg->bindColumn('djid',$daoju->djid);
     $cxjg->bindColumn('djyxb',$daoju->djyxb);
-    $ret = $cxjg->fetch(\PDO::FETCH_BOUND);
+    $ret = $cxjg->fetch(\PDO::FETCH_ASSOC);
     if ($ret){
         return $daoju;
     }else{
@@ -690,7 +644,7 @@ function upzbsx($zbnowid,$upsx,$sid,$dblj){
     $cxjg = $dblj->query($sql);
     $cxjg->bindColumn("$upsx",$zbsx);
     $cxjg->bindColumn("qianghua",$zbqh);
-    $cxjg->fetch(\PDO::FETCH_BOUND);
+    $cxjg->fetch(\PDO::FETCH_ASSOC);
     $djsum = $zbqh *3+1;
     $ret = \player\deledjsum(1,$djsum,$sid,$dblj);
     if ($ret){
@@ -741,7 +695,7 @@ class yaodan{
 function getyaopin($dblj){
     $sql = "select * from yaopin";
     $cxjg = $dblj->query($sql);
-    $yaopin = $cxjg->fetchAll(\PDO::FETCH_BOUND);
+    $yaopin = $cxjg->fetchAll(\PDO::FETCH_ASSOC);
     return $yaopin;
 //    $cxjg->bindColumn('ypname',$yaopin->ypname);
 //    $cxjg->bindColumn('yphp',$yaopin->yphp);
@@ -754,7 +708,7 @@ function getyaopin($dblj){
 function getyaodan($dblj){
     $sql = "select * from yaodan";
     $cxjg = $dblj->query($sql);
-    $yaodan = $cxjg->fetchAll(\PDO::FETCH_BOUND);
+    $yaodan = $cxjg->fetchAll(\PDO::FETCH_ASSOC);
     return $yaodan;
 //    $cxjg->bindColumn('ypname',$yaopin->ypname);
 //    $cxjg->bindColumn('yphp',$yaopin->yphp);
@@ -776,7 +730,7 @@ function getyaopinonce($ypid,$dblj){
     $cxjg->bindColumn('ypjg',$yaopin->ypjg);
     $cxjg->bindColumn('ypbj',$yaopin->ypbj);
     $cxjg->bindColumn('ypid',$yaopin->ypid);
-    $cxjg->fetch(\PDO::FETCH_BOUND);
+    $cxjg->fetch(\PDO::FETCH_ASSOC);
     return $yaopin;
 }
 function getyaodanonce($ydid,$dblj){
@@ -793,7 +747,7 @@ function getyaodanonce($ydid,$dblj){
     $cxjg->bindColumn('ydid',$yaodan->ydid);
 	$cxjg->bindColumn('ydys',$yaodan->ydys);	
 	$cxjg->bindColumn('ydjgm',$yaodan->ydjgm);
-    $cxjg->fetch(\PDO::FETCH_BOUND);
+    $cxjg->fetch(\PDO::FETCH_ASSOC);
     return $yaodan;
 }
 
@@ -809,7 +763,7 @@ function getplayeryaopin($ypid,$sid,$dblj){
     $cxjg->bindColumn('ypbj',$yaopin->ypbj);
     $cxjg->bindColumn('ypxx',$yaopin->ypxx);
     $cxjg->bindColumn('ypsum',$yaopin->ypsum);
-    $ret = $cxjg->fetch(\PDO::FETCH_BOUND);
+    $ret = $cxjg->fetch(\PDO::FETCH_ASSOC);
     if ($ret){
         return $yaopin;
     }else{
@@ -830,7 +784,7 @@ function getplayeryaodan($ydid,$sid,$dblj){
     $cxjg->bindColumn('ydxx',$yaodan->ydxx);
     $cxjg->bindColumn('ydsum',$yaodan->ydsum);
 	$cxjg->bindColumn('ydjgm',$yaodan->ydjgm);
-    $ret = $cxjg->fetch(\PDO::FETCH_BOUND);
+    $ret = $cxjg->fetch(\PDO::FETCH_ASSOC);
     if ($ret){
         return $yaodan;
     }else{
@@ -842,7 +796,7 @@ function getplayeryaopinall($sid,$dblj){
     $sql = "select * from playeryaopin WHERE sid='$sid'";
     $cxjg = $dblj->query($sql);
     if ($cxjg){
-        $ret = $cxjg->fetchAll(\PDO::FETCH_BOUND);
+        $ret = $cxjg->fetchAll(\PDO::FETCH_ASSOC);
         return $ret;
     }else{
         return false;
@@ -854,7 +808,7 @@ function getplayeryaodanall($sid,$dblj){
     $sql = "select * from playeryaodan WHERE sid='$sid'";
     $cxjg = $dblj->query($sql);
     if ($cxjg){
-        $ret = $cxjg->fetchAll(\PDO::FETCH_BOUND);
+        $ret = $cxjg->fetchAll(\PDO::FETCH_ASSOC);
         return $ret;
     }else{
         return false;
@@ -1023,7 +977,7 @@ function getplayerrenwu($sid,$dblj){
 //    $cxjg->bindColumn("rwyxb",$task->rwyxb);
 //    $cxjg->bindColumn("rwzt",$task->rwzt);
 //    $cxjg->bindColumn("rwcount",$task->rwcount);
-    $task = $cxjg->fetchAll(\PDO::FETCH_BOUND);
+    $task = $cxjg->fetchAll(\PDO::FETCH_ASSOC);
     return $task;
 }
 function gettask($rwid,$dblj){
@@ -1044,7 +998,7 @@ function gettask($rwid,$dblj){
     $cxjg->bindColumn("rwyp",$task->rwyp);
     $cxjg->bindColumn("lastrwid",$task->lastrwid);
 	$cxjg->bindColumn("rwqy",$task->rwqy);
-    $cxjg->fetchAll(\PDO::FETCH_BOUND);
+    $cxjg->fetchAll(\PDO::FETCH_ASSOC);
     return $task;
 }
 function getplayerrenwuonce($sid,$rwid,$dblj){
@@ -1065,7 +1019,7 @@ function getplayerrenwuonce($sid,$rwid,$dblj){
     $cxjg->bindColumn("rwnowcount",$task->rwnowcount);
     $cxjg->bindColumn("rwlx",$task->rwlx);
     $cxjg->bindColumn("rwyp",$task->rwyp);
-    $ret = $cxjg->fetch(\PDO::FETCH_BOUND);
+    $ret = $cxjg->fetch(\PDO::FETCH_ASSOC);
     if (!$ret){
         return false;
     }
@@ -1116,7 +1070,7 @@ function getboss($bossid,$dblj){
 	$cxjg->bindColumn('djjv',$boss->djjv);
 	$cxjg->bindColumn('sid',$boss->sid);
 	
-    $cxjg->fetch(\PDO::FETCH_BOUND);
+    $cxjg->fetch(\PDO::FETCH_ASSOC);
     return $boss;
 }
 function useyaopin($ypid,$ypsum,$sid,$dblj){
@@ -1226,60 +1180,20 @@ function getchongwu($cwid, $dblj){
     $cxjg->bindColumn("tool7",$chongwu->tool7);
 
 
-    if ($chongwu->tool1!=0){
-        $zhuangbei = getzb($chongwu->tool1,$dblj);
-        $chongwu->ugj = $chongwu->cwgj + $zhuangbei->zbgj;
-        $chongwu->ufy = $chongwu->cwfy + $zhuangbei->zbfy;
-        $chongwu->ubj = $chongwu->cwbj + $zhuangbei->zbbj;
-        $chongwu->uxx = $chongwu->cwxx + $zhuangbei->zbxx;
-        $chongwu->umaxhp = $chongwu->cwmaxhp + $zhuangbei->zbhp;
-    }
-    if ($chongwu->tool2!=0){
-        $zhuangbei = getzb($chongwu->tool2,$dblj);
-        $chongwu->ugj = $chongwu->cwgj + $zhuangbei->zbgj;
-        $chongwu->ufy = $chongwu->cwfy + $zhuangbei->zbfy;
-        $chongwu->ubj = $chongwu->cwbj + $zhuangbei->zbbj;
-        $chongwu->uxx = $chongwu->cwxx + $zhuangbei->zbxx;
-        $chongwu->umaxhp = $chongwu->cwmaxhp + $zhuangbei->zbhp;
-    }
-    if ($chongwu->tool3!=0){
-        $zhuangbei = getzb($chongwu->tool3,$dblj);
-        $chongwu->ugj = $chongwu->cwgj + $zhuangbei->zbgj;
-        $chongwu->ufy = $chongwu->cwfy + $zhuangbei->zbfy;
-        $chongwu->ubj = $chongwu->cwbj + $zhuangbei->zbbj;
-        $chongwu->uxx = $chongwu->cwxx + $zhuangbei->zbxx;
-        $chongwu->umaxhp = $chongwu->cwmaxhp + $zhuangbei->zbhp;
-    }
-    if ($chongwu->tool4!=0){
-        $zhuangbei = getzb($chongwu->tool4,$dblj);
-        $chongwu->ugj = $chongwu->cwgj + $zhuangbei->zbgj;
-        $chongwu->ufy = $chongwu->cwfy + $zhuangbei->zbfy;
-        $chongwu->ubj = $chongwu->cwbj + $zhuangbei->zbbj;
-        $chongwu->uxx = $chongwu->cwxx + $zhuangbei->zbxx;
-        $chongwu->umaxhp = $chongwu->cwmaxhp + $zhuangbei->zbhp;
-    }
-    if ($chongwu->tool5!=0){
-        $zhuangbei = getzb($chongwu->tool5,$dblj);
-        $chongwu->ugj = $chongwu->cwgj + $zhuangbei->zbgj;
-        $chongwu->ufy = $chongwu->cwfy + $zhuangbei->zbfy;
-        $chongwu->ubj = $chongwu->cwbj + $zhuangbei->zbbj;
-        $chongwu->uxx = $chongwu->cwxx + $zhuangbei->zbxx;
-        $chongwu->umaxhp = $chongwu->cwmaxhp + $zhuangbei->zbhp;
-
-    }
-    if ($chongwu->tool7!=0){
-        $zhuangbei = getzb($chongwu->tool7,$dblj);
-        $chongwu->ugj = $chongwu->cwgj + $zhuangbei->zbgj;
-        $chongwu->ufy = $chongwu->cwfy + $zhuangbei->zbfy;
-        $chongwu->ubj = $chongwu->cwbj + $zhuangbei->zbbj;
-        $chongwu->uxx = $chongwu->cwxx + $zhuangbei->zbxx;
-        $chongwu->umaxhp = $chongwu->cwmaxhp + $zhuangbei->zbhp;
-
-
+    $tools = [$chongwu->tool1, $chongwu->tool2, $chongwu->tool3, $chongwu->tool4, $chongwu->tool5, $chongwu->tool6, $chongwu->tool7];
+    foreach ($tools as $toolId) {
+        if ($toolId != 0) {
+            $zhuangbei = getzb($toolId, $dblj);
+            $chongwu->ugj = $chongwu->cwgj + $zhuangbei->zbgj;
+            $chongwu->ufy = $chongwu->cwfy + $zhuangbei->zbfy;
+            $chongwu->ubj = $chongwu->cwbj + $zhuangbei->zbbj;
+            $chongwu->uxx = $chongwu->cwxx + $zhuangbei->zbxx;
+            $chongwu->umaxhp = $chongwu->cwmaxhp + $zhuangbei->zbhp;
+        }
     }
 
-    $ret = $cxjg->fetch(\PDO::FETCH_BOUND);
-    for ($i=0;$i<$rangeslv;$i++){
+    $ret = $cxjg->fetch(\PDO::FETCH_ASSOC);
+    for ($i=0;$i<count($rangeslv)-1;$i++){
         if ($chongwu->cwlv>=$rangeslv[$i] && $chongwu->cwlv<$rangeslv[$i+1]){
             $cwnextlv = $chongwu->cwlv + 1;
             $chongwu->cwmaxexp = $cwnextlv *($cwnextlv+round($cwnextlv/2))*50*$rangesexp[$i]+$cwnextlv;//Sủng vật thăng cấp cwmaxexp Thăng cấp tính toán, ta đổi thành 50 Lần ngầm thừa nhận 10 Lần
@@ -1293,7 +1207,7 @@ function getchongwuall($sid,$dblj){
     $sql = "select * from playerchongwu WHERE sid = '$sid'";
     $cxjg = $dblj->query($sql);
     if ($cxjg){
-        $ret = $cxjg->fetchAll(\PDO::FETCH_BOUND);
+        $ret = $cxjg->fetchAll(\PDO::FETCH_ASSOC);
         return $ret;
     }else{
         return false;
@@ -1332,11 +1246,11 @@ function wugongcs($wgid,$sid, $dblj){
     $cxjg->bindColumn("wglx",$chongwu->wglx);
 
 
-    $ret = $cxjg->fetch(\PDO::FETCH_BOUND);
-    for ($i=0;$i<$rangeslv;$i++){
+    $ret = $cxjg->fetch(\PDO::FETCH_ASSOC);
+    for ($i=0;$i<count($rangeslv)-1;$i++){
         if ($chongwu->wgdj>=$rangeslv[$i] && $chongwu->wgdj<$rangeslv[$i+1]){
             $cwnextlv = $chongwu->wgdj + 1;
-			$chongwu->wgdj = $cwnextlv + 0 ;
+            $chongwu->wgdj = $cwnextlv + 0 ;
             
             break;
         }
@@ -1347,7 +1261,7 @@ function wgsl($sid,$dblj){
     $sql = "select * from playerwugong WHERE sid = '$sid'";
     $cxjg = $dblj->query($sql);
     if ($cxjg){
-        $ret = $cxjg->fetchAll(\PDO::FETCH_BOUND);
+        $ret = $cxjg->fetchAll(\PDO::FETCH_ASSOC);
         return $ret;
     }else{
         return false;
@@ -1445,13 +1359,13 @@ class jineng{
 function getjineng_all($dblj){
     $sql = "select * from jineng";
     $cxjg = $dblj->query($sql);
-    $retjn = $cxjg->fetchAll(\PDO::FETCH_BOUND);
+    $retjn = $cxjg->fetchAll(\PDO::FETCH_ASSOC);
     return $retjn;
 }
 function getplayerjineng_all($sid,$dblj){
     $sql = "select * from playerjineng WHERE sid='$sid'";
     $cxjg = $dblj->query($sql);
-    $retjn = $cxjg->fetchAll(\PDO::FETCH_BOUND);
+    $retjn = $cxjg->fetchAll(\PDO::FETCH_ASSOC);
     return $retjn;
 }
 function getjineng_once($jnid,$dblj){
@@ -1466,7 +1380,7 @@ function getjineng_once($jnid,$dblj){
     $cxjg->bindColumn("jnxx",$jineng->jnxx);
     $cxjg->bindColumn("jndj",$jineng->jndj);
     $cxjg->bindColumn("djcount",$jineng->djcount);
-    $cxjg->fetch(\PDO::FETCH_BOUND);
+    $cxjg->fetch(\PDO::FETCH_ASSOC);
     return $jineng;
 }
 
@@ -1482,7 +1396,7 @@ function getplayerjineng($jnid,$sid,$dblj){
     $cxjg->bindColumn("jnbj",$jineng->jnbj);
     $cxjg->bindColumn("jnxx",$jineng->jnxx);
     $cxjg->bindColumn("jncount",$jineng->jncount);
-    $ret = $cxjg->fetch(\PDO::FETCH_BOUND);
+    $ret = $cxjg->fetch(\PDO::FETCH_ASSOC);
 
     if ($ret){
         return $jineng;
@@ -1528,19 +1442,19 @@ function getqy($qyid,$dblj){
     $cxjg->bindColumn('qyname',$qy->qyname);
     $cxjg->bindColumn('qyid',$qy->qyid);
     $cxjg->bindColumn('mid',$qy->mid);
-    $cxjg->fetch(\PDO::FETCH_BOUND);
+    $cxjg->fetch(\PDO::FETCH_ASSOC);
     return $qy;
 }
 function getqy_all($dblj){
     $sql = "select * from `qy`";
     $cxjg = $dblj->query($sql);
-    $ret = $cxjg->fetchAll(\PDO::FETCH_BOUND);
+    $ret = $cxjg->fetchAll(\PDO::FETCH_ASSOC);
     return $ret;
 }
 function getqy_dt($dblj){
     $sql = "select * from `mid`";
     $cxjg = $dblj->query($sql);
-    $ret = $cxjg->fetchAll(\PDO::FETCH_BOUND);
+    $ret = $cxjg->fetchAll(\PDO::FETCH_ASSOC);
     return $ret;
 }
 class gameconfig{
@@ -1551,7 +1465,7 @@ function getgameconfig($dblj){
     $sql = "select * from `gameconfig`";
     $cxjg = $dblj->query($sql);
     $cxjg->bindColumn('firstmid',$gameconfig->firstmid);
-    $ret = $cxjg->fetch(\PDO::FETCH_BOUND);
+    $ret = $cxjg->fetch(\PDO::FETCH_ASSOC);
     return $gameconfig;
 }
 
@@ -1587,7 +1501,7 @@ function getfangshi_once($lx,$payid,$dblj){
             $redj->bindColumn('djcount',$fsdj->djcount);
             $redj->bindColumn('payid',$fsdj->payid);
             $redj->bindColumn('djinfo',$fsdj->djinfo);
-            $dj = $redj->fetch(\PDO::FETCH_BOUND);
+            $dj = $redj->fetch(\PDO::FETCH_ASSOC);
             if ($dj){
                 return $fsdj;
             }
@@ -1600,7 +1514,7 @@ function getfangshi_once($lx,$payid,$dblj){
             $redj->bindColumn('payid',$fszb->payid);
             $redj->bindColumn('uid',$fszb->uid);
             $redj->bindColumn("pay",$fszb->pay);
-            $zb = $redj->fetch(\PDO::FETCH_BOUND);
+            $zb = $redj->fetch(\PDO::FETCH_ASSOC);
             if ($zb){
                 return $fszb;
             }
@@ -1613,7 +1527,7 @@ function getfangshi_once($lx,$payid,$dblj){
             $redj->bindColumn('payid',$fszb->payid);
             $redj->bindColumn('uid',$fszb->uid);
             $redj->bindColumn("pay",$fszb->pay);
-            $zb = $redj->fetch(\PDO::FETCH_BOUND);
+            $zb = $redj->fetch(\PDO::FETCH_ASSOC);
             if ($zb){
                 return $fszb;
             }
@@ -1632,7 +1546,7 @@ function getfangshi_all($lx, $dblj){
         case "daoju":
             $sql = "select * from `fangshi_dj`";
             $redj = $dblj->query($sql);
-            $dj = $redj->fetchAll(\PDO::FETCH_BOUND);
+            $dj = $redj->fetchAll(\PDO::FETCH_ASSOC);
             return $dj;
         case "zhuangbei":
 		    $sql = "select * from youtable order by rand() limit 5";
@@ -1640,13 +1554,13 @@ function getfangshi_all($lx, $dblj){
             $sql = "select * from `fangshi_zb`";
 			
             $redj = $dblj->query($sql);
-            $dj = $redj->fetchAll(\PDO::FETCH_BOUND);
+            $dj = $redj->fetchAll(\PDO::FETCH_ASSOC);
             return $dj;
 		case "shangdian":
             $sql = "select * from `fangshi_sd` ";
 			
             $redj = $dblj->query($sql);
-            $dj = $redj->fetchAll(\PDO::FETCH_BOUND);
+            $dj = $redj->fetchAll(\PDO::FETCH_ASSOC);
             return $dj;
     }
 
@@ -1674,14 +1588,14 @@ function getclub($clubid,$dblj){
     $retc->bindColumn("clubno1",$club->clubno1);
     $retc->bindColumn("clubyxb",$club->clubyxb);
     $retc->bindColumn("clubczb",$club->clubczb);
-    $retc->fetch(\PDO::FETCH_BOUND);
+    $retc->fetch(\PDO::FETCH_ASSOC);
     return $club;
 }
 
 function getclub_all($dblj){
     $sql = "select * from `club`";
     $retc = $dblj->query($sql);
-    $club = $retc->fetchAll(\PDO::FETCH_BOUND);
+    $club = $retc->fetchAll(\PDO::FETCH_ASSOC);
     return $club;
 }
 
@@ -1705,7 +1619,7 @@ function getclubplayer_once($sid, $dblj){
     $retc->bindColumn('uid',$clubplayer->uid);
     $retc->bindColumn('uid',$clubplayer->uid);
     $retc->bindColumn('uclv',$clubplayer->uclv);
-    $ret = $retc->fetch(\PDO::FETCH_BOUND);
+    $ret = $retc->fetch(\PDO::FETCH_ASSOC);
     if (!$ret){
         return $ret;
     }
@@ -1737,7 +1651,7 @@ function getduihuan($dhm,$dblj){
     $ret->bindColumn('dhczb',$duihuan->dhczb);
     $ret->bindColumn('dhname',$duihuan->dhname);
     $ret->bindColumn('dhexp',$duihuan->dhexp);
-    $ret = $ret->fetch(\PDO::FETCH_BOUND);
+    $ret = $ret->fetch(\PDO::FETCH_ASSOC);
     if ($ret){
         return $duihuan;
     }
@@ -1787,7 +1701,7 @@ function wgcx($wgid,$sid,$dblj){
 		$cxjg->bindColumn('xlzt',$wgcx->xlzt);
 		$cxjg->bindColumn('xlsj',$wgcx->xlsj);
 		
-    $ret = $cxjg->fetch(\PDO::FETCH_BOUND);
+    $ret = $cxjg->fetch(\PDO::FETCH_ASSOC);
     if ($ret){
         return $wgcx;
     }else{
@@ -1825,7 +1739,7 @@ function wgcs($wgid,$sid,$dblj){
 		$cxjg->bindColumn('xlzt',$wgcs->xlzt);
 		$cxjg->bindColumn('xlsj',$wgcs->xlsj);
 		
-    $ret = $cxjg->fetch(\PDO::FETCH_BOUND);
+    $ret = $cxjg->fetch(\PDO::FETCH_ASSOC);
     if ($ret){
         return $wgcs;
     }else{
@@ -1849,7 +1763,7 @@ function cqmj($wgid,$dblj){
     $cxjg->bindColumn('wgid',$miji->wgid);
     $cxjg->bindColumn('wgys',$miji->wgys);
     $cxjg->bindColumn('wglx',$miji->wglx);
-    $cxjg->fetch(\PDO::FETCH_BOUND);
+    $cxjg->fetch(\PDO::FETCH_ASSOC);
     return $miji;
 }
 function mjcx($cqsjs,$dblj){
@@ -1861,7 +1775,7 @@ function mjcx($cqsjs,$dblj){
     $cxjg->bindColumn('wgid',$miji->wgid);
     $cxjg->bindColumn('wgys',$miji->wgys);
     $cxjg->bindColumn('wglx',$miji->wglx);
-    $ret = $cxjg->fetch(\PDO::FETCH_BOUND);
+    $ret = $cxjg->fetch(\PDO::FETCH_ASSOC);
     if ($ret){
         return $miji;
     }else{
@@ -1893,7 +1807,7 @@ function cqwg($cqsjs,$sid,$dblj){
     $cxjg->bindColumn('wgid',$mj->wgid);
     $cxjg->bindColumn('wgys',$mj->wgys);
 	$cxjg->bindColumn('wglx',$mj->wglx);
-    $cxjg->fetch(\PDO::FETCH_BOUND);
+    $cxjg->fetch(\PDO::FETCH_ASSOC);
 	$wgname = $mj->wgname;
 	$wginfo = $mj->wginfo;
 	$wgid = $mj->wgid;

@@ -27,7 +27,7 @@ if (isset($canshu)){
                 $ypname = $oneyaopin['ypname'];
                 $ypid = $oneyaopin['ypid'];
                 $ypjg = $oneyaopin['ypjg'];
-                $ypcmd = $encode->encode("cmd=pill_info&ypid=$ypid&sid=$sid");
+                $ypcmd = $encode->encode("cmd=ypinfo&ypid=$ypid&sid=$sid");
                 $gm1yp = $encode->encode("cmd=npc&nid=$nid&canshu=gogoumai&ypcount=1&ypid=$ypid&sid=$sid");
             //    $gm5yp = $encode->encode("cmd=npc&nid=$nid&canshu=gogoumai&ypcount=5&ypid=$ypid&sid=$sid");
             //    $gm10yp = $encode->encode("cmd=npc&nid=$nid&canshu=gogoumai&ypcount=10&ypid=$ypid&sid=$sid");

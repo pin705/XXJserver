@@ -27,7 +27,7 @@ if (isset($canshu)){
                 $ydname = $oneyaodan['ydname'];
                 $ydid = $oneyaodan['ydid'];
                 $ydjg = $oneyaodan['ydjg'];
-                $ydcmd = $encode->encode("cmd=medicine_info&ydid=$ydid&sid=$sid");//cmd=php文件& 文件内某物件 &sid是一个地址 你的身份
+                $ydcmd = $encode->encode("cmd=ydinfo&ydid=$ydid&sid=$sid");//cmd=php文件& 文件内某物件 &sid是一个地址 你的身份
                 $gm1yd = $encode->encode("cmd=npc&nid=$nid&canshu=gogoumai&ydcount=1&ydid=$ydid&sid=$sid");
             //    $gm5yd = $encode->encode("cmd=npc&nid=$nid&canshu=gogoumai&ydcount=5&ydid=$ydid&sid=$sid");
             //    $gm10yd = $encode->encode("cmd=npc&nid=$nid&canshu=gogoumai&ydcount=10&ydid=$ydid&sid=$sid");
