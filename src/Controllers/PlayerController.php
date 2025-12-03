@@ -2,77 +2,66 @@
 
 namespace XXJ\Controllers;
 
-use XXJ\Core\View;
-use XXJ\Utils\Encoder;
-use XXJ\Repositories\PlayerRepository;
+use XXJ\Core\Controller;
 use XXJ\Repositories\ItemRepository;
-use XXJ\Core\Database;
 
-class PlayerController
+class PlayerController extends Controller
 {
-    private PlayerRepository $playerRepo;
     private ItemRepository $itemRepo;
-    private Encoder $encoder;
-    private $db;
 
     public function __construct()
     {
-        $this->playerRepo = new PlayerRepository();
+        parent::__construct();
         $this->itemRepo = new ItemRepository();
-        $this->encoder = new Encoder();
-        $this->db = Database::getInstance()->getConnection();
     }
 
-    public function showStatus($params)
+    public function showStatus()
     {
-        $sid = $params['sid'];
-        $player = $this->playerRepo->findBySid($sid);
+        $sid = $this->sid;
+        $player = $this->player;
         if (!$player) return;
 
+        $cmd = $_GET['cmd'] ?? '';
+
         // Handle unequip
-        if (isset($params['cmd']) && $params['cmd'] == 'xxzb' && isset($params['zbwz'])) {
-            $slot = $params['zbwz'];
+        if ($cmd == 'xxzb' && isset($_GET['zbwz'])) {
+            $slot = $_GET['zbwz'];
             $this->playerRepo->unequipItem($sid, $slot);
-            $player = $this->playerRepo->findBySid($sid); // Refresh player
+            // Refresh player
+            $player = $this->playerRepo->findBySid($sid);
+            $this->player = $player;
         }
 
         // Handle equip
         $errorMsg = '';
-        if (isset($params['cmd']) && $params['cmd'] == 'setzbwz' && isset($params['zbnowid']) && isset($params['zbwz'])) {
-            $zbnowid = $params['zbnowid'];
-            $slot = $params['zbwz'];
+        if ($cmd == 'setzbwz' && isset($_GET['zbnowid']) && isset($_GET['zbwz'])) {
+            $zbnowid = $_GET['zbnowid'];
+            $slot = $_GET['zbwz'];
             
             // Check if item exists and belongs to player
-            // Note: In a real scenario, we should check inventory, but for now we check if item exists
             $item = $this->itemRepo->findById($zbnowid);
             
             if (!$item || $item->uid != $player->uid) {
                 $errorMsg = "Ngươi không có nên trang bị, không cách nào trang bị";
-            } elseif ($item->zblv - $player->ulv > 5) {
-                $errorMsg = "Trang bị lớn hơn người chơi đẳng cấp, không cách nào trang bị";
-            } elseif ($item->tool != $slot && $item->tool) {
-                $errorMsg = "Trang bị chủng loại không phù hợp, không cách nào trang bị";
             } else {
-                $this->playerRepo->equipItem($sid, $slot, $zbnowid);
-                $player = $this->playerRepo->findBySid($sid); // Refresh
+                $this->playerRepo->equipItem($sid, $zbnowid, $slot);
+                // Refresh player
+                $player = $this->playerRepo->findBySid($sid);
+                $this->player = $player;
             }
         }
 
-        // Load equipped items details
+        // Get equipped items details
         $equippedItems = [];
-        for ($i = 1; $i <= 7; $i++) {
-            $toolProp = "tool$i";
-            if ($player->$toolProp != 0) {
-                $equippedItems[$i] = $this->itemRepo->findById($player->$toolProp);
+        foreach (['tool1', 'tool2', 'tool3', 'tool4', 'tool5', 'tool6'] as $slot) {
+            if ($player->$slot) {
+                $equippedItems[$slot] = $this->itemRepo->getEquipmentTemplate($player->$slot);
             }
         }
 
-        View::render('zhuangtai', [
-            'player' => $player,
-            'equippedItems' => $equippedItems,
-            'encoder' => $this->encoder,
-            'sid' => $sid,
-            'errorMsg' => $errorMsg
+        $this->render('zhuangtai', [
+            'errorMsg' => $errorMsg,
+            'equippedItems' => $equippedItems
         ]);
     }
 }

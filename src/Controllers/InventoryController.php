@@ -2,34 +2,26 @@
 
 namespace XXJ\Controllers;
 
-use XXJ\Core\View;
-use XXJ\Utils\Encoder;
-use XXJ\Repositories\PlayerRepository;
+use XXJ\Core\Controller;
 use XXJ\Repositories\ItemRepository;
-use XXJ\Core\Database;
 
-class InventoryController
+class InventoryController extends Controller
 {
-    private PlayerRepository $playerRepo;
     private ItemRepository $itemRepo;
-    private Encoder $encoder;
-    private $db;
 
     public function __construct()
     {
-        $this->playerRepo = new PlayerRepository();
+        parent::__construct();
         $this->itemRepo = new ItemRepository();
-        $this->encoder = new Encoder();
-        $this->db = Database::getInstance()->getConnection();
     }
 
-    public function showBag($params)
+    public function showBag()
     {
-        $sid = $params['sid'];
-        $player = $this->playerRepo->findBySid($sid);
+        $sid = $this->sid;
+        $player = $this->player;
         if (!$player) return;
 
-        $page = $params['page'] ?? 1;
+        $page = $_GET['page'] ?? 1;
         $limit = 10;
         $offset = ($page - 1) * $limit;
 
@@ -37,13 +29,10 @@ class InventoryController
         $totalItems = $this->itemRepo->countPlayerItems($sid);
         $totalPages = ceil($totalItems / $limit);
 
-        View::render('bagzb', [
-            'player' => $player,
+        $this->render('bagzb', [
             'items' => $items,
             'page' => $page,
-            'totalPages' => $totalPages,
-            'encoder' => $this->encoder,
-            'sid' => $sid
+            'totalPages' => $totalPages
         ]);
     }
 }

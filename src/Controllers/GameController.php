@@ -2,44 +2,39 @@
 
 namespace XXJ\Controllers;
 
-use XXJ\Core\View;
-use XXJ\Utils\Encoder;
-use XXJ\Repositories\PlayerRepository;
+use XXJ\Core\Controller;
 use XXJ\Repositories\MapRepository;
 use XXJ\Repositories\BossRepository;
 use XXJ\Repositories\NpcRepository;
 use XXJ\Repositories\MonsterRepository;
-use XXJ\Core\Database;
+use XXJ\Repositories\ChatRepository;
 
-class GameController
+class GameController extends Controller
 {
-    private PlayerRepository $playerRepo;
     private MapRepository $mapRepo;
     private BossRepository $bossRepo;
     private NpcRepository $npcRepo;
     private MonsterRepository $monsterRepo;
-    private Encoder $encoder;
-    private $db;
+    private ChatRepository $chatRepo;
 
     public function __construct()
     {
-        $this->playerRepo = new PlayerRepository();
+        parent::__construct();
         $this->mapRepo = new MapRepository();
         $this->bossRepo = new BossRepository();
         $this->npcRepo = new NpcRepository();
         $this->monsterRepo = new MonsterRepository();
-        $this->encoder = new Encoder();
-        $this->db = Database::getInstance()->getConnection();
+        $this->chatRepo = new ChatRepository();
     }
 
-    public function moveToMap($params)
+    public function moveToMap()
     {
-        $sid = $params['sid'];
-        $newmid = $params['newmid'] ?? null;
+        $sid = $this->sid;
+        $player = $this->player;
+        $newmid = $_GET['newmid'] ?? null;
 
-        $player = $this->playerRepo->findBySid($sid);
         if (!$player) {
-            // Handle error
+            echo "Player not found";
             return;
         }
 
@@ -64,13 +59,13 @@ class GameController
             $player->nowmid = $newmid;
         }
 
-        $this->showMap(['sid' => $sid]);
+        $this->showMap();
     }
 
-    public function showMap($params)
+    public function showMap()
     {
-        $sid = $params['sid'];
-        $player = $this->playerRepo->findBySid($sid);
+        $sid = $this->sid;
+        $player = $this->player;
         
         if (!$player) return;
 
@@ -113,8 +108,7 @@ class GameController
         $monsters = $this->monsterRepo->getMonstersByMap($player->nowmid);
 
         // Chat
-        $stmt = $this->db->query("SELECT * FROM ggliaotian ORDER BY id DESC LIMIT 2");
-        $chats = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        $chats = $this->chatRepo->getGlobalMessages(2);
 
         // Links
         $links = [
@@ -139,8 +133,7 @@ class GameController
             'mystery_shop' => $this->encoder->encode("cmd=getbagyd&sid=$sid"),
         ];
 
-        View::render('nowmid', [
-            'player' => $player,
+        $this->render('nowmid', [
             'clmid' => $clmid,
             'boss' => $boss,
             'bossHtml' => $bossHtml,
@@ -148,9 +141,7 @@ class GameController
             'npcs' => $npcs,
             'monsters' => $monsters,
             'chats' => $chats,
-            'links' => $links,
-            'encoder' => $this->encoder,
-            'sid' => $sid
+            'links' => $links
         ]);
     }
 }

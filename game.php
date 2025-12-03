@@ -121,6 +121,7 @@ if (isset($cmd)){
     // Boss
     $router->add('boss', [\XXJ\Controllers\BossController::class, 'index']);
     $router->add('pvbgj', [\XXJ\Controllers\BossController::class, 'combat']);
+    $router->add('pvb', [\XXJ\Controllers\BossController::class, 'combat']);
 
     // Pet
     $router->add('chongwu', [\XXJ\Controllers\PetController::class, 'index']);

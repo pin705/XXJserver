@@ -3,33 +3,34 @@
 namespace XXJ\Controllers;
 
 use XXJ\Core\Controller;
-use XXJ\Repositories\PlayerRepository;
 use XXJ\Repositories\BossRepository;
 use XXJ\Repositories\ItemRepository;
 use XXJ\Repositories\SkillRepository;
-use XXJ\Utils\Encoder;
 
 class BossController extends Controller
 {
-    private $playerRepo;
     private $bossRepo;
     private $itemRepo;
     private $skillRepo;
-    private $encoder;
 
     public function __construct()
     {
-        $this->playerRepo = new PlayerRepository();
+        parent::__construct();
         $this->bossRepo = new BossRepository();
         $this->itemRepo = new ItemRepository();
         $this->skillRepo = new SkillRepository();
-        $this->encoder = new Encoder();
+    }
+
+    public function index()
+    {
+        // Alias for info if needed, or list bosses
+        $this->info();
     }
 
     public function info()
     {
-        $sid = $_GET['sid'];
-        $bossid = $_GET['bossid'];
+        $sid = $this->sid;
+        $bossid = $_GET['bossid'] ?? 0;
         
         $boss = $this->bossRepo->findById($bossid);
         
@@ -61,21 +62,24 @@ class BossController extends Controller
 
         $this->render('bossinfo', [
             'boss' => $boss,
-            'drops' => $drops,
-            'sid' => $sid,
-            'encode' => $this->encoder
+            'drops' => $drops
         ]);
+    }
+
+    public function combat()
+    {
+        $this->fight();
     }
 
     public function fight()
     {
-        $sid = $_GET['sid'];
-        $bossid = $_GET['bossid'];
-        $cmd = $_GET['cmd'];
+        $sid = $this->sid;
+        $player = $this->player;
+        $bossid = $_GET['bossid'] ?? 0;
+        $cmd = $_GET['cmd'] ?? '';
         $canshu = $_GET['canshu'] ?? null;
-        $nowmid = $_GET['nowmid'] ?? null;
+        $nowmid = $_GET['nowmid'] ?? $player->nowmid;
         
-        $player = $this->playerRepo->findBySid($sid);
         $boss = $this->bossRepo->findById($bossid);
         
         if (!$boss) {
@@ -85,17 +89,19 @@ class BossController extends Controller
         
         if ($boss->bosshp <= 0) {
             $this->bossRepo->upgradeBoss($bossid);
-            $this->render('boss_escaped', ['sid' => $sid, 'player' => $player, 'boss' => $boss, 'encode' => $this->encoder, 'nowmid' => $nowmid]);
+            $this->render('boss_escaped', ['boss' => $boss, 'nowmid' => $nowmid]);
             return;
         }
         
         if ($nowmid && $player->nowmid != $nowmid) {
-             echo "Map mismatch. <a href='?cmd=".$this->encoder->encode("cmd=gomid&newmid=$player->nowmid&sid=$sid")."'>Return</a>";
+             $backLink = $this->encoder->encode("cmd=gomid&newmid=$player->nowmid&sid=$sid");
+             echo "Map mismatch. <a href='?cmd=$backLink'>Return</a>";
              return;
         }
         
         if (($boss->sid != $sid && $boss->sid != '') || ($boss->bossid == '')) {
-            echo "Boss is fighting someone else! <a href='?cmd=".$this->encoder->encode("cmd=gomid&newmid=$player->nowmid&sid=$sid")."'>Return</a>";
+            $backLink = $this->encoder->encode("cmd=gomid&newmid=$player->nowmid&sid=$sid");
+            echo "Boss is fighting someone else! <a href='?cmd=$backLink'>Return</a>";
             return;
         }
         
@@ -106,7 +112,9 @@ class BossController extends Controller
         
         if ($canshu == 'useyp' && isset($_GET['ypid'])) {
             $this->playerRepo->usePotion($sid, $_GET['ypid']);
+            // Refresh player
             $player = $this->playerRepo->findBySid($sid);
+            $this->player = $player;
         }
         
         $combatLog = "";
@@ -131,6 +139,7 @@ class BossController extends Controller
                 if ($heal > 0) {
                     $player->uhp += $heal;
                     if ($player->uhp > $player->umaxhp) $player->uhp = $player->umaxhp;
+                    $this->playerRepo->updateHp($sid, $player->uhp);
                     $combatLog .= "Bạn hút <font color='green'>$heal</font> máu.<br>";
                 }
             }
@@ -151,8 +160,6 @@ class BossController extends Controller
                 $this->render('boss_win', [
                     'boss' => $boss, 
                     'drops' => $droppedItems, 
-                    'sid' => $sid, 
-                    'encode' => $this->encoder,
                     'nowmid' => $nowmid
                 ]);
                 return;
@@ -169,7 +176,7 @@ class BossController extends Controller
             
             if ($player->uhp <= 0) {
                 $this->bossRepo->clearBossOwner($sid);
-                $this->render('boss_lose', ['boss' => $boss, 'sid' => $sid, 'encode' => $this->encoder, 'nowmid' => $nowmid]);
+                $this->render('boss_lose', ['boss' => $boss, 'nowmid' => $nowmid]);
                 return;
             }
         }
@@ -185,10 +192,7 @@ class BossController extends Controller
         }
         
         $this->render('boss', [
-            'player' => $player,
             'boss' => $boss,
-            'sid' => $sid,
-            'encode' => $this->encoder,
             'combatLog' => $combatLog,
             'nowmid' => $nowmid,
             'potions' => $potions

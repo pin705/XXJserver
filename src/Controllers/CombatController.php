@@ -2,44 +2,38 @@
 
 namespace XXJ\Controllers;
 
-use XXJ\Core\View;
-use XXJ\Utils\Encoder;
-use XXJ\Repositories\PlayerRepository;
+use XXJ\Core\Controller;
 use XXJ\Repositories\MonsterRepository;
 use XXJ\Repositories\MapRepository;
-use XXJ\Core\Database;
 
-class CombatController
+class CombatController extends Controller
 {
-    private PlayerRepository $playerRepo;
     private MonsterRepository $monsterRepo;
     private MapRepository $mapRepo;
-    private Encoder $encoder;
-    private $db;
 
     public function __construct()
     {
-        $this->playerRepo = new PlayerRepository();
+        parent::__construct();
         $this->monsterRepo = new MonsterRepository();
         $this->mapRepo = new MapRepository();
-        $this->encoder = new Encoder();
-        $this->db = Database::getInstance()->getConnection();
     }
 
-    public function pve($params)
+    public function pve()
     {
-        $sid = $params['sid'];
-        $gid = $params['gid'];
-        $player = $this->playerRepo->findBySid($sid);
+        $sid = $this->sid;
+        $player = $this->player;
+        $gid = $_GET['gid'] ?? 0;
+        $cmd = $_GET['cmd'] ?? '';
+        
         $monster = $this->monsterRepo->findById($gid);
 
         if (!$player || !$monster) {
-            // Handle error
+            echo "Error: Player or Monster not found.";
             return;
         }
 
         // Check Map
-        if ($player->nowmid != $monster->mid && $monster->mid) { // Assuming monster has mid, or we check player vs current map
+        if ($player->nowmid != $monster->mid && $monster->mid) {
              // Logic from pve.php: if ($nowmid!=$player->nowmid)
              // But here we trust player->nowmid is correct context usually. 
              // Let's just check if monster is in same map if monster has mid property
@@ -60,14 +54,14 @@ class CombatController
         }
 
         // Handle Item Use (canshu=useyp)
-        if (isset($params['canshu']) && $params['canshu'] == 'useyp' && isset($params['ypid'])) {
+        if (isset($_GET['canshu']) && $_GET['canshu'] == 'useyp' && isset($_GET['ypid'])) {
             // Implement use item logic
-            // $this->playerRepo->useItem($sid, $params['ypid']);
+            // $this->playerRepo->useItem($sid, $_GET['ypid']);
         }
 
         // Handle Attack (pvegj)
         $combatLog = "";
-        if (isset($params['cmd']) && $params['cmd'] == 'pvegj') {
+        if ($cmd == 'pvegj') {
             // Player attacks Monster
             $damage = max(1, $player->ugj - $monster->gfy); // Simplified formula
             // Random factor
@@ -97,12 +91,9 @@ class CombatController
             }
         }
 
-        View::render('pve', [
-            'player' => $player,
+        $this->render('pve', [
             'monster' => $monster,
-            'combatLog' => $combatLog,
-            'encoder' => $this->encoder,
-            'sid' => $sid
+            'combatLog' => $combatLog
         ]);
     }
 }
