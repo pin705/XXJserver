@@ -4,126 +4,199 @@ namespace XXJ\Controllers;
 
 use XXJ\Core\Controller;
 use XXJ\Repositories\SkillRepository;
+use XXJ\Repositories\PlayerRepository;
 
 class SkillController extends Controller
 {
-    private $skillRepo;
+    private SkillRepository $skillRepo;
+    private PlayerRepository $playerRepo;
 
     public function __construct()
     {
         parent::__construct();
         $this->skillRepo = new SkillRepository();
+        $this->playerRepo = new PlayerRepository();
     }
 
     public function index()
     {
-        $sid = $this->sid;
-        $player = $this->player;
-        $wgid = $player->wugong;
+        $player = $this->playerRepo->findBySid($this->sid);
+        $skills = $this->skillRepo->getAllSkills($this->sid);
         
-        $skill = $this->skillRepo->getSkill($sid, $wgid);
-        
-        $cmd = $_GET['cmd'] ?? '';
-        $canshu = $_GET['canshu'] ?? null;
-        
-        $message = '';
-        $xlsjc = 'Chưa bắt đầu tu luyện'; // Cultivation time string
-        
-        // Handle actions
-        if ($cmd === 'wgxiulian') {
-            if ($skill->xlzt == 1) {
-                $message = 'Đã trong tu luyện<br/>';
-            } else {
-                $cost = $skill->wgdj * 3;
-                $currencyType = ($canshu == 1) ? 1 : 2;
-                
-                $result = $this->skillRepo->startCultivation($sid, $wgid, $cost, $currencyType);
-                if ($result) {
-                    $message = 'Hắc hưu hắc hưu, thao luyện...<br/>';
-                    $xlsjc = 0;
-                    // Refresh skill data
-                    $skill = $this->skillRepo->getSkill($sid, $wgid);
-                } else {
-                    $message = 'Thất bại thất bại thất bại 404';
-                }
-            }
-        }
-        
-        // Calculate cultivation status
-        $now = time();
-        $startTime = strtotime($skill->xlsj);
-        $minutes = floor(($now - $startTime) / 60);
-        $expGain = round($minutes * 0.8);
-        $bonus = round(10 + $expGain * 1.2);
-        
-        if ($minutes > 1440) {
-            $minutes = 1440;
-            $expGain = round($minutes * 1.2);
-            $bonus = round(10 + $expGain * 1.6);
-        }
-        
-        if ($cmd === 'jswg') {
-            if ($skill->xlzt == 1) {
-                $totalExp = $expGain + $skill->wgxl;
-                $isLevelUp = false;
-                $levelUpData = [];
-                
-                if ($totalExp > $skill->wgxlmax) {
-                    $isLevelUp = true;
-                    $levelUpData = [
-                        'new_exp' => $totalExp - $skill->wgxlmax,
-                        'max_exp_increase' => $bonus
-                    ];
-                    $message = 'nhận được tu vi:'.$expGain.' (Thăng cấp!)<br/>';
-                } else {
-                    $message = 'nhận được tu vi:'.$expGain.'<br/>';
-                }
-                
-                $this->skillRepo->endCultivation($sid, $wgid, $expGain, $isLevelUp, $levelUpData);
-                $xlsjc = 'Kết thúc tu luyện...<br/>Thời gian tu luyện：'.$minutes;
-                
-                // Refresh skill data
-                $skill = $this->skillRepo->getSkill($sid, $wgid);
-            } else {
-                $message = 'Ngươi còn chưa có bắt đầu tu luyện...<br/>';
-            }
-        } elseif ($skill->xlzt == 1) {
-             $xlsjc = $minutes;
-        }
-
-        $data = [
+        $this->render('skill/index', [
             'player' => $player,
-            'sid' => $sid,
-            'skill' => $skill,
-            'encode' => $this->encoder,
-            'message' => $message,
-            'xlsjc' => $xlsjc,
-            'expGain' => $expGain,
-            'minutes' => $minutes
-        ];
-
-        $this->render('wugong', $data);
-    }
-
-    public function showBag()
-    {
-        $sid = $this->sid;
-        $skills = $this->skillRepo->getPlayerSkills($sid);
-        
-        $this->render('bagjn', [
-            'skills' => $skills
+            'skills' => $skills,
+            'activeSkillId' => $player->wugong
         ]);
     }
 
-    public function showDetail()
+    public function draw()
     {
-        $sid = $this->sid;
-        $wgid = $_GET['jnid'] ?? 0;
+        $player = $this->playerRepo->findBySid($this->sid);
+        $cost = 200;
+
+        if ($player->uczb < $cost) {
+            $this->render('skill/index', [
+                'player' => $player,
+                'skills' => $this->skillRepo->getAllSkills($this->sid),
+                'activeSkillId' => $player->wugong,
+                'error' => 'Tiên ngọc không đủ! Cần 200 Tiên ngọc.'
+            ]);
+            return;
+        }
+
+        $this->playerRepo->updateCurrency($this->sid, 'uczb', -$cost);
+        $isVip = $player->vip > 0;
+        $result = $this->skillRepo->drawSkill($this->sid, $player->uid, $isVip);
+
+        $message = '';
+        if ($result['type'] === 'duplicate') {
+            $message = "Bạn đã có bí tịch này, số lượng +1: " . $result['skill']->wgname;
+        } else {
+            $message = "Chúc mừng bạn nhận được bí tịch mới: " . $result['skill']->wgname;
+        }
+
+        $this->render('skill/index', [
+            'player' => $player,
+            'skills' => $this->skillRepo->getAllSkills($this->sid),
+            'activeSkillId' => $player->wugong,
+            'success' => $message
+        ]);
+    }
+
+    public function learn()
+    {
+        $skillId = $_GET['wgid'] ?? 0;
+        if ($skillId) {
+            $this->skillRepo->learnSkill($this->sid, $skillId);
+        }
+        $this->redirect('?cmd=skill');
+    }
+
+    public function unlearn()
+    {
+        // Legacy "biguan" (Close/Unlearn)
+        $this->skillRepo->unlearnSkill($this->sid);
+        $this->redirect('?cmd=skill');
+    }
+
+    public function discard()
+    {
+        $skillId = $_GET['wgid'] ?? 0;
+        if ($skillId) {
+            $this->skillRepo->deleteSkill($this->sid, $skillId);
+        }
+        $this->redirect('?cmd=skill');
+    }
+
+    public function train()
+    {
+        $player = $this->playerRepo->findBySid($this->sid);
+        $skillId = $player->wugong;
         
-        $skill = $this->skillRepo->getSkill($sid, $wgid);
+        if (!$skillId) {
+            $this->redirect('?cmd=skill');
+            return;
+        }
+
+        $skill = $this->skillRepo->getSkill($this->sid, $skillId);
         
-        $this->render('jninfo', [
-            'skill' => $skill
+        // Calculate training time if currently training
+        $trainingTime = 0;
+        if ($skill->xlzt == 1) {
+            $start = strtotime($skill->xlsjc);
+            $now = time();
+            $trainingTime = floor(($now - $start) / 60);
+            if ($trainingTime > 1440) $trainingTime = 1440; // Max 24 hours
+        }
+
+        // Calculate consumption
+        $consumption = round($skill->wgdj / 2) + 1;
+
+        $this->render('skill/train', [
+            'player' => $player,
+            'skill' => $skill,
+            'trainingTime' => $trainingTime,
+            'consumption' => $consumption
+        ]);
+    }
+
+    public function startTraining()
+    {
+        $player = $this->playerRepo->findBySid($this->sid);
+        $skillId = $player->wugong;
+        
+        if (!$skillId) {
+            $this->redirect('?cmd=skill');
+            return;
+        }
+
+        $skill = $this->skillRepo->getSkill($this->sid, $skillId);
+        
+        if ($skill->xlzt == 1) {
+            // Already training
+            $this->redirect('?cmd=skill_train');
+            return;
+        }
+
+        // Check if enough books
+        $consumption = round($skill->wgdj / 2) + 1;
+        
+        if ($skill->wgsum < $consumption) {
+             $this->render('skill/train', [
+                'player' => $player,
+                'skill' => $skill,
+                'trainingTime' => 0,
+                'consumption' => $consumption,
+                'error' => 'Không đủ bí tịch để tu luyện!'
+            ]);
+            return;
+        }
+
+        $this->skillRepo->startTraining($this->sid, $skillId);
+        $this->redirect('?cmd=skill_train');
+    }
+
+    public function endTraining()
+    {
+        $player = $this->playerRepo->findBySid($this->sid);
+        $skillId = $player->wugong;
+        
+        if (!$skillId) {
+            $this->redirect('?cmd=skill');
+            return;
+        }
+
+        $skill = $this->skillRepo->getSkill($this->sid, $skillId);
+        
+        if ($skill->xlzt != 1) {
+            $this->redirect('?cmd=skill_train');
+            return;
+        }
+
+        $start = strtotime($skill->xlsjc);
+        $now = time();
+        $minutes = floor(($now - $start) / 60);
+        if ($minutes > 1440) $minutes = 1440;
+
+        $consumption = round($skill->wgdj / 2) + 1;
+
+        $result = $this->skillRepo->endTraining($this->sid, $skillId, $minutes, $consumption);
+        
+        $message = "Kết thúc tu luyện. Thời gian: $minutes phút. Nhận được " . $result['exp_gain'] . " kinh nghiệm.";
+        if ($result['leveled_up']) {
+            $message .= " Chúc mừng! Võ công đã thăng cấp lên cấp " . $result['new_level'] . "!";
+        }
+
+        // Refresh skill data
+        $skill = $this->skillRepo->getSkill($this->sid, $skillId);
+
+        $this->render('skill/train', [
+            'player' => $player,
+            'skill' => $skill,
+            'trainingTime' => 0,
+            'consumption' => $consumption,
+            'success' => $message
         ]);
     }
 }

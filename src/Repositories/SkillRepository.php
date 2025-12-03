@@ -14,113 +14,133 @@ class SkillRepository
         $this->db = Database::getInstance()->getConnection();
     }
 
-    public function getSkill($sid, $wgid)
-    {
-        $stmt = $this->db->prepare("SELECT * FROM playerwugong WHERE wgid = ? AND sid = ?");
-        $stmt->execute([$wgid, $sid]);
-        return $stmt->fetch(PDO::FETCH_OBJ);
-    }
-
-    public function startCultivation($sid, $wgid, $cost, $currencyType)
-    {
-        try {
-            $this->db->beginTransaction();
-
-            // Deduct cost
-            if ($currencyType === 1) {
-                $stmt = $this->db->prepare("UPDATE game1 SET uyxb = uyxb - ? WHERE sid = ? AND uyxb >= ?");
-            } else {
-                $stmt = $this->db->prepare("UPDATE game1 SET uczb = uczb - ? WHERE sid = ? AND uczb >= ?");
-            }
-            $stmt->execute([$cost, $sid, $cost]);
-            
-            if ($stmt->rowCount() === 0) {
-                $this->db->rollBack();
-                return false;
-            }
-
-            // Update skill status
-            $now = date('Y-m-d H:i:s');
-            $stmt = $this->db->prepare("UPDATE playerwugong SET xlzt = 1, xlsj = ? WHERE wgid = ? AND sid = ?");
-            $stmt->execute([$now, $wgid, $sid]);
-
-            $this->db->commit();
-            return true;
-        } catch (\Exception $e) {
-            $this->db->rollBack();
-            return false;
-        }
-    }
-
-    public function endCultivation($sid, $wgid, $exp, $isLevelUp, $levelUpData = [])
-    {
-        try {
-            $this->db->beginTransaction();
-
-            // Reset status
-            $stmt = $this->db->prepare("UPDATE playerwugong SET xlzt = 0 WHERE wgid = ? AND sid = ?");
-            $stmt->execute([$wgid, $sid]);
-
-            if ($isLevelUp) {
-                // Level up logic
-                $stmt = $this->db->prepare("
-                    UPDATE playerwugong SET 
-                        wgxl = ?, 
-                        wgdj = wgdj + 1, 
-                        wgxlmax = wgxlmax + ?, 
-                        wgsum = wgsum - 1 
-                    WHERE wgid = ? AND sid = ?
-                ");
-                $stmt->execute([$levelUpData['new_exp'], $levelUpData['max_exp_increase'], $wgid, $sid]);
-            } else {
-                // Normal exp gain
-                $stmt = $this->db->prepare("
-                    UPDATE playerwugong SET 
-                        wgxl = wgxl + ?, 
-                        wgsum = wgsum - 1 
-                    WHERE wgid = ? AND sid = ?
-                ");
-                $stmt->execute([$exp, $wgid, $sid]);
-            }
-
-            $this->db->commit();
-            return true;
-        } catch (\Exception $e) {
-            $this->db->rollBack();
-            return false;
-        }
-    }
-
-    public function getPlayerSkills($sid)
+    public function getAllSkills($sid)
     {
         $stmt = $this->db->prepare("SELECT * FROM playerwugong WHERE sid = ?");
         $stmt->execute([$sid]);
-        return $stmt->fetchAll(PDO::FETCH_OBJ);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getPlayerConsumableSkills($sid)
+    public function getSkill($sid, $skillId)
     {
-        $stmt = $this->db->prepare("SELECT * FROM playerjineng WHERE sid = ? AND jncount > 0");
-        $stmt->execute([$sid]);
-        return $stmt->fetchAll(PDO::FETCH_OBJ);
+        $stmt = $this->db->prepare("SELECT * FROM playerwugong WHERE wgid = ? AND sid = ?");
+        $stmt->execute([$skillId, $sid]);
+        return $stmt->fetch(PDO::FETCH_OBJ);
     }
 
-    public function useConsumableSkill($sid, $jnid)
+    public function getSkillTemplate($skillId)
     {
-        $stmt = $this->db->prepare("SELECT * FROM playerjineng WHERE sid = ? AND jnid = ?");
-        $stmt->execute([$sid, $jnid]);
-        $skill = $stmt->fetch(PDO::FETCH_OBJ);
-        
-        if (!$skill || $skill->jncount <= 0) return null;
-        
-        if ($skill->jncount > 1) {
-            $stmt = $this->db->prepare("UPDATE playerjineng SET jncount = jncount - 1 WHERE sid = ? AND jnid = ?");
-            $stmt->execute([$sid, $jnid]);
+        $stmt = $this->db->prepare("SELECT * FROM wugong WHERE wgid = ?");
+        $stmt->execute([$skillId]);
+        return $stmt->fetch(PDO::FETCH_OBJ);
+    }
+
+    public function drawSkill($sid, $uid, $isVip)
+    {
+        // Logic from cqwg in player.php
+        // Random skill ID. 1-3 for normal, 1-10 for VIP.
+        $maxId = $isVip ? 10 : 3;
+        $skillId = mt_rand(1, $maxId);
+
+        $existingSkill = $this->getSkill($sid, $skillId);
+
+        if ($existingSkill) {
+            $stmt = $this->db->prepare("UPDATE playerwugong SET wgsum = wgsum + 1 WHERE wgid = ? AND sid = ?");
+            $stmt->execute([$skillId, $sid]);
+            return ['type' => 'duplicate', 'skill' => $existingSkill];
         } else {
-            $stmt = $this->db->prepare("DELETE FROM playerjineng WHERE sid = ? AND jnid = ?");
-            $stmt->execute([$sid, $jnid]);
+            $template = $this->getSkillTemplate($skillId);
+            if ($template) {
+                $stmt = $this->db->prepare("
+                    INSERT INTO playerwugong (wgname, wgid, wginfo, wgys, sid, uid, wglx, wgsum, wgdj, wgxl, wgxlmax, xlzt, xlsj) 
+                    VALUES (?, ?, ?, ?, ?, ?, ?, 1, 0, 0, 100, 0, 0)
+                ");
+                
+                $stmt->execute([
+                    $template->wgname,
+                    $template->wgid,
+                    $template->wginfo,
+                    $template->wgys,
+                    $sid,
+                    $uid,
+                    $template->wglx
+                ]);
+                return ['type' => 'new', 'skill' => $template];
+            }
         }
-        
-        return $skill;
+        return false;
+    }
+
+    public function deleteSkill($sid, $skillId)
+    {
+        $skill = $this->getSkill($sid, $skillId);
+        if (!$skill) return false;
+
+        if ($skill->wgsum > 1) {
+            $stmt = $this->db->prepare("UPDATE playerwugong SET wgsum = wgsum - 1 WHERE wgid = ? AND sid = ?");
+            $stmt->execute([$skillId, $sid]);
+        } else {
+            $stmt = $this->db->prepare("DELETE FROM playerwugong WHERE wgid = ? AND sid = ?");
+            $stmt->execute([$skillId, $sid]);
+        }
+        return true;
+    }
+
+    public function learnSkill($sid, $skillId)
+    {
+        $stmt = $this->db->prepare("UPDATE game1 SET wugong = ? WHERE sid = ?");
+        $stmt->execute([$skillId, $sid]);
+    }
+
+    public function unlearnSkill($sid)
+    {
+        $stmt = $this->db->prepare("UPDATE game1 SET wugong = 0 WHERE sid = ?");
+        $stmt->execute([$sid]);
+    }
+
+    public function startTraining($sid, $skillId)
+    {
+        $now = date('Y-m-d H:i:s');
+        $stmt = $this->db->prepare("UPDATE playerwugong SET xlzt = 1, xlsjc = ? WHERE wgid = ? AND sid = ?");
+        $stmt->execute([$now, $skillId, $sid]);
+    }
+
+    public function endTraining($sid, $skillId, $minutes, $consumedBooks)
+    {
+        $skill = $this->getSkill($sid, $skillId);
+        if (!$skill || $skill->xlzt != 1) return false;
+
+        $expGain = round($minutes * 0.8);
+        if ($expGain < 1) $expGain = 1;
+
+        $newExp = $skill->wgxl + $expGain;
+        $maxExp = $skill->wgxlmax;
+        $level = $skill->wgdj;
+
+        if ($newExp >= $maxExp) {
+            // Level up
+            $stmt = $this->db->prepare("
+                UPDATE playerwugong 
+                SET wgdj = wgdj + 1, 
+                    wgxl = 0, 
+                    wgxlmax = wgxlmax * 2, 
+                    xlzt = 0,
+                    wgsum = wgsum - ?
+                WHERE wgid = ? AND sid = ?
+            ");
+            $stmt->execute([$consumedBooks, $skillId, $sid]);
+            return ['leveled_up' => true, 'exp_gain' => $expGain, 'new_level' => $level + 1];
+        } else {
+            // Just add exp
+            $stmt = $this->db->prepare("
+                UPDATE playerwugong 
+                SET wgxl = wgxl + ?, 
+                    xlzt = 0,
+                    wgsum = wgsum - ?
+                WHERE wgid = ? AND sid = ?
+            ");
+            $stmt->execute([$expGain, $consumedBooks, $skillId, $sid]);
+            return ['leveled_up' => false, 'exp_gain' => $expGain];
+        }
     }
 }
