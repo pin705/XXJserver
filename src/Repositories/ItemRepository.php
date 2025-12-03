@@ -55,4 +55,32 @@ class ItemRepository
         $stmt = $this->db->prepare("DELETE FROM playerzhuangbei WHERE zbnowid = ? AND sid = ?");
         return $stmt->execute([$zbnowid, $sid]);
     }
+
+    public function getEquipmentTemplate($zbid)
+    {
+        $stmt = $this->db->prepare("SELECT * FROM zhuangbei WHERE zbid = ?");
+        $stmt->execute([$zbid]);
+        return $stmt->fetch(PDO::FETCH_OBJ);
+    }
+
+    public function getItemTemplate($djid)
+    {
+        $stmt = $this->db->prepare("SELECT * FROM daoju WHERE djid = ?");
+        $stmt->execute([$djid]);
+        return $stmt->fetch(PDO::FETCH_OBJ);
+    }
+
+    public function getPotionTemplate($ypid)
+    {
+        $stmt = $this->db->prepare("SELECT * FROM yaopin WHERE ypid = ?");
+        $stmt->execute([$ypid]);
+        return $stmt->fetch(PDO::FETCH_OBJ);
+    }
+
+    public function getPlayerPotion($sid, $ypid)
+    {
+        $stmt = $this->db->prepare("SELECT * FROM playeryaopin WHERE sid = ? AND ypid = ?");
+        $stmt->execute([$sid, $ypid]);
+        return $stmt->fetch(PDO::FETCH_OBJ);
+    }
 }
