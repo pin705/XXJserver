@@ -100,9 +100,9 @@ if (isset($cmd)){
     $router->add('pvegj', [\XXJ\Controllers\CombatController::class, 'pve']);
     
     // Tasks
-    $router->add('task', [\XXJ\Controllers\TaskController::class, 'index']);
-    $router->add('mytask', [\XXJ\Controllers\TaskController::class, 'myTasks']);
-    $router->add('mytaskinfo', [\XXJ\Controllers\TaskController::class, 'taskInfo']);
+    // $router->add('task', [\XXJ\Controllers\TaskController::class, 'index']);
+    // $router->add('mytask', [\XXJ\Controllers\TaskController::class, 'myTasks']);
+    // $router->add('mytaskinfo', [\XXJ\Controllers\TaskController::class, 'taskInfo']);
     
     // Chat
     $router->add('liaotian', [\XXJ\Controllers\ChatController::class, 'index']);
@@ -122,6 +122,12 @@ if (isset($cmd)){
 
     // Pet
     $router->add('chongwu', [\XXJ\Controllers\PetController::class, 'index']);
+
+    // Club
+    $router->add('club', [\XXJ\Controllers\ClubController::class, 'index']);
+
+    // Ranking
+    $router->add('paihang', [\XXJ\Controllers\RankingController::class, 'index']);
 
     try {
         if (isset($params['cmd'])) {
