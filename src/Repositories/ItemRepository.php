@@ -226,6 +226,64 @@ class ItemRepository
         return true;
     }
 
+    public function getPlayerYaoDan($sid)
+    {
+        $stmt = $this->db->prepare("SELECT * FROM playeryaodan WHERE sid = ? AND ydsum > 0");
+        $stmt->execute([$sid]);
+        return $stmt->fetchAll(PDO::FETCH_OBJ);
+    }
+
+    public function getPlayerYaoDanSingle($sid, $ydid)
+    {
+        $stmt = $this->db->prepare("SELECT * FROM playeryaodan WHERE sid = ? AND ydid = ?");
+        $stmt->execute([$sid, $ydid]);
+        return $stmt->fetch(PDO::FETCH_OBJ);
+    }
+
+    public function getYaoDanTemplate($ydid)
+    {
+        $stmt = $this->db->prepare("SELECT * FROM yaodan WHERE ydid = ?");
+        $stmt->execute([$ydid]);
+        return $stmt->fetch(PDO::FETCH_OBJ);
+    }
+
+    public function useYaoDan($sid, $ydid)
+    {
+        $playerPill = $this->getPlayerYaoDanSingle($sid, $ydid);
+        if (!$playerPill || $playerPill->ydsum < 1) return false;
+
+        // Deduct
+        if ($playerPill->ydsum > 1) {
+            $stmt = $this->db->prepare("UPDATE playeryaodan SET ydsum = ydsum - 1 WHERE sid = ? AND ydid = ?");
+            $stmt->execute([$sid, $ydid]);
+        } else {
+            $stmt = $this->db->prepare("DELETE FROM playeryaodan WHERE sid = ? AND ydid = ?");
+            $stmt->execute([$sid, $ydid]);
+        }
+
+        // Apply Stats
+        // ydhp, ydgj, ydfy, ydbj, ydxx
+        $stmt = $this->db->prepare("
+            UPDATE game1 
+            SET uhp = uhp + ?, 
+                ugj = ugj + ?, 
+                ufy = ufy + ?, 
+                ubj = ubj + ?, 
+                uxx = uxx + ? 
+            WHERE sid = ?
+        ");
+        $stmt->execute([
+            $playerPill->ydhp,
+            $playerPill->ydgj,
+            $playerPill->ydfy,
+            $playerPill->ydbj,
+            $playerPill->ydxx,
+            $sid
+        ]);
+
+        return true;
+    }
+
     public function getAllShopItems()
     {
         $stmt = $this->db->query("SELECT * FROM yaodan");

@@ -121,9 +121,10 @@ if (isset($cmd)){
     $router->add('shangdian', [\XXJ\Controllers\ShopController::class, 'index']);
 
     // Skills
-    $router->add('wgxiulian', [\XXJ\Controllers\SkillController::class, 'index']);
-    $router->add('wgxl', [\XXJ\Controllers\SkillController::class, 'index']);
-    $router->add('jswg', [\XXJ\Controllers\SkillController::class, 'index']);
+    $router->add('wgxiulian', [\XXJ\Controllers\SkillController::class, 'train']);
+    $router->add('wgxl', [\XXJ\Controllers\SkillController::class, 'train']);
+    $router->add('jswg', [\XXJ\Controllers\SkillController::class, 'endTraining']);
+    $router->add('xxwg', [\XXJ\Controllers\SkillController::class, 'index']);
 
     // Pet
     $router->add('chongwu', [\XXJ\Controllers\PetController::class, 'index']);
@@ -169,17 +170,22 @@ if (isset($cmd)){
     $router->add('delezb', [\XXJ\Controllers\InventoryController::class, 'deleteEquipment']);
 
     // Skills
-    $router->add('getbagjn', [\XXJ\Controllers\SkillController::class, 'showBag']);
-    $router->add('jninfo', [\XXJ\Controllers\SkillController::class, 'showDetail']);
+    $router->add('getbagjn', [\XXJ\Controllers\SkillController::class, 'index']); // Mapped to index
+    $router->add('jninfo', [\XXJ\Controllers\SkillController::class, 'train']); // Mapped to train
 
     // Map & NPC
     $router->add('allmap', [\XXJ\Controllers\GameController::class, 'listMaps']);
     $router->add('npc', [\XXJ\Controllers\NpcController::class, 'interact']);
 
     // Cultivation
-    $router->add('goxiulian', [\XXJ\Controllers\PlayerController::class, 'showCultivation']);
-    $router->add('startxiulian', [\XXJ\Controllers\PlayerController::class, 'startCultivation']);
-    $router->add('endxiulian', [\XXJ\Controllers\PlayerController::class, 'endCultivation']);
+    $router->add('xiulian', [\XXJ\Controllers\CultivationController::class, 'index']);
+    $router->add('goxiulian', [\XXJ\Controllers\CultivationController::class, 'index']);
+    $router->add('startxiulian', [\XXJ\Controllers\CultivationController::class, 'start']);
+    $router->add('endxiulian', [\XXJ\Controllers\CultivationController::class, 'end']);
+    
+    $router->add('cultivation', [\XXJ\Controllers\CultivationController::class, 'index']);
+    $router->add('cultivation_start', [\XXJ\Controllers\CultivationController::class, 'start']);
+    $router->add('cultivation_end', [\XXJ\Controllers\CultivationController::class, 'end']);
 
     // Skill System
     $router->add('skill', [\XXJ\Controllers\SkillController::class, 'index']);
