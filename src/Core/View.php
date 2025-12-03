@@ -7,7 +7,7 @@ class View
     public static function render(string $template, array $data = []): void
     {
         extract($data);
-        $templatePath = __DIR__ . '/../../templates/' . $template . '.php';
+        $templatePath = __DIR__ . '/../../views/' . $template . '.php';
         if (file_exists($templatePath)) {
             require $templatePath;
         } else {

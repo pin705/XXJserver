@@ -22,7 +22,7 @@ class AuthController extends Controller
     {
         $token = $_GET['token'] ?? '';
         $tishi = $_GET['tishi'] ?? '';
-        $this->render('cj', ['token' => $token, 'tishi' => $tishi]);
+        $this->render('game/cj', ['token' => $token, 'tishi' => $tishi]);
     }
 
     public function createPlayer()

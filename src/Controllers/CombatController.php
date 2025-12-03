@@ -130,7 +130,7 @@ class CombatController extends Controller
                 // Legacy code usually has a respawn mechanism.
                 // Let's just leave it dead/reset for now.
                 
-                $this->render('pve_win', [
+                $this->render('game/pve_win', [
                     'monster' => $monster,
                     'combatLog' => $combatLog,
                     'player' => $player
@@ -150,7 +150,7 @@ class CombatController extends Controller
                     $combatLog .= "Bạn đã bị đánh bại!<br>";
                     $this->playerRepo->updateHp($sid, 1); // Revive with 1 HP at town?
                     // Redirect to town or show death screen
-                    $this->render('pve_lose', [
+                    $this->render('game/pve_lose', [
                         'monster' => $monster,
                         'combatLog' => $combatLog,
                         'player' => $player
@@ -162,7 +162,7 @@ class CombatController extends Controller
             }
         }
 
-        $this->render('pve', [
+        $this->render('game/pve', [
             'monster' => $monster,
             'combatLog' => $combatLog,
             'actionMessage' => $actionMessage,

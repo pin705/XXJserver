@@ -35,7 +35,7 @@ class FriendController extends Controller
             }
         }
 
-        $this->render('friend_list', [
+        $this->render('game/friend_list', [
             'friends' => $friendList,
             'back_cmd' => 'gomid&newmid=' . $this->player->nowmid . '&sid=' . $this->sid
         ]);

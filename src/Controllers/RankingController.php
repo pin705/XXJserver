@@ -39,7 +39,7 @@ class RankingController extends Controller
                 break;
         }
 
-        $this->render('ranking', [
+        $this->render('game/ranking', [
             'rankings' => $rankings,
             'type' => $type,
             'title' => $title,

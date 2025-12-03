@@ -133,7 +133,7 @@ class GameController extends Controller
             'mystery_shop' => $this->encoder->encode("cmd=getbagyd&sid=$sid"),
         ];
 
-        $this->render('nowmid', [
+        $this->render('game/nowmid', [
             'clmid' => $clmid,
             'boss' => $boss,
             'bossHtml' => $bossHtml,
@@ -148,7 +148,7 @@ class GameController extends Controller
     public function listMaps()
     {
         $maps = $this->mapRepo->getAllMaps();
-        $this->render('allmap', ['maps' => $maps]);
+        $this->render('game/allmap', ['maps' => $maps]);
     }
 
     public function showRegionMap()

@@ -38,7 +38,7 @@ class InventoryController extends Controller
             $totalItems = $this->itemRepo->countPlayerEquipment($sid);
             $totalPages = ceil($totalItems / $limit);
 
-            $this->render('bagzb', [
+            $this->render('game/bagzb', [
                 'items' => $items,
                 'page' => $page,
                 'totalPages' => $totalPages,
@@ -46,19 +46,19 @@ class InventoryController extends Controller
             ]);
         } elseif ($type == 'potion') {
             $items = $this->itemRepo->getPlayerPotions($sid);
-            $this->render('bagyp', [
+            $this->render('game/bagyp', [
                 'items' => $items,
                 'type' => 'potion'
             ]);
         } elseif ($type == 'item') {
             $items = $this->itemRepo->getPlayerDaoju($sid);
-            $this->render('bagdj', [
+            $this->render('game/bagdj', [
                 'items' => $items,
                 'type' => 'item'
             ]);
         } elseif ($type == 'pill') {
             $items = $this->itemRepo->getPlayerYaoDan($sid);
-            $this->render('bagyd', [
+            $this->render('game/bagyd', [
                 'items' => $items,
                 'type' => 'pill'
             ]);
@@ -73,19 +73,19 @@ class InventoryController extends Controller
 
         if ($type == 'equip') {
             $item = $this->itemRepo->findById($id);
-            $this->render('zbinfo', ['item' => $item]);
+            $this->render('game/zbinfo', ['item' => $item]);
         } elseif ($type == 'potion') {
             $item = $this->itemRepo->getPotionTemplate($id);
             $playerPotion = $this->itemRepo->getPlayerPotion($sid, $id);
-            $this->render('ypinfo', ['item' => $item, 'playerPotion' => $playerPotion]);
+            $this->render('game/ypinfo', ['item' => $item, 'playerPotion' => $playerPotion]);
         } elseif ($type == 'item') {
             $item = $this->itemRepo->getItemTemplate($id);
             $playerItem = $this->itemRepo->getPlayerDaojuSingle($sid, $id);
-            $this->render('djinfo', ['item' => $item, 'playerItem' => $playerItem]);
+            $this->render('game/djinfo', ['item' => $item, 'playerItem' => $playerItem]);
         } elseif ($type == 'pill') {
             $item = $this->itemRepo->getYaoDanTemplate($id);
             $playerItem = $this->itemRepo->getPlayerYaoDanSingle($sid, $id);
-            $this->render('ydinfo', ['item' => $item, 'playerItem' => $playerItem]);
+            $this->render('game/ydinfo', ['item' => $item, 'playerItem' => $playerItem]);
         }
     }
 
@@ -93,7 +93,7 @@ class InventoryController extends Controller
     {
         $zbid = $_GET['zbid'] ?? 0;
         $item = $this->itemRepo->getEquipmentTemplate($zbid);
-        $this->render('zbinfo_sys', ['item' => $item]);
+        $this->render('game/zbinfo_sys', ['item' => $item]);
     }
 
     public function usePill()
@@ -109,7 +109,7 @@ class InventoryController extends Controller
         $item = $this->itemRepo->getYaoDanTemplate($ydid);
         $playerItem = $this->itemRepo->getPlayerYaoDanSingle($sid, $ydid);
         
-        $this->render('ydinfo', [
+        $this->render('game/ydinfo', [
             'item' => $item, 
             'playerItem' => $playerItem,
             'message' => $message

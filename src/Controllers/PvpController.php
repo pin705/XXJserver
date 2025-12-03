@@ -22,7 +22,7 @@ class PvpController extends Controller
         $target = $this->playerRepo->findByUid($uid);
         
         if (!$target) {
-             $this->render('pvp', [
+             $this->render('game/pvp', [
                 'error' => 'Người chơi không tồn tại',
                 'back_cmd' => 'gomid&newmid=' . $this->player->nowmid . '&sid=' . $this->sid
             ]);
@@ -32,7 +32,7 @@ class PvpController extends Controller
         $map = $this->mapRepo->findById($this->player->nowmid);
         
         if ($map->ispvp == 0) {
-             $this->render('pvp', [
+             $this->render('game/pvp', [
                 'error' => 'Trước mắt địa đồ không cho phép PK',
                 'back_cmd' => 'gomid&newmid=' . $this->player->nowmid . '&sid=' . $this->sid
             ]);
@@ -40,7 +40,7 @@ class PvpController extends Controller
         }
 
         if ($target->sfzx == 0) {
-             $this->render('pvp', [
+             $this->render('game/pvp', [
                 'error' => 'Nên người chơi không có online',
                 'back_cmd' => 'gomid&newmid=' . $this->player->nowmid . '&sid=' . $this->sid
             ]);
@@ -48,7 +48,7 @@ class PvpController extends Controller
         }
 
         if ($target->nowmid != $this->player->nowmid) {
-             $this->render('pvp', [
+             $this->render('game/pvp', [
                 'error' => 'Nên người chơi không có ở nơi đó đồ',
                 'back_cmd' => 'gomid&newmid=' . $this->player->nowmid . '&sid=' . $this->sid
             ]);
@@ -56,7 +56,7 @@ class PvpController extends Controller
         }
 
         if ($this->player->uhp <= 0) {
-             $this->render('pvp', [
+             $this->render('game/pvp', [
                 'error' => 'Ngươi là thân bị trọng thương, không cách nào tiến hành chiến đấu',
                 'back_cmd' => 'gomid&newmid=' . $this->player->nowmid . '&sid=' . $this->sid
             ]);
@@ -64,7 +64,7 @@ class PvpController extends Controller
         }
 
         if ($target->uhp <= 0) {
-             $this->render('pvp', [
+             $this->render('game/pvp', [
                 'error' => 'Nên người chơi đã nhận bạo lực một kích, trước mắt chính vùng vẫy giãy chết, còn xin đại hiệp giơ cao đánh khẽ。',
                 'back_cmd' => 'gomid&newmid=' . $this->player->nowmid . '&sid=' . $this->sid
             ]);
@@ -88,7 +88,7 @@ class PvpController extends Controller
             $msg .= "<br/>{$target->uname} đã bị ngươi đánh bại!";
         }
 
-        $this->render('pvp', [
+        $this->render('game/pvp', [
             'msg' => $msg,
             'target' => $target,
             'back_cmd' => 'gomid&newmid=' . $this->player->nowmid . '&sid=' . $this->sid,

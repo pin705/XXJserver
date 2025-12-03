@@ -25,7 +25,7 @@ class MonsterController extends Controller
         $nowmid = $_GET['nowmid'] ?? 0;
 
         if ($nowmid != $this->player->nowmid) {
-            $this->render('monster_info', [
+            $this->render('game/monster_info', [
                 'error' => 'Mời bình thường chơi đùa！',
                 'back_cmd' => 'gomid&newmid=' . $this->player->nowmid . '&sid=' . $this->sid
             ]);
@@ -36,7 +36,7 @@ class MonsterController extends Controller
         $template = $this->monsterRepo->getTemplate($gyid);
 
         if (!$monster || !$template) {
-             $this->render('monster_info', [
+             $this->render('game/monster_info', [
                 'error' => 'Quái vật không tồn tại',
                 'back_cmd' => 'gomid&newmid=' . $this->player->nowmid . '&sid=' . $this->sid
             ]);
@@ -48,7 +48,7 @@ class MonsterController extends Controller
         }
 
         if ($monster->sid != '' || $monster->gname == '') {
-             $this->render('monster_info', [
+             $this->render('game/monster_info', [
                 'error' => 'Quái vật đã bị những người khác công kích！<br/>Mời thiếu hiệp luyện tập một chút tốc độ tay a',
                 'back_cmd' => 'gomid&newmid=' . $this->player->nowmid . '&sid=' . $this->sid
             ]);
@@ -100,7 +100,7 @@ class MonsterController extends Controller
              }
         }
 
-        $this->render('monster_info', [
+        $this->render('game/monster_info', [
             'monster' => $monster,
             'template' => $template,
             'drops' => $drops,

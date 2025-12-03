@@ -60,7 +60,7 @@ class BossController extends Controller
             }
         }
 
-        $this->render('bossinfo', [
+        $this->render('game/bossinfo', [
             'boss' => $boss,
             'drops' => $drops
         ]);

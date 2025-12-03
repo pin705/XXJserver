@@ -65,7 +65,7 @@ class PlayerController extends Controller
             }
         }
 
-        $this->render('zhuangtai', [
+        $this->render('game/zhuangtai', [
             'errorMsg' => $errorMsg,
             'equippedItems' => $equippedItems
         ]);
@@ -77,7 +77,7 @@ class PlayerController extends Controller
         $target = $this->playerRepo->findByUid($uid);
         
         if (!$target) {
-             $this->render('other_player', [
+             $this->render('game/other_player', [
                 'error' => 'Người chơi không tồn tại',
                 'back_cmd' => 'gomid&newmid=' . $this->player->nowmid . '&sid=' . $this->sid
             ]);
@@ -114,7 +114,7 @@ class PlayerController extends Controller
             $imMenu .= "<br/>";
         }
 
-        $this->render('other_player', [
+        $this->render('game/other_player', [
             'target' => $target,
             'clubName' => $clubName,
             'clubCmd' => $clubCmd,
@@ -135,7 +135,7 @@ class PlayerController extends Controller
         
         $exp = round($minutes * $player->ulv * 1);
         
-        $this->render('xiulian', [
+        $this->render('game/xiulian', [
             'minutes' => $minutes,
             'exp' => $exp,
             'cost_yxb' => 32 * $player->ulv,
