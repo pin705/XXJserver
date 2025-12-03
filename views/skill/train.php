@@ -57,7 +57,8 @@ $endCmd = $encode->encode("cmd=skill_end_train&sid=$sid");
             <p>Cấp độ võ công: <?php echo $skill->wgdj; ?></p>
             <p>Kinh nghiệm: <?php echo $skill->wgxl; ?> / <?php echo $skill->wgxlmax; ?></p>
             <p>Số lượng bí tịch: <?php echo $skill->wgsum; ?> quyển</p>
-            <p>Tiêu hao mỗi lần: <?php echo $consumption; ?> quyển</p>
+            <p>Tiêu hao bắt đầu: <?php echo $currencyCost; ?> Linh thạch/Ma thạch</p>
+            <p>Tiêu hao kết thúc: 1 quyển bí tịch</p>
             <p>Giới thiệu: <?php echo $skill->wginfo; ?></p>
         </div>
 
@@ -67,13 +68,19 @@ $endCmd = $encode->encode("cmd=skill_end_train&sid=$sid");
             <div style="background-color: #e8f5e9; padding: 15px; border-radius: 5px; margin-bottom: 15px;">
                 <h4 style="color: green;">Đang trong trạng thái tu luyện...</h4>
                 <p>Thời gian đã tu luyện: <strong><?php echo $trainingTime; ?></strong> phút</p>
+                <p>Dự kiến nhận: <strong><?php echo $expGain; ?></strong> kinh nghiệm</p>
                 <p>(Tối đa 1440 phút)</p>
-                <a href="?cmd=<?php echo $endCmd; ?>" class="btn btn-success">Kết Thúc Tu Luyện</a>
+                <a href="?cmd=<?php echo $endCmd; ?>" class="btn btn-success">Kết Thúc Tu Luyện (Tốn 1 Bí tịch)</a>
             </div>
         <?php else: ?>
             <div style="margin-bottom: 15px;">
-                <p>Bắt đầu tu luyện sẽ tiêu hao <strong><?php echo $consumption; ?></strong> quyển bí tịch.</p>
-                <a href="?cmd=<?php echo $startCmd; ?>" class="btn btn-primary">Bắt Đầu Tu Luyện</a>
+                <p>Bắt đầu tu luyện sẽ tiêu hao <strong><?php echo $currencyCost; ?></strong> Linh thạch hoặc Ma thạch.</p>
+                <?php 
+                    $startLinhThach = $encode->encode("cmd=skill_start_train&type=1&sid=$sid");
+                    $startMaThach = $encode->encode("cmd=skill_start_train&type=2&sid=$sid");
+                ?>
+                <a href="?cmd=<?php echo $startLinhThach; ?>" class="btn btn-primary">Dùng Linh Thạch</a>
+                <a href="?cmd=<?php echo $startMaThach; ?>" class="btn btn-warning">Dùng Ma Thạch</a>
             </div>
         <?php endif; ?>
 

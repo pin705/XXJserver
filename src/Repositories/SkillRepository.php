@@ -18,7 +18,7 @@ class SkillRepository
     {
         $stmt = $this->db->prepare("SELECT * FROM playerwugong WHERE sid = ?");
         $stmt->execute([$sid]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $stmt->fetchAll(PDO::FETCH_OBJ);
     }
 
     public function getSkill($sid, $skillId)
@@ -101,46 +101,77 @@ class SkillRepository
     public function startTraining($sid, $skillId)
     {
         $now = date('Y-m-d H:i:s');
-        $stmt = $this->db->prepare("UPDATE playerwugong SET xlzt = 1, xlsjc = ? WHERE wgid = ? AND sid = ?");
+        $stmt = $this->db->prepare("UPDATE playerwugong SET xlzt = 1, xlsj = ? WHERE wgid = ? AND sid = ?");
         $stmt->execute([$now, $skillId, $sid]);
     }
 
-    public function endTraining($sid, $skillId, $minutes, $consumedBooks)
+    public function endTraining($sid, $skillId, $minutes)
     {
         $skill = $this->getSkill($sid, $skillId);
         if (!$skill || $skill->xlzt != 1) return false;
 
-        $expGain = round($minutes * 0.8);
+        // Calculate Exp Gain
+        if ($minutes > 1440) {
+            $minutes = 1440;
+            $expGain = round($minutes * 1.2);
+            $fanbei = round(10 + $expGain * 1.6);
+        } else {
+            $expGain = round($minutes * 0.8);
+            $fanbei = round(10 + $expGain * 1.2);
+        }
+
         if ($expGain < 1) $expGain = 1;
 
         $newExp = $skill->wgxl + $expGain;
         $maxExp = $skill->wgxlmax;
-        $level = $skill->wgdj;
+        
+        // Check if we have enough books (wgsum)
+        if ($skill->wgsum < 1) {
+            // Should not happen if we checked at start, but legacy checks at end too?
+            // Legacy: if($cxwg->wgsum>=1) allow start.
+            // But endTraining consumes it.
+            // If user has 0 books, can they end training?
+            // Legacy doesn't explicitly check wgsum > 0 in jswg, it just does update wgsum = wgsum - 1.
+            // If wgsum becomes negative, that's a bug in legacy, but we should probably prevent it or allow it if legacy did.
+            // Let's assume we just decrement.
+        }
 
         if ($newExp >= $maxExp) {
             // Level up
+            $overflowExp = $newExp - $maxExp;
+            
             $stmt = $this->db->prepare("
                 UPDATE playerwugong 
                 SET wgdj = wgdj + 1, 
-                    wgxl = 0, 
-                    wgxlmax = wgxlmax * 2, 
+                    wgxl = ?, 
+                    wgxlmax = wgxlmax + ?, 
                     xlzt = 0,
-                    wgsum = wgsum - ?
+                    wgsum = wgsum - 1
                 WHERE wgid = ? AND sid = ?
             ");
-            $stmt->execute([$consumedBooks, $skillId, $sid]);
-            return ['leveled_up' => true, 'exp_gain' => $expGain, 'new_level' => $level + 1];
+            $stmt->execute([$overflowExp, $fanbei, $skillId, $sid]);
+            
+            return [
+                'leveled_up' => true, 
+                'exp_gain' => $expGain, 
+                'new_level' => $skill->wgdj + 1,
+                'overflow_exp' => $overflowExp
+            ];
         } else {
             // Just add exp
             $stmt = $this->db->prepare("
                 UPDATE playerwugong 
                 SET wgxl = wgxl + ?, 
                     xlzt = 0,
-                    wgsum = wgsum - ?
+                    wgsum = wgsum - 1
                 WHERE wgid = ? AND sid = ?
             ");
-            $stmt->execute([$expGain, $consumedBooks, $skillId, $sid]);
-            return ['leveled_up' => false, 'exp_gain' => $expGain];
+            $stmt->execute([$expGain, $skillId, $sid]);
+            
+            return [
+                'leveled_up' => false, 
+                'exp_gain' => $expGain
+            ];
         }
     }
 }

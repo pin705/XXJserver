@@ -103,21 +103,31 @@ class SkillController extends Controller
         
         // Calculate training time if currently training
         $trainingTime = 0;
+        $expGain = 0;
         if ($skill->xlzt == 1) {
-            $start = strtotime($skill->xlsjc);
+            $start = strtotime($skill->xlsj);
             $now = time();
             $trainingTime = floor(($now - $start) / 60);
             if ($trainingTime > 1440) $trainingTime = 1440; // Max 24 hours
+            
+            // Preview exp gain
+            if ($trainingTime > 1440) {
+                $expGain = round(1440 * 1.2);
+            } else {
+                $expGain = round($trainingTime * 0.8);
+            }
         }
 
-        // Calculate consumption
-        $consumption = round($skill->wgdj / 2) + 1;
+        // Calculate consumption (Currency for start)
+        $currencyCost = $skill->wgdj * 3;
+        if ($currencyCost == 0) $currencyCost = 1;
 
         $this->render('skill/train', [
             'player' => $player,
             'skill' => $skill,
             'trainingTime' => $trainingTime,
-            'consumption' => $consumption
+            'currencyCost' => $currencyCost,
+            'expGain' => $expGain
         ]);
     }
 
@@ -125,6 +135,7 @@ class SkillController extends Controller
     {
         $player = $this->playerRepo->findBySid($this->sid);
         $skillId = $player->wugong;
+        $type = $_GET['type'] ?? 1; // 1 = Linh thạch, 2 = Ma thạch
         
         if (!$skillId) {
             $this->redirect('?cmd=skill');
@@ -134,24 +145,32 @@ class SkillController extends Controller
         $skill = $this->skillRepo->getSkill($this->sid, $skillId);
         
         if ($skill->xlzt == 1) {
-            // Already training
             $this->redirect('?cmd=skill_train');
             return;
         }
 
-        // Check if enough books
-        $consumption = round($skill->wgdj / 2) + 1;
-        
-        if ($skill->wgsum < $consumption) {
+        // Check currency
+        $cost = $skill->wgdj * 3;
+        if ($cost == 0) $cost = 1;
+
+        $currencyType = ($type == 1) ? 'uyxb' : 'uczb';
+        $currencyName = ($type == 1) ? 'Linh thạch' : 'Ma thạch';
+        $currentAmount = ($type == 1) ? $player->uyxb : $player->uczb;
+
+        if ($currentAmount < $cost) {
              $this->render('skill/train', [
                 'player' => $player,
                 'skill' => $skill,
                 'trainingTime' => 0,
-                'consumption' => $consumption,
-                'error' => 'Không đủ bí tịch để tu luyện!'
+                'currencyCost' => $cost,
+                'expGain' => 0,
+                'error' => "Không đủ $currencyName để tu luyện!"
             ]);
             return;
         }
+
+        // Deduct currency
+        $this->playerRepo->updateCurrency($this->sid, $currencyType, -$cost);
 
         $this->skillRepo->startTraining($this->sid, $skillId);
         $this->redirect('?cmd=skill_train');
@@ -174,14 +193,13 @@ class SkillController extends Controller
             return;
         }
 
-        $start = strtotime($skill->xlsjc);
+        $start = strtotime($skill->xlsj);
         $now = time();
         $minutes = floor(($now - $start) / 60);
-        if ($minutes > 1440) $minutes = 1440;
+        // if ($minutes > 1440) $minutes = 1440; // Handled in Repo
 
-        $consumption = round($skill->wgdj / 2) + 1;
-
-        $result = $this->skillRepo->endTraining($this->sid, $skillId, $minutes, $consumption);
+        // End training consumes 1 book
+        $result = $this->skillRepo->endTraining($this->sid, $skillId, $minutes);
         
         $message = "Kết thúc tu luyện. Thời gian: $minutes phút. Nhận được " . $result['exp_gain'] . " kinh nghiệm.";
         if ($result['leveled_up']) {
@@ -190,12 +208,15 @@ class SkillController extends Controller
 
         // Refresh skill data
         $skill = $this->skillRepo->getSkill($this->sid, $skillId);
+        $currencyCost = $skill->wgdj * 3;
+        if ($currencyCost == 0) $currencyCost = 1;
 
         $this->render('skill/train', [
             'player' => $player,
             'skill' => $skill,
             'trainingTime' => 0,
-            'consumption' => $consumption,
+            'currencyCost' => $currencyCost,
+            'expGain' => 0,
             'success' => $message
         ]);
     }

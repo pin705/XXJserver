@@ -66,8 +66,8 @@ $trainCmd = $encode->encode("cmd=skill_train&sid=$sid");
                     <img src="images/wugong/<?php echo $activeSkillId; ?>.png" style="width: 100px; border-radius: 8px;"><br>
                     Đang tu luyện: <strong><?php 
                         foreach ($skills as $s) {
-                            if ($s['wgid'] == $activeSkillId) {
-                                echo $s['wgname'];
+                            if ($s->wgid == $activeSkillId) {
+                                echo $s->wgname;
                                 break;
                             }
                         }
@@ -88,16 +88,16 @@ $trainCmd = $encode->encode("cmd=skill_train&sid=$sid");
         <?php else: ?>
             <?php foreach ($skills as $skill): ?>
                 <?php 
-                    $isActive = $skill['wgid'] == $activeSkillId;
-                    $learnCmd = $encode->encode("cmd=skill_learn&wgid={$skill['wgid']}&sid=$sid");
-                    $unlearnCmd = $encode->encode("cmd=skill_unlearn&wgid={$skill['wgid']}&sid=$sid");
-                    $discardCmd = $encode->encode("cmd=skill_discard&wgid={$skill['wgid']}&sid=$sid");
+                    $isActive = $skill->wgid == $activeSkillId;
+                    $learnCmd = $encode->encode("cmd=skill_learn&wgid={$skill->wgid}&sid=$sid");
+                    $unlearnCmd = $encode->encode("cmd=skill_unlearn&wgid={$skill->wgid}&sid=$sid");
+                    $discardCmd = $encode->encode("cmd=skill_discard&wgid={$skill->wgid}&sid=$sid");
                 ?>
                 <div class="skill-item <?php echo $isActive ? 'skill-active' : ''; ?>">
-                    <div style="font-weight: bold; color: <?php echo $skill['wgys']; ?>">
-                        <?php echo $skill['wgname']; ?> (x<?php echo $skill['wgsum']; ?>)
+                    <div style="font-weight: bold; color: <?php echo $skill->wgys; ?>">
+                        <?php echo $skill->wgname; ?> (x<?php echo $skill->wgsum; ?>)
                     </div>
-                    <div>Cấp độ: <?php echo $skill['wgdj']; ?></div>
+                    <div>Cấp độ: <?php echo $skill->wgdj; ?></div>
                     <div>Kinh nghiệm: <?php echo $skill['wgxl']; ?> / <?php echo $skill['wgxlmax']; ?></div>
                     <div style="margin-top: 5px;">
                         <?php if ($isActive): ?>

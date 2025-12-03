@@ -181,6 +181,16 @@ if (isset($cmd)){
     $router->add('startxiulian', [\XXJ\Controllers\PlayerController::class, 'startCultivation']);
     $router->add('endxiulian', [\XXJ\Controllers\PlayerController::class, 'endCultivation']);
 
+    // Skill System
+    $router->add('skill', [\XXJ\Controllers\SkillController::class, 'index']);
+    $router->add('skill_draw', [\XXJ\Controllers\SkillController::class, 'draw']);
+    $router->add('skill_learn', [\XXJ\Controllers\SkillController::class, 'learn']);
+    $router->add('skill_unlearn', [\XXJ\Controllers\SkillController::class, 'unlearn']);
+    $router->add('skill_discard', [\XXJ\Controllers\SkillController::class, 'discard']);
+    $router->add('skill_train', [\XXJ\Controllers\SkillController::class, 'train']);
+    $router->add('skill_start_train', [\XXJ\Controllers\SkillController::class, 'startTraining']);
+    $router->add('skill_end_train', [\XXJ\Controllers\SkillController::class, 'endTraining']);
+
     try {
         if (isset($params['cmd'])) {
             $router->dispatch($params['cmd'], $params);
