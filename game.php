@@ -361,12 +361,6 @@ if (isset($cmd)){
         case "fangshi":
             $ym = "game/fangshi.php";
             break;
-        case "club":
-            $ym = "game/club.php";
-            break;
-        case "clublist":
-            $ym = "game/clublist.php";
-            break;
         case "duihuan":
             $ym = "game/duihuan.php";
             break;

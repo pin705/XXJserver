@@ -50,15 +50,64 @@ class ClubRepository
         return $clubs;
     }
 
-    public function getMembers($clubid): array
+    public function getClubMembers($clubid): array
     {
-        // Join with game1 to get player names
-        $sql = "SELECT cp.*, g.uname, g.ulv, g.ugj, g.ufy 
-                FROM clubplayer cp 
-                JOIN game1 g ON cp.uid = g.uid 
-                WHERE cp.clubid = ? 
-                ORDER BY cp.uclv ASC";
-        $stmt = $this->db->prepare($sql);
+        $stmt = $this->db->prepare("SELECT cp.*, g.uname FROM clubplayer cp JOIN game1 g ON cp.uid = g.uid WHERE cp.clubid = ? ORDER BY cp.uclv ASC");
+        $stmt->execute([$clubid]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function joinClub($sid, $uid, $clubid)
+    {
+        // Check if already in club
+        $stmt = $this->db->prepare("SELECT * FROM clubplayer WHERE uid = ?");
+        $stmt->execute([$uid]);
+        if ($stmt->fetch()) {
+            return false;
+        }
+
+        $stmt = $this->db->prepare("INSERT INTO clubplayer (clubid, uid, sid, uclv) VALUES (?, ?, ?, 6)"); // 6 = Disciple
+        return $stmt->execute([$clubid, $uid, $sid]);
+    }
+
+    public function leaveClub($sid)
+    {
+        $stmt = $this->db->prepare("DELETE FROM clubplayer WHERE sid = ?");
+        return $stmt->execute([$sid]);
+    }
+
+    public function disbandClub($clubid)
+    {
+        $this->db->beginTransaction();
+        try {
+            $stmt = $this->db->prepare("DELETE FROM club WHERE clubid = ?");
+            $stmt->execute([$clubid]);
+            
+            $stmt = $this->db->prepare("DELETE FROM clubplayer WHERE clubid = ?");
+            $stmt->execute([$clubid]);
+            
+            $this->db->commit();
+            return true;
+        } catch (\Exception $e) {
+            $this->db->rollBack();
+            return false;
+        }
+    }
+
+    public function getAssignableMembers($clubid, $myRank)
+    {
+        // Get members with rank > myRank (lower status)
+        $stmt = $this->db->prepare("SELECT cp.*, g.uname FROM clubplayer cp JOIN game1 g ON cp.uid = g.uid WHERE cp.clubid = ? AND cp.uclv > ? ORDER BY cp.uclv ASC");
+        $stmt->execute([$clubid, $myRank]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function updateMemberRole($clubid, $uid, $newRank)
+    {
+        $stmt = $this->db->prepare("UPDATE clubplayer SET uclv = ? WHERE uid = ? AND clubid = ?");
+        return $stmt->execute([$newRank, $uid, $clubid]);
+    }
+}
         $stmt->execute([$clubid]);
         
         $members = [];
@@ -75,10 +124,7 @@ class ClubRepository
         }
         return $members;
     }
-
-    public function createClub($clubname, $leaderUid, $leaderSid)
-    {
-        // Start transaction
+}
         $this->db->beginTransaction();
         try {
             // Insert Club
