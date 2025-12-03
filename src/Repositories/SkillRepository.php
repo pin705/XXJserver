@@ -90,4 +90,11 @@ class SkillRepository
             return false;
         }
     }
+
+    public function getPlayerSkills($sid)
+    {
+        $stmt = $this->db->prepare("SELECT * FROM playerwugong WHERE sid = ?");
+        $stmt->execute([$sid]);
+        return $stmt->fetchAll(PDO::FETCH_OBJ);
+    }
 }

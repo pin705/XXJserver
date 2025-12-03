@@ -27,7 +27,7 @@ class ItemRepository
         return null;
     }
 
-    public function getPlayerItems($sid, $offset = 0, $limit = 10)
+    public function getPlayerEquipment($sid, $offset = 0, $limit = 10)
     {
         $stmt = $this->db->prepare("SELECT * FROM playerzhuangbei WHERE sid = ? LIMIT ?, ?");
         // PDO limit params need to be integers
@@ -43,11 +43,25 @@ class ItemRepository
         return $items;
     }
 
-    public function countPlayerItems($sid)
+    public function countPlayerEquipment($sid)
     {
         $stmt = $this->db->prepare("SELECT COUNT(*) FROM playerzhuangbei WHERE sid = ?");
         $stmt->execute([$sid]);
         return $stmt->fetchColumn();
+    }
+
+    public function getPlayerPotions($sid)
+    {
+        $stmt = $this->db->prepare("SELECT * FROM playeryaopin WHERE sid = ? AND ypsum > 0");
+        $stmt->execute([$sid]);
+        return $stmt->fetchAll(PDO::FETCH_OBJ);
+    }
+
+    public function getPlayerDaoju($sid)
+    {
+        $stmt = $this->db->prepare("SELECT * FROM playerdaoju WHERE sid = ? AND djsum > 0");
+        $stmt->execute([$sid]);
+        return $stmt->fetchAll(PDO::FETCH_OBJ);
     }
 
     public function deleteItem($zbnowid, $sid)
@@ -164,5 +178,30 @@ class ItemRepository
                 $template->ypbj, $template->ypxx, $ypid, $amount, $sid
             ]);
         }
+    }
+
+    public function getPlayerDaojuSingle($sid, $djid)
+    {
+        $stmt = $this->db->prepare("SELECT * FROM playerdaoju WHERE sid = ? AND djid = ?");
+        $stmt->execute([$sid, $djid]);
+        return $stmt->fetch(PDO::FETCH_OBJ);
+    }
+
+    public function usePotion($sid, $ypid)
+    {
+        // Decrease count
+        $stmt = $this->db->prepare("UPDATE playeryaopin SET ypsum = ypsum - 1 WHERE sid = ? AND ypid = ? AND ypsum > 0");
+        $stmt->execute([$sid, $ypid]);
+        
+        if ($stmt->rowCount() > 0) {
+            // Apply effect (Heal HP for now)
+            $template = $this->getPotionTemplate($ypid);
+            if ($template && $template->yphp > 0) {
+                $stmt = $this->db->prepare("UPDATE game1 SET uhp = LEAST(umaxhp, uhp + ?) WHERE sid = ?");
+                $stmt->execute([$template->yphp, $sid]);
+            }
+            return true;
+        }
+        return false;
     }
 }

@@ -39,4 +39,14 @@ class MapRepository
         $stmt->execute([$qyid]);
         return $stmt->fetch(PDO::FETCH_OBJ);
     }
+
+    public function getAllMaps()
+    {
+        $stmt = $this->db->query("SELECT * FROM mid");
+        $maps = [];
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $maps[] = new Map($row);
+        }
+        return $maps;
+    }
 }

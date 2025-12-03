@@ -104,4 +104,26 @@ class SkillController extends Controller
 
         $this->render('wugong', $data);
     }
+
+    public function showBag()
+    {
+        $sid = $this->sid;
+        $skills = $this->skillRepo->getPlayerSkills($sid);
+        
+        $this->render('bagjn', [
+            'skills' => $skills
+        ]);
+    }
+
+    public function showDetail()
+    {
+        $sid = $this->sid;
+        $wgid = $_GET['jnid'] ?? 0;
+        
+        $skill = $this->skillRepo->getSkill($sid, $wgid);
+        
+        $this->render('jninfo', [
+            'skill' => $skill
+        ]);
+    }
 }

@@ -144,4 +144,10 @@ class GameController extends Controller
             'links' => $links
         ]);
     }
+
+    public function listMaps()
+    {
+        $maps = $this->mapRepo->getAllMaps();
+        $this->render('allmap', ['maps' => $maps]);
+    }
 }

@@ -250,4 +250,37 @@ class PlayerRepository
         }
         return null;
     }
+
+    public function setPotionSlot($sid, $slot, $ypid)
+    {
+        if (!in_array($slot, [1, 2, 3])) return;
+        $field = "yp" . $slot;
+        $stmt = $this->db->prepare("UPDATE game1 SET $field = ? WHERE sid = ?");
+        $stmt->execute([$ypid, $sid]);
+    }
+
+    public function updateCultivation($sid, $status, $time = null)
+    {
+        $sql = "UPDATE game1 SET sfxl = ?";
+        $params = [$status];
+        
+        if ($time) {
+            $sql .= ", xiuliantime = ?";
+            $params[] = $time;
+        }
+        
+        $sql .= " WHERE sid = ?";
+        $params[] = $sid;
+        
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute($params);
+    }
+
+    public function addExp($sid, $exp)
+    {
+        // Logic to add exp and check level up/breakthrough cap
+        // For now just add exp
+        $stmt = $this->db->prepare("UPDATE game1 SET uexp = uexp + ? WHERE sid = ?");
+        return $stmt->execute([$exp, $sid]);
+    }
 }

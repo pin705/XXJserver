@@ -122,4 +122,75 @@ class PlayerController extends Controller
             'back_cmd' => 'gomid&newmid=' . $this->player->nowmid . '&sid=' . $this->sid
         ]);
     }
+
+    public function showCultivation()
+    {
+        $sid = $this->sid;
+        $player = $this->player;
+        
+        $now = time();
+        $startTime = strtotime($player->xiuliantime);
+        $minutes = floor(($now - $startTime) / 60);
+        if ($minutes > 1440) $minutes = 1440; // Max 24 hours
+        
+        $exp = round($minutes * $player->ulv * 1);
+        
+        $this->render('xiulian', [
+            'minutes' => $minutes,
+            'exp' => $exp,
+            'cost_yxb' => 32 * $player->ulv,
+            'cost_czb' => round(($player->ulv + 1) / 2)
+        ]);
+    }
+
+    public function startCultivation()
+    {
+        $sid = $this->sid;
+        $player = $this->player;
+        $type = $_GET['type'] ?? 1; // 1: yxb, 2: czb
+        
+        if ($player->sfxl == 1) {
+            $this->redirect('goxiulian', ['sid' => $sid, 'msg' => 'Đã trong tu luyện']);
+            return;
+        }
+        
+        $cost = ($type == 1) ? (32 * $player->ulv) : round(($player->ulv + 1) / 2);
+        $currency = ($type == 1) ? 'uyxb' : 'uczb';
+        
+        if ($player->$currency < $cost) {
+            $this->redirect('goxiulian', ['sid' => $sid, 'msg' => 'Không đủ tiền']);
+            return;
+        }
+        
+        // Deduct cost
+        $this->playerRepo->updateCurrency($sid, $currency, -$cost);
+        
+        // Start
+        $this->playerRepo->updateCultivation($sid, 1, date('Y-m-d H:i:s'));
+        
+        $this->redirect('goxiulian', ['sid' => $sid, 'msg' => 'Bắt đầu tu luyện...']);
+    }
+
+    public function endCultivation()
+    {
+        $sid = $this->sid;
+        $player = $this->player;
+        
+        if ($player->sfxl == 0) {
+            $this->redirect('goxiulian', ['sid' => $sid]);
+            return;
+        }
+        
+        $now = time();
+        $startTime = strtotime($player->xiuliantime);
+        $minutes = floor(($now - $startTime) / 60);
+        if ($minutes > 1440) $minutes = 1440;
+        
+        $exp = round($minutes * $player->ulv * 1);
+        
+        $this->playerRepo->addExp($sid, $exp);
+        $this->playerRepo->updateCultivation($sid, 0);
+        
+        $this->redirect('goxiulian', ['sid' => $sid, 'msg' => "Kết thúc tu luyện. Nhận được $exp kinh nghiệm."]);
+    }
 }

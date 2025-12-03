@@ -150,6 +150,35 @@ if (isset($cmd)){
     $router->add('deim', [\XXJ\Controllers\FriendController::class, 'remove']);
     $router->add('getplayerinfo', [\XXJ\Controllers\PlayerController::class, 'viewOtherPlayer']);
 
+    // Inventory & Items
+    $router->add('getbagzb', [\XXJ\Controllers\InventoryController::class, 'showBag']); // type=equip (default)
+    $router->add('getbagyp', [\XXJ\Controllers\InventoryController::class, 'showBag']); // type=potion
+    $router->add('getbagdj', [\XXJ\Controllers\InventoryController::class, 'showBag']); // type=item
+    $router->add('getbagyd', [\XXJ\Controllers\InventoryController::class, 'showBag']); // type=potion (mapped)
+    
+    $router->add('zbinfo', [\XXJ\Controllers\InventoryController::class, 'showDetail']); // type=equip
+    $router->add('chakanzb', [\XXJ\Controllers\InventoryController::class, 'showDetail']); // type=equip
+    $router->add('ypinfo', [\XXJ\Controllers\InventoryController::class, 'showDetail']); // type=potion
+    $router->add('djinfo', [\XXJ\Controllers\InventoryController::class, 'showDetail']); // type=item
+    
+    $router->add('setyp', [\XXJ\Controllers\InventoryController::class, 'setPotionSlot']);
+    $router->add('useyp', [\XXJ\Controllers\InventoryController::class, 'usePotion']);
+    $router->add('upzb', [\XXJ\Controllers\InventoryController::class, 'upgradeEquipment']);
+    $router->add('delezb', [\XXJ\Controllers\InventoryController::class, 'deleteEquipment']);
+
+    // Skills
+    $router->add('getbagjn', [\XXJ\Controllers\SkillController::class, 'showBag']);
+    $router->add('jninfo', [\XXJ\Controllers\SkillController::class, 'showDetail']);
+
+    // Map & NPC
+    $router->add('allmap', [\XXJ\Controllers\GameController::class, 'listMaps']);
+    $router->add('npc', [\XXJ\Controllers\NpcController::class, 'interact']);
+
+    // Cultivation
+    $router->add('goxiulian', [\XXJ\Controllers\PlayerController::class, 'showCultivation']);
+    $router->add('startxiulian', [\XXJ\Controllers\PlayerController::class, 'startCultivation']);
+    $router->add('endxiulian', [\XXJ\Controllers\PlayerController::class, 'endCultivation']);
+
     try {
         if (isset($params['cmd'])) {
             $router->dispatch($params['cmd'], $params);

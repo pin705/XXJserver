@@ -21,18 +21,97 @@ class InventoryController extends Controller
         $player = $this->player;
         if (!$player) return;
 
-        $page = $_GET['page'] ?? 1;
-        $limit = 10;
-        $offset = ($page - 1) * $limit;
+        $type = $_GET['type'] ?? 'equip'; // equip, potion, item, skill
 
-        $items = $this->itemRepo->getPlayerItems($sid, $offset, $limit);
-        $totalItems = $this->itemRepo->countPlayerItems($sid);
-        $totalPages = ceil($totalItems / $limit);
+        if ($type == 'equip') {
+            $page = $_GET['page'] ?? 1;
+            $limit = 10;
+            $offset = ($page - 1) * $limit;
 
-        $this->render('bagzb', [
-            'items' => $items,
-            'page' => $page,
-            'totalPages' => $totalPages
-        ]);
+            $items = $this->itemRepo->getPlayerEquipment($sid, $offset, $limit);
+            $totalItems = $this->itemRepo->countPlayerEquipment($sid);
+            $totalPages = ceil($totalItems / $limit);
+
+            $this->render('bagzb', [
+                'items' => $items,
+                'page' => $page,
+                'totalPages' => $totalPages,
+                'type' => 'equip'
+            ]);
+        } elseif ($type == 'potion') {
+            $items = $this->itemRepo->getPlayerPotions($sid);
+            $this->render('bagyp', [
+                'items' => $items,
+                'type' => 'potion'
+            ]);
+        } elseif ($type == 'item') {
+            $items = $this->itemRepo->getPlayerDaoju($sid);
+            $this->render('bagdj', [
+                'items' => $items,
+                'type' => 'item'
+            ]);
+        }
+    }
+
+    public function showDetail()
+    {
+        $type = $_GET['type'] ?? 'equip';
+        $id = $_GET['id'] ?? 0;
+        $sid = $this->sid;
+
+        if ($type == 'equip') {
+            $item = $this->itemRepo->findById($id);
+            $this->render('zbinfo', ['item' => $item]);
+        } elseif ($type == 'potion') {
+            $item = $this->itemRepo->getPotionTemplate($id);
+            $playerPotion = $this->itemRepo->getPlayerPotion($sid, $id);
+            $this->render('ypinfo', ['item' => $item, 'playerPotion' => $playerPotion]);
+        } elseif ($type == 'item') {
+            $item = $this->itemRepo->getItemTemplate($id);
+            $playerItem = $this->itemRepo->getPlayerDaojuSingle($sid, $id);
+            $this->render('djinfo', ['item' => $item, 'playerItem' => $playerItem]);
+        }
+    }
+
+    public function usePotion()
+    {
+        $ypid = $_GET['ypid'] ?? 0;
+        $sid = $this->sid;
+        
+        // Logic to use potion (heal, etc.)
+        // For now, just decrease count and show message
+        // Real logic should be in Repo or Service
+        
+        $this->itemRepo->usePotion($sid, $ypid);
+        $this->redirect('ypinfo', ['type' => 'potion', 'id' => $ypid, 'sid' => $sid]);
+    }
+
+    public function setPotionSlot()
+    {
+        $ypid = $_GET['ypid'] ?? 0;
+        $slot = $_GET['slot'] ?? 1; // 1, 2, 3
+        $sid = $this->sid;
+
+        $this->playerRepo->setPotionSlot($sid, $slot, $ypid);
+        $this->redirect('ypinfo', ['type' => 'potion', 'id' => $ypid, 'sid' => $sid]);
+    }
+
+    public function upgradeEquipment()
+    {
+        $zbid = $_GET['zbid'] ?? 0;
+        $sid = $this->sid;
+        
+        // Logic to upgrade equipment
+        // For now, just redirect back
+        $this->redirect('zbinfo', ['zbid' => $zbid, 'sid' => $sid]);
+    }
+
+    public function deleteEquipment()
+    {
+        $zbid = $_GET['zbid'] ?? 0;
+        $sid = $this->sid;
+        
+        $this->itemRepo->deleteItem($zbid, $sid);
+        $this->redirect('getbagzb', ['sid' => $sid]);
     }
 }

@@ -195,4 +195,12 @@ class TaskRepository
         
         return "Nhiệm vụ hoàn thành!";
     }
+    
+    public function getNpcTasks($nid, $sid)
+    {
+        // Placeholder logic. Real logic involves checking task requirements vs player state.
+        // For now return empty array or fetch from DB if table exists.
+        // Legacy `npc/npc.php` calls `player\gettask($nid, $dblj)`.
+        return [];
+    }
 }
