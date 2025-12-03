@@ -289,7 +289,27 @@ class PlayerRepository
         $params[] = $sid;
         
         $stmt = $this->db->prepare($sql);
-        return $stmt->execute($params);
+        $stmt->execute($params);
+    }
+
+    public function resetTalents($sid, $level)
+    {
+        $points = $level * 5;
+        $sql = "UPDATE game1 SET tf = ?, tfbj = 0, tfgj = 0, tfhp = 0, tfxy = 0, tffy = 0, tfsb = 0, tfxx = 0 WHERE sid = ?";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$points, $sid]);
+    }
+
+    public function upgradeTalent($sid, $type)
+    {
+        // type is column name like tfxy, tfsb...
+        // Validate type to prevent SQL injection
+        $allowed = ['tfxy', 'tfsb', 'tffy', 'tfhp', 'tfbj', 'tfxx', 'tfgj'];
+        if (!in_array($type, $allowed)) return;
+
+        $sql = "UPDATE game1 SET $type = $type + 1, tf = tf - 1 WHERE sid = ? AND tf > 0";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$sid]);
     }
 
     public function addExp($sid, $exp)
@@ -298,5 +318,48 @@ class PlayerRepository
         // For now just add exp
         $stmt = $this->db->prepare("UPDATE game1 SET uexp = uexp + ? WHERE sid = ?");
         return $stmt->execute([$exp, $sid]);
+    }
+
+    public function checkBreakthroughStatus($player)
+    {
+        // Legacy logic approximation
+        // $tupo = 1 if level % 10 == 9? Or specific levels?
+        // Legacy `istupo` function is not visible here, but usually in cultivation games:
+        // Every 10 levels (9->10, 19->20) is a minor breakthrough (layer).
+        // Every big realm (LianQi -> ZhuJi) is a major one.
+        // Let's assume every level ending in 9 needs breakthrough.
+        
+        $isStuck = false;
+        $cost = 0;
+        
+        // Simple formula for cost
+        $cost = $player->ulv * $player->ulv * $player->ulv * 0.2;
+        if ($cost < 100) $cost = 100;
+
+        // Check if max exp reached
+        if ($player->uexp >= $player->umaxexp) {
+            $isStuck = true;
+        }
+
+        return ['isStuck' => $isStuck, 'cost' => floor($cost)];
+    }
+
+    public function processBreakthrough($sid, $stats)
+    {
+        // Level up
+        $sql = "UPDATE game1 SET ulv = ulv + 1, uexp = 0, umaxexp = umaxexp * 1.2, 
+                umaxhp = umaxhp + :hp, uhp = umaxhp + :hp, 
+                ugj = ugj + :gj, ufy = ufy + :fy, 
+                tf = tf + :tf 
+                WHERE sid = :sid";
+        
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([
+            ':hp' => $stats['hp'],
+            ':gj' => $stats['gj'],
+            ':fy' => $stats['fy'],
+            ':tf' => $stats['tf'],
+            ':sid' => $sid
+        ]);
     }
 }

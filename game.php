@@ -1,7 +1,6 @@
 ﻿<?php
 //error_reporting(0);
 require_once 'class/player.php';
-require_once 'class/encode.php';
 include_once 'pdo.php';
 
 require_once __DIR__ . '/vendor/autoload.php';
@@ -26,7 +25,7 @@ header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
 header("Cache-Control: no-cache, must-revalidate");
 header("Pragma: no-cache");
 
-$encode = new \encode\encode();
+$encode = new \XXJ\Utils\Encoder();
 $player = new \player\player();
 $guaiwu = new \player\guaiwu();
 $clmid = new \player\clmid();
@@ -133,6 +132,15 @@ if (isset($cmd)){
             $controller->index();
         }
     });
+
+    // Talents
+    $router->add('tianfu', [\XXJ\Controllers\TalentController::class, 'index']);
+
+    // Breakthrough
+    $router->add('tupo', [\XXJ\Controllers\BreakthroughController::class, 'index']);
+
+    // Suits
+    $router->add('taozhuang', [\XXJ\Controllers\SuitController::class, 'index']);
 
     // Skills
     $router->add('wgxiulian', [\XXJ\Controllers\SkillController::class, 'train']);
