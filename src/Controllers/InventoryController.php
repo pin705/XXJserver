@@ -15,6 +15,12 @@ class InventoryController extends Controller
         $this->itemRepo = new ItemRepository();
     }
 
+    public function showPillBag()
+    {
+        $_GET['type'] = 'pill';
+        $this->showBag();
+    }
+
     public function showBag()
     {
         $sid = $this->sid;
@@ -50,6 +56,12 @@ class InventoryController extends Controller
                 'items' => $items,
                 'type' => 'item'
             ]);
+        } elseif ($type == 'pill') {
+            $items = $this->itemRepo->getPlayerYaoDan($sid);
+            $this->render('bagyd', [
+                'items' => $items,
+                'type' => 'pill'
+            ]);
         }
     }
 
@@ -70,7 +82,38 @@ class InventoryController extends Controller
             $item = $this->itemRepo->getItemTemplate($id);
             $playerItem = $this->itemRepo->getPlayerDaojuSingle($sid, $id);
             $this->render('djinfo', ['item' => $item, 'playerItem' => $playerItem]);
+        } elseif ($type == 'pill') {
+            $item = $this->itemRepo->getYaoDanTemplate($id);
+            $playerItem = $this->itemRepo->getPlayerYaoDanSingle($sid, $id);
+            $this->render('ydinfo', ['item' => $item, 'playerItem' => $playerItem]);
         }
+    }
+
+    public function showTemplateDetail()
+    {
+        $zbid = $_GET['zbid'] ?? 0;
+        $item = $this->itemRepo->getEquipmentTemplate($zbid);
+        $this->render('zbinfo_sys', ['item' => $item]);
+    }
+
+    public function usePill()
+    {
+        $ydid = $_GET['ydid'] ?? 0;
+        $sid = $this->sid;
+        
+        $success = $this->itemRepo->useYaoDan($sid, $ydid);
+        
+        $message = $success ? "Sử dụng đan dược thành công! Thuộc tính đã tăng." : "Sử dụng thất bại!";
+        
+        // Render detail with message
+        $item = $this->itemRepo->getYaoDanTemplate($ydid);
+        $playerItem = $this->itemRepo->getPlayerYaoDanSingle($sid, $ydid);
+        
+        $this->render('ydinfo', [
+            'item' => $item, 
+            'playerItem' => $playerItem,
+            'message' => $message
+        ]);
     }
 
     public function usePotion()

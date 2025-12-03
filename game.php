@@ -157,15 +157,18 @@ if (isset($cmd)){
     $router->add('getbagzb', [\XXJ\Controllers\InventoryController::class, 'showBag']); // type=equip (default)
     $router->add('getbagyp', [\XXJ\Controllers\InventoryController::class, 'showBag']); // type=potion
     $router->add('getbagdj', [\XXJ\Controllers\InventoryController::class, 'showBag']); // type=item
-    $router->add('getbagyd', [\XXJ\Controllers\InventoryController::class, 'showBag']); // type=potion (mapped)
+    $router->add('getbagyd', [\XXJ\Controllers\InventoryController::class, 'showPillBag']); // type=pill
     
     $router->add('zbinfo', [\XXJ\Controllers\InventoryController::class, 'showDetail']); // type=equip
+    $router->add('zbinfo_sys', [\XXJ\Controllers\InventoryController::class, 'showTemplateDetail']);
     $router->add('chakanzb', [\XXJ\Controllers\InventoryController::class, 'showDetail']); // type=equip
     $router->add('ypinfo', [\XXJ\Controllers\InventoryController::class, 'showDetail']); // type=potion
     $router->add('djinfo', [\XXJ\Controllers\InventoryController::class, 'showDetail']); // type=item
+    $router->add('ydinfo', [\XXJ\Controllers\InventoryController::class, 'showDetail']); // type=pill
     
     $router->add('setyp', [\XXJ\Controllers\InventoryController::class, 'setPotionSlot']);
     $router->add('useyp', [\XXJ\Controllers\InventoryController::class, 'usePotion']);
+    $router->add('usepill', [\XXJ\Controllers\InventoryController::class, 'usePill']);
     $router->add('upzb', [\XXJ\Controllers\InventoryController::class, 'upgradeEquipment']);
     $router->add('delezb', [\XXJ\Controllers\InventoryController::class, 'deleteEquipment']);
 
