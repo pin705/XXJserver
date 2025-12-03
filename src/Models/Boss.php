@@ -7,7 +7,7 @@ class Boss
     public $bossid;
     public $bossname;
     public $bossinfo;
-    public $glv;
+    public $bosslv; // Changed from glv
     public $bosszb;
     public $bossdj;
     public $bosshp;
@@ -23,6 +23,8 @@ class Boss
     public $dljv;
     public $ypjv;
     public $djjv;
+    public $bosstime;
+    public $bs;
 
     public function __construct(array $data = [])
     {

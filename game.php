@@ -98,13 +98,23 @@ if (isset($cmd)){
     // Combat
     $router->add('pve', [\XXJ\Controllers\CombatController::class, 'pve']);
     $router->add('pvegj', [\XXJ\Controllers\CombatController::class, 'pve']);
-
-    // Task
-    $router->add('task', [\XXJ\Controllers\TaskController::class, 'showTask']);
-
+    
+    // Tasks
+    $router->add('task', [\XXJ\Controllers\TaskController::class, 'index']);
+    $router->add('mytask', [\XXJ\Controllers\TaskController::class, 'myTasks']);
+    $router->add('mytaskinfo', [\XXJ\Controllers\TaskController::class, 'taskInfo']);
+    
     // Chat
-    $router->add('liaotian', [\XXJ\Controllers\ChatController::class, 'showChat']);
-    $router->add('sendliaotian', [\XXJ\Controllers\ChatController::class, 'showChat']);
+    $router->add('liaotian', [\XXJ\Controllers\ChatController::class, 'index']);
+    $router->add('sendliaotian', [\XXJ\Controllers\ChatController::class, 'send']);
+
+    // Shop
+    $router->add('shangdian', [\XXJ\Controllers\ShopController::class, 'index']);
+
+    // Skills
+    $router->add('wgxiulian', [\XXJ\Controllers\SkillController::class, 'index']);
+    $router->add('wgxl', [\XXJ\Controllers\SkillController::class, 'index']);
+    $router->add('jswg', [\XXJ\Controllers\SkillController::class, 'index']);
 
     try {
         if (isset($params['cmd'])) {

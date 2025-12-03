@@ -67,4 +67,26 @@ class Player
             }
         }
     }
+
+    public function getJingjie()
+    {
+        $rangeslv = array(0, 30, 50, 70, 80, 90, 100, 110);
+        $rangesjj = array(
+            '<font color=#C7C7C7>Luyện</font><font color=#D7D7D7>Khí</font>', 
+            '<font color=#78CAC6>Trúc</font><font color=#75C7C3>Cơ</font>', 
+            '<font color=#A78104>Kim</font><font color=#A36208>Đan</font>', 
+            '<font color=#FAC389>Nguyên</font><font color=#F7C086>Anh</font>', 
+            '<font color=#F49477>Hóa</font><font color=#F19174>Thần</font>', 
+            '<font color=#EB1A21>Luyện</font><font color=#E8171E>Hư</font>', 
+            '<font color=#9D0F36>Hợp</font><font color=#4C0148>Thể</font>', 
+            '<font color=#770035>Lớn</font><font color=#740044>Thừa</font>'
+        );
+        
+        for ($i = 0; $i < count($rangeslv); $i++) {
+            if ($this->ulv >= $rangeslv[$i] && $this->ulv < ($rangeslv[$i+1] ?? 9999)) {
+                return $rangesjj[$i];
+            }
+        }
+        return "Phàm Nhân";
+    }
 }
