@@ -150,4 +150,29 @@ class GameController extends Controller
         $maps = $this->mapRepo->getAllMaps();
         $this->render('allmap', ['maps' => $maps]);
     }
+
+    public function showRegionMap()
+    {
+        $sid = $this->sid;
+        $player = $this->player;
+        $currentMap = $this->mapRepo->findById($player->nowmid);
+        
+        $qyid = $_GET['qyid'] ?? $currentMap->mqy;
+        
+        // Get all maps in the region
+        $maps = $this->mapRepo->findByRegion($qyid);
+        
+        $this->render('game/region_map', [
+            'maps' => $maps,
+            'currentMap' => $currentMap,
+            'player' => $player,
+            'sid' => $sid
+        ]);
+    }
+
+    public function showWorldMap()
+    {
+        $regions = $this->mapRepo->getAllRegions();
+        $this->render('game/world_map', ['regions' => $regions]);
+    }
 }

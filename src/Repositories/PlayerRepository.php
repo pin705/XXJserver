@@ -362,4 +362,10 @@ class PlayerRepository
             ':sid' => $sid
         ]);
     }
+
+    public function updateName($uid, $newName)
+    {
+        $stmt = $this->db->prepare("UPDATE game1 SET uname = ? WHERE uid = ?");
+        $stmt->execute([$newName, $uid]);
+    }
 }

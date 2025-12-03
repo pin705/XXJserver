@@ -5,17 +5,20 @@ namespace XXJ\Controllers;
 use XXJ\Core\Controller;
 use XXJ\Repositories\NpcRepository;
 use XXJ\Repositories\TaskRepository;
+use XXJ\Repositories\PlayerRepository;
 
 class NpcController extends Controller
 {
     private NpcRepository $npcRepo;
     private TaskRepository $taskRepo;
+    private PlayerRepository $playerRepo;
 
     public function __construct()
     {
         parent::__construct();
         $this->npcRepo = new NpcRepository();
         $this->taskRepo = new TaskRepository();
+        $this->playerRepo = new PlayerRepository();
     }
 
     public function index()
@@ -113,4 +116,84 @@ class NpcController extends Controller
         return 'available';
     }
 
+    public function rename()
+    {
+        $sid = $this->sid;
+        $player = $this->player;
+        $canshu = $_GET['canshu'] ?? '';
+        $nid = $_GET['nid'] ?? 0;
+        
+        $message = '';
+        
+        if ($canshu == 'process') {
+            $newName = $_GET['newname'] ?? '';
+            $newName = htmlspecialchars($newName);
+            
+            if ($player->uczb < 200) {
+                $message = "Tiên thạch không đủ 200, không thể đổi tên!";
+            } elseif (strlen($newName) < 6 || strlen($newName) > 12) {
+                $message = "Tên quá dài hoặc quá ngắn (6-12 ký tự)!";
+            } else {
+                // Deduct currency using SID
+                $this->playerRepo->updateCurrency($sid, 'uczb', -200);
+                
+                // Update name using UID
+                $this->playerRepo->updateName($player->uid, $newName);
+                
+                $message = "Đổi tên thành công: $newName";
+                $player->uname = $newName; // Update local object
+            }
+        }
+        
+        $this->render('npc/rename', [
+            'player' => $player,
+            'sid' => $sid,
+            'nid' => $nid,
+            'message' => $message
+        ]);
+    }
+
+    public function vipRename()
+    {
+        $sid = $this->sid;
+        $player = $this->player;
+        $canshu = $_GET['canshu2'] ?? ''; // Legacy uses canshu2
+        
+        $message = '';
+        
+        if ($player->vip < 1) { 
+             $message = "Cấp VIP chưa đủ (Yêu cầu VIP 1)!";
+             $this->render('npc/rename', [
+                'player' => $player,
+                'sid' => $sid,
+                'nid' => 0,
+                'message' => $message
+            ]);
+            return;
+        }
+
+        if ($canshu == 'gm') {
+            $newName = $_GET['gaibian'] ?? '';
+            $newName = htmlspecialchars($newName);
+            
+            if ($player->uczb < 200) {
+                $message = "Tiên thạch không đủ 200!";
+            } elseif (strlen($newName) < 6 || strlen($newName) > 12) {
+                $message = "Tên quá dài hoặc quá ngắn (6-12 ký tự)!";
+            } else {
+                $this->playerRepo->updateCurrency($sid, 'uczb', -200);
+                $this->playerRepo->updateName($player->uid, $newName);
+                $message = "VIP Đổi tên thành công: $newName";
+                $player->uname = $newName;
+            }
+        }
+        
+        $this->render('npc/rename', [
+            'player' => $player,
+            'sid' => $sid,
+            'nid' => 0,
+            'message' => $message,
+            'isVip' => true
+        ]);
+    }
 }

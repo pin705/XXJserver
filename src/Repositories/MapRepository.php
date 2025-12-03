@@ -49,4 +49,21 @@ class MapRepository
         }
         return $maps;
     }
+
+    public function findByRegion($mqy)
+    {
+        $stmt = $this->db->prepare("SELECT * FROM mid WHERE mqy = ?");
+        $stmt->execute([$mqy]);
+        $maps = [];
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $maps[] = new Map($row);
+        }
+        return $maps;
+    }
+
+    public function getAllRegions()
+    {
+        $stmt = $this->db->query("SELECT * FROM qy");
+        return $stmt->fetchAll(PDO::FETCH_OBJ);
+    }
 }
