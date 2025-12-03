@@ -74,6 +74,29 @@ class PlayerRepository
         return null;
     }
 
+    public function create(array $data): bool
+    {
+        $sql = "INSERT INTO game1(token, sid, uname, ulv, uyxb, uczb, uexp, uhp, umaxhp, ugj, ufy, uwx, usex, vip, nowmid, endtime, sfzx, shenfen) 
+                VALUES (?, ?, ?, '1', '2000', '100', '0', '35', '35', '12', '5', '0', ?, '0', ?, ?, ?, ?)";
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute([
+            $data['token'], 
+            $data['sid'], 
+            $data['uname'], 
+            $data['sex'], 
+            $data['nowmid'], 
+            $data['endtime'], 
+            $data['shenfen'], 
+            $data['shenfen']
+        ]);
+    }
+
+    public function updateLoginStatus(string $sid, string $time): void
+    {
+        $stmt = $this->db->prepare("UPDATE game1 SET endtime=?, sfzx=1 WHERE sid=?");
+        $stmt->execute([$time, $sid]);
+    }
+
     public function updateMap($sid, $mid)
     {
         $stmt = $this->db->prepare("UPDATE game1 SET nowmid = ? WHERE sid = ?");
@@ -207,5 +230,24 @@ class PlayerRepository
                 $stmt->execute([$maxExp, $sid]);
             }
         }
+    }
+
+    public function checkNameExists(string $username): bool
+    {
+        $stmt = $this->db->prepare("SELECT uname FROM game1 WHERE uname = ?");
+        $stmt->execute([$username]);
+        return (bool)$stmt->fetch();
+    }
+
+    public function findByUid($uid): ?Player
+    {
+        $stmt = $this->db->prepare("SELECT sid FROM game1 WHERE uid = ?");
+        $stmt->execute([$uid]);
+        $data = $stmt->fetch();
+
+        if ($data) {
+            return $this->findBySid($data['sid']);
+        }
+        return null;
     }
 }

@@ -56,25 +56,43 @@ class ItemRepository
         return $stmt->execute([$zbnowid, $sid]);
     }
 
-    public function getEquipmentTemplate($zbid)
+    public function getEquipmentTemplate($zbid): ?Item
     {
         $stmt = $this->db->prepare("SELECT * FROM zhuangbei WHERE zbid = ?");
         $stmt->execute([$zbid]);
-        return $stmt->fetch(PDO::FETCH_OBJ);
+        $data = $stmt->fetch();
+
+        if ($data) {
+            return new Item($data);
+        }
+        return null;
     }
 
-    public function getItemTemplate($djid)
+    public function getItemTemplate($djid): ?Item
     {
         $stmt = $this->db->prepare("SELECT * FROM daoju WHERE djid = ?");
         $stmt->execute([$djid]);
-        return $stmt->fetch(PDO::FETCH_OBJ);
+        $data = $stmt->fetch();
+
+        if ($data) {
+            // Map daoju fields to Item model if necessary, or just return object
+            // Assuming Item model is flexible or I should use stdClass/array
+            // For now, let's assume Item model can handle it or I'll return object
+            return (object)$data;
+        }
+        return null;
     }
 
-    public function getPotionTemplate($ypid)
+    public function getPotionTemplate($ypid): ?Item
     {
         $stmt = $this->db->prepare("SELECT * FROM yaopin WHERE ypid = ?");
         $stmt->execute([$ypid]);
-        return $stmt->fetch(PDO::FETCH_OBJ);
+        $data = $stmt->fetch();
+
+        if ($data) {
+            return (object)$data;
+        }
+        return null;
     }
 
     public function getPlayerPotion($sid, $ypid)

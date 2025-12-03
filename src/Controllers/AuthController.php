@@ -2,52 +2,47 @@
 
 namespace XXJ\Controllers;
 
-use XXJ\Core\View;
-use XXJ\Utils\Encoder;
-use XXJ\Repositories\PlayerRepository;
+use XXJ\Core\Controller;
 use XXJ\Repositories\GameConfigRepository;
-use XXJ\Core\Database;
+use XXJ\Repositories\ChatRepository;
 
-class AuthController
+class AuthController extends Controller
 {
-    private PlayerRepository $playerRepo;
     private GameConfigRepository $configRepo;
-    private Encoder $encoder;
-    private $db;
+    private ChatRepository $chatRepo;
 
     public function __construct()
     {
-        $this->playerRepo = new PlayerRepository();
+        parent::__construct();
         $this->configRepo = new GameConfigRepository();
-        $this->encoder = new Encoder();
-        $this->db = Database::getInstance()->getConnection();
+        $this->chatRepo = new ChatRepository();
     }
 
-    public function showCreatePlayer($params)
+    public function showCreatePlayer()
     {
-        $token = $params['token'] ?? '';
-        $tishi = $params['tishi'] ?? '';
-        View::render('cj', ['token' => $token, 'tishi' => $tishi]);
+        $token = $_GET['token'] ?? '';
+        $tishi = $_GET['tishi'] ?? '';
+        $this->render('cj', ['token' => $token, 'tishi' => $tishi]);
     }
 
-    public function createPlayer($params)
+    public function createPlayer()
     {
-        $token = $params['token'] ?? '';
-        $username = $params['username'] ?? '';
-        $sex = $params['sex'] ?? '';
-        $shenfen = $params['shenfen'] ?? '';
+        $token = $_GET['token'] ?? '';
+        $username = $_POST['username'] ?? ($_GET['username'] ?? '');
+        $sex = $_POST['sex'] ?? ($_GET['sex'] ?? '');
+        $shenfen = $_POST['shenfen'] ?? ($_GET['shenfen'] ?? '');
 
         if (empty($token) || empty($username) || empty($sex)) {
-            $this->showCreatePlayer(['token' => $token, 'tishi' => 'Thiếu thông tin<br>']);
+            $this->redirect('cj', ['token' => $token, 'tishi' => 'Thiếu thông tin']);
             return;
         }
 
-        // Check duplicate name
-        $stmt = $this->db->prepare("SELECT uname FROM game1 WHERE uname = ?");
-        $stmt->execute([$username]);
-        if ($stmt->fetch()) {
-            $this->showCreatePlayer(['token' => $token, 'tishi' => "Người chơi:【{$username}】Đã tồn tại<br><br>"]);
-            return;
+        // Check duplicate name (This should ideally be in Repo too, but keeping it simple for now or moving to Repo)
+        // Let's use a quick check via Repo if possible, or just add a method.
+        // Actually, let's add checkNameExists to PlayerRepo.
+        if ($this->playerRepo->checkNameExists($username)) {
+             $this->redirect('cj', ['token' => $token, 'tishi' => "Người chơi:【{$username}】Đã tồn tại"]);
+             return;
         }
 
         // Check name length
@@ -67,15 +62,18 @@ class AuthController
             $firstmid = $config->firstmid;
             $nowdate = date('Y-m-d H:i:s');
 
-            $sql = "INSERT INTO game1(token, sid, uname, ulv, uyxb, uczb, uexp, uhp, umaxhp, ugj, ufy, uwx, usex, vip, nowmid, endtime, sfzx, shenfen) 
-                    VALUES (?, ?, ?, '1', '2000', '100', '0', '35', '35', '12', '5', '0', ?, '0', ?, ?, ?, ?)";
-            $stmt = $this->db->prepare($sql);
-            $stmt->execute([$token, $sid, $username, $sex, $firstmid, $nowdate, $shenfen, $shenfen]);
+            $this->playerRepo->create([
+                'token' => $token,
+                'sid' => $sid,
+                'uname' => $username,
+                'sex' => $sex,
+                'nowmid' => $firstmid,
+                'endtime' => $nowdate,
+                'shenfen' => $shenfen
+            ]);
 
             // Global chat announcement
-            $sqlChat = "INSERT INTO ggliaotian(name, msg, uid) VALUES (?, ?, '0')";
-            $stmtChat = $this->db->prepare($sqlChat);
-            $stmtChat->execute(['【Hệ thống】', "Vạn người không được một{$username}Bước lên tiên đồ"]);
+            $this->chatRepo->addMessage('0', '【Hệ thống】', "Vạn người không được một{$username}Bước lên tiên đồ");
 
             $gonowmid = $this->encoder->encode("cmd=gomid&newmid=$firstmid&sid=$sid");
             
@@ -94,8 +92,7 @@ class AuthController
         if ($player) {
              $gonowmid = $this->encoder->encode("cmd=gomid&newmid=$player->nowmid&sid=$sid");
              $nowdate = date('Y-m-d H:i:s');
-             $stmt = $this->db->prepare("UPDATE game1 SET endtime=?, sfzx=1 WHERE sid=?");
-             $stmt->execute([$nowdate, $sid]);
+             $this->playerRepo->updateLoginStatus($sid, $nowdate);
              header("refresh:1;url=?cmd=$gonowmid");
              exit();
         }

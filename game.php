@@ -138,11 +138,17 @@ if (isset($cmd)){
     // Ranking
     $router->add('paihang', [\XXJ\Controllers\RankingController::class, 'index']);
 
-    // Task System
-    $router->add('mytask', [\XXJ\Controllers\TaskController::class, 'myTasks']);
-    $router->add('mytaskinfo', [\XXJ\Controllers\TaskController::class, 'taskInfo']);
-    $router->add('npctask', [\XXJ\Controllers\TaskController::class, 'npcTask']);
-    $router->add('taskteleport', [\XXJ\Controllers\TaskController::class, 'teleport']);
+    // Monster Info
+    $router->add('getginfo', [\XXJ\Controllers\MonsterController::class, 'info']);
+
+    // PVP
+    $router->add('pvp', [\XXJ\Controllers\PvpController::class, 'combat']);
+
+    // Friend System
+    $router->add('im', [\XXJ\Controllers\FriendController::class, 'index']);
+    $router->add('addim', [\XXJ\Controllers\FriendController::class, 'add']);
+    $router->add('deim', [\XXJ\Controllers\FriendController::class, 'remove']);
+    $router->add('getplayerinfo', [\XXJ\Controllers\PlayerController::class, 'viewOtherPlayer']);
 
     try {
         if (isset($params['cmd'])) {

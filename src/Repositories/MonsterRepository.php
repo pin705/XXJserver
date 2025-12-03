@@ -48,4 +48,16 @@ class MonsterRepository
         $stmt = $this->db->prepare("UPDATE midguaiwu SET sid = ? WHERE id = ?");
         $stmt->execute([$sid, $gid]);
     }
+
+    public function getTemplate($id): ?Monster
+    {
+        $stmt = $this->db->prepare("SELECT * FROM guaiwu WHERE id = ?");
+        $stmt->execute([$id]);
+        $data = $stmt->fetch();
+
+        if ($data) {
+            return new Monster($data);
+        }
+        return null;
+    }
 }
