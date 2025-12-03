@@ -1,7 +1,7 @@
 <?php
 $sqlname='root';
-$sqlpass='6f7f374baf6fd4d4';
-$dbhost='103.149.252.61';
+$sqlpass=''; // Default for local, was '6f7f374baf6fd4d4'
+$dbhost='127.0.0.1'; // Default for local, was '103.149.252.61'
 $dbname='game';
 $dsn="mysql:host=$dbhost;dbname=$dbname;";
 $dblj = new PDO($dsn,$sqlname,$sqlpass,array(PDO::ATTR_PERSISTENT=>true));
