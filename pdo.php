@@ -1,7 +1,7 @@
 <?php
 $sqlname='root';
-$sqlpass='www.aae.ink';
-$dbhost='localhost';
+$sqlpass='6f7f374baf6fd4d4';
+$dbhost='103.149.252.61';
 $dbname='game';
 $dsn="mysql:host=$dbhost;dbname=$dbname;";
 $dblj = new PDO($dsn,$sqlname,$sqlpass,array(PDO::ATTR_PERSISTENT=>true));
