@@ -117,10 +117,11 @@ if (isset($cmd)){
     $router->add('jswg', [\XXJ\Controllers\SkillController::class, 'index']);
 
     // Boss
-    $router->add('boss', [\XXJ\Controllers\BossController::class, 'info']);
-    $router->add('bossinfo', [\XXJ\Controllers\BossController::class, 'info']);
-    $router->add('pvb', [\XXJ\Controllers\BossController::class, 'fight']);
-    $router->add('pvbgj', [\XXJ\Controllers\BossController::class, 'fight']);
+    $router->add('boss', [\XXJ\Controllers\BossController::class, 'index']);
+    $router->add('pvbgj', [\XXJ\Controllers\BossController::class, 'combat']);
+
+    // Pet
+    $router->add('chongwu', [\XXJ\Controllers\PetController::class, 'index']);
 
     try {
         if (isset($params['cmd'])) {

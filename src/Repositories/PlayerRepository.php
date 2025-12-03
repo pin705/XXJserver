@@ -179,4 +179,14 @@ class PlayerRepository
         }
         return true;
     }
+
+    public function updateCurrency($sid, $type, $amount)
+    {
+        // type: uyxb (Linh thạch), uczb (Ma thạch/Premium)
+        if (!in_array($type, ['uyxb', 'uczb'])) return;
+        
+        $sql = "UPDATE game1 SET $type = $type + ? WHERE sid = ?";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$amount, $sid]);
+    }
 }
