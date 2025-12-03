@@ -273,47 +273,11 @@ if (isset($cmd)){
         case 'pvegj':
             $ym = 'game/pve.php';
             break;
-		case 'pvbgj':
-            $ym = 'game/boss.php';
-            break;
-        case 'sendliaotian':
-            if (isset($ltlx) && isset($ltmsg)){
-                switch ($ltlx){
-                    case 'all':
-                        $player = player\getplayer($sid,$dblj);
-                        if ($player->uname!=''){
-                            $ltmsg = htmlspecialchars($ltmsg);
-                            $sql = "insert into ggliaotian(name,msg,uid) values(?,?,?)";
-                            $stmt = $dblj->prepare($sql);
-                            $exeres = $stmt->execute(array($player->uname,$ltmsg,$player->uid));
-                        }
-                        $ym = 'game/liaotian.php';
-                        break;
-                    case "im":
-                        $player = player\getplayer($sid,$dblj);
-                        if ($player->uname!=''){
-                            $ltmsg = htmlspecialchars($ltmsg);
-                            $sql = "insert into imliaotian(name,msg,uid,imuid) values('$player->uname','$ltmsg',$player->uid,{$imuid})";
-
-                            $cxjg = $dblj->exec($sql);
-                            
-                        }
-                        $ym = 'game/liaotian.php';
-                        break;
-                }
-            }
-            break;
-        case 'liaotian':
-            $ym ='game/liaotian.php';
-            break;
         case 'getplayerinfo':
             $ym ='game/otherzhuangtai.php';
             break;
         case 'zbinfo':
             $ym = 'game/zbinfo.php';
-            break;
-        case 'npc':
-            $ym = "npc/npc.php";
             break;
         case 'paihang';
             $ym = 'game/paihang.php';
@@ -379,29 +343,11 @@ if (isset($cmd)){
         case 'endxiulian':
             $ym = 'game/xiulian.php';
             break;
-        case 'task':
-            $ym = 'game/task.php';
-            break;
-        case 'mytask':
-            $ym = 'game/playertask.php';
-            break;
-        case 'mytaskinfo':
-            $ym = 'game/playertaskinfo.php';
-            break;
-        case 'boss':
-            $ym = 'game/bossinfo.php';
-            break;
         case 'ypinfo':
             $ym = 'game/ypinfo.php';
             break;
 		case 'ydinfo':
             $ym = 'game/ydinfo.php';
-            break;
-        case 'pvb':
-            $ym = 'game/boss.php';
-            break;
-        case 'chongwu':
-            $ym = 'game/chongwu.php';
             break;
         case 'jninfo':
             $ym = 'game/jninfo.php';
@@ -426,9 +372,6 @@ if (isset($cmd)){
             break;
         case "im":
             $ym = "game/im.php";
-            break;
-		case "shangdian":
-            $ym = "game/shangdian.php";
             break;
 		case "qydt":
             $ym = "game/qydt.php";

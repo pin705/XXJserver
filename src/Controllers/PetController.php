@@ -21,10 +21,22 @@ class PetController extends Controller
     public function index()
     {
         $action = $_GET['action'] ?? 'index';
+        $canshu = $_GET['canshu'] ?? '';
         
+        // Map legacy parameters
+        if ($canshu === 'chouqu') $action = 'draw';
+        if ($canshu === 'chuzhan') $action = 'deploy';
+        if ($canshu === 'shouhui') $action = 'recall';
+        if ($canshu === 'fangsheng') $action = 'release';
+        if ($canshu === 'cwinfo') $action = 'info';
+        if ($canshu === 'queren') $action = 'confirm_draw'; // Show confirmation
+
         switch ($action) {
             case 'draw':
                 $this->draw();
+                break;
+            case 'confirm_draw':
+                $this->listPets(true); // Show list with confirmation dialog
                 break;
             case 'deploy':
                 $this->deploy();
@@ -47,7 +59,7 @@ class PetController extends Controller
         }
     }
 
-    private function listPets()
+    private function listPets($showConfirm = false)
     {
         $sid = $this->player->sid;
         $pets = $this->petRepo->findBySid($sid);
@@ -62,22 +74,19 @@ class PetController extends Controller
             }
         }
 
-        $this->render('chongwu', [
+        $this->render('pet/index', [
             'pets' => $pets,
             'currentPetId' => $currentPetId,
             'popup' => $popup,
-            'player' => $this->player
+            'showConfirm' => $showConfirm,
+            'player' => $this->player,
+            'sid' => $sid
         ]);
     }
 
     public function draw()
     {
         $sid = $this->player->sid;
-        
-        // Check currency (50 Ma thạch - uczb)
-        // Note: Legacy code uses changeczb(2, 50, ...) which deducts 50 uczb.
-        // uczb is Premium Currency? Let's check player.php
-        // Yes, changeczb affects uczb.
         
         if ($this->player->uczb >= 50) {
             // Deduct currency
@@ -137,9 +146,10 @@ class PetController extends Controller
             return;
         }
         
-        $this->render('chongwu_info', [
+        $this->render('pet/info', [
             'pet' => $pet,
-            'player' => $this->player
+            'player' => $this->player,
+            'sid' => $this->player->sid
         ]);
     }
     
