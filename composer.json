@@ -1,0 +1,13 @@
+{
+    "name": "xxj/server",
+    "description": "Refactored XXJ Server",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "XXJ\\": "src/"
+        }
+    },
+    "require": {
+        "php": ">=7.4"
+    }
+}

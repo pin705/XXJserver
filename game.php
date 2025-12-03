@@ -4,6 +4,23 @@ require_once 'class/player.php';
 require_once 'class/encode.php';
 include_once 'pdo.php';
 
+require_once __DIR__ . '/vendor/autoload.php';
+use XXJ\Core\Database;
+
+// Initialize the new Database singleton using credentials from pdo.php
+// This allows us to use the new architecture alongside the old one
+try {
+    Database::getInstance([
+        'host' => $dbhost,
+        'dbname' => $dbname,
+        'username' => $sqlname,
+        'password' => $sqlpass
+    ]);
+} catch (Exception $e) {
+    // Handle error or fallback
+    error_log("New DB Init failed: " . $e->getMessage());
+}
+
 header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
 header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
 header("Cache-Control: no-cache, must-revalidate");
@@ -63,6 +80,41 @@ if (isset($cmd)){
     }
 
     $Dcmd = $encode->decode($cmd);
+    
+    // New Router Logic
+    parse_str($Dcmd, $params);
+    $router = new \XXJ\Core\Router();
+    $router->add('cj', [\XXJ\Controllers\AuthController::class, 'showCreatePlayer']);
+    $router->add('cjplayer', [\XXJ\Controllers\AuthController::class, 'createPlayer']);
+    $router->add('login', [\XXJ\Controllers\AuthController::class, 'login']);
+    $router->add('gomid', [\XXJ\Controllers\GameController::class, 'moveToMap']);
+    
+    // Player Status & Inventory
+    $router->add('zhuangtai', [\XXJ\Controllers\PlayerController::class, 'showStatus']);
+    $router->add('xxzb', [\XXJ\Controllers\PlayerController::class, 'showStatus']); // Unequip
+    $router->add('setzbwz', [\XXJ\Controllers\PlayerController::class, 'showStatus']); // Equip
+    $router->add('getbagzb', [\XXJ\Controllers\InventoryController::class, 'showBag']);
+
+    // Combat
+    $router->add('pve', [\XXJ\Controllers\CombatController::class, 'pve']);
+    $router->add('pvegj', [\XXJ\Controllers\CombatController::class, 'pve']);
+
+    // Task
+    $router->add('task', [\XXJ\Controllers\TaskController::class, 'showTask']);
+
+    // Chat
+    $router->add('liaotian', [\XXJ\Controllers\ChatController::class, 'showChat']);
+    $router->add('sendliaotian', [\XXJ\Controllers\ChatController::class, 'showChat']);
+
+    try {
+        if (isset($params['cmd'])) {
+            $router->dispatch($params['cmd'], $params);
+            exit();
+        }
+    } catch (Exception $e) {
+        // Command not found in router, fall back to legacy switch
+    }
+
     parse_str($Dcmd);
     switch ($cmd){
         case 'cj':
