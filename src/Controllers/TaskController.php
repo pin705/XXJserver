@@ -56,23 +56,52 @@ class TaskController extends Controller
             $item = $this->itemRepo->getItemTemplate($task->rwyq);
             $targetName = $item ? $item->djname : 'Vật phẩm';
         } elseif ($task->rwzl == 2) { // Kill
-            // Need MonsterRepository? Or just query
-            // Legacy uses getyguaiwu
-            // I'll assume I can get name from DB or just show ID for now if Repo missing
-            // Let's use a quick query or add MonsterRepo later.
-            // For now, let's try to get it via direct DB query in Controller or Repo?
-            // Better to add getMonsterName to TaskRepo or similar.
-            // I'll skip name resolution for now or use a placeholder.
             $targetName = "Quái vật ($task->rwyq)";
         } elseif ($task->rwzl == 3) { // Talk
-            // NPC Name
              $targetName = "NPC ($task->rwcount)";
         }
+
+        // Resolve rewards
+        $rewards = [];
+        if ($task->rwdj) {
+            $items = explode(',', $task->rwdj);
+            foreach ($items as $itemStr) {
+                $parts = explode('|', $itemStr);
+                if (count($parts) == 2) {
+                    $item = $this->itemRepo->getItemTemplate($parts[0]);
+                    if ($item) $rewards[] = ['type' => 'item', 'name' => $item->djname, 'count' => $parts[1], 'id' => $parts[0]];
+                }
+            }
+        }
+        if ($task->rwyp) {
+            $potions = explode(',', $task->rwyp);
+            foreach ($potions as $pStr) {
+                $parts = explode('|', $pStr);
+                if (count($parts) == 2) {
+                    $potion = $this->itemRepo->getPotionTemplate($parts[0]);
+                    if ($potion) $rewards[] = ['type' => 'potion', 'name' => $potion->ypname, 'count' => $parts[1], 'id' => $parts[0]];
+                }
+            }
+        }
+        if ($task->rwzb) {
+            $zbs = explode(',', $task->rwzb);
+            foreach ($zbs as $zbid) {
+                $zb = $this->itemRepo->getEquipmentTemplate($zbid);
+                if ($zb) $rewards[] = ['type' => 'equip', 'name' => $zb->zbname, 'id' => $zbid];
+            }
+        }
+        if ($task->rwexp) $rewards[] = ['type' => 'exp', 'value' => $task->rwexp];
+        if ($task->rwyxb) $rewards[] = ['type' => 'yxb', 'value' => $task->rwyxb];
+
+        // Teleport cost
+        $teleportCost = round($this->player->ulv * 12 + 500);
 
         $this->render('task/my_info', [
             'playerTask' => $playerTask,
             'task' => $task,
             'targetName' => $targetName,
+            'rewards' => $rewards,
+            'teleportCost' => $teleportCost,
             'player' => $this->player
         ]);
     }
@@ -144,11 +173,23 @@ class TaskController extends Controller
         if ($task->rwexp) $rewards[] = "Kinh nghiệm: {$task->rwexp}";
         if ($task->rwyxb) $rewards[] = "Linh thạch: {$task->rwyxb}";
 
+        // Resolve names for requirements
+        $targetName = '';
+        if ($task->rwzl == 1) { // Collect
+            $item = $this->itemRepo->getItemTemplate($task->rwyq);
+            $targetName = $item ? $item->djname : "Vật phẩm ($task->rwyq)";
+        } elseif ($task->rwzl == 2) { // Kill
+            $targetName = "Quái vật ($task->rwyq)";
+        } elseif ($task->rwzl == 3) { // Talk
+             $targetName = "NPC ($task->rwcount)";
+        }
+
         $this->render('task/npc_view', [
             'task' => $task,
             'playerTask' => $playerTask,
             'message' => $message,
             'rewards' => $rewards,
+            'targetName' => $targetName,
             'nid' => $nid,
             'player' => $this->player
         ]);

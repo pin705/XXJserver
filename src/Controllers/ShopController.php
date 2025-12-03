@@ -38,7 +38,7 @@ class ShopController extends Controller
                 $message = "Thao tác thất bại";
                 $messageType = 'error';
             }
-        } elseif ($canshu1 === 'gogoumai1' && $ydid && $ydcount) {
+                } elseif ($canshu1 === 'gogoumai1' && $ydid && $ydcount) {
             $result = $this->shopRepo->buyItem($sid, $ydid, $ydcount, 2); // 2 = uczb
             if ($result) {
                 $message = "Thao tác thành công";
@@ -48,21 +48,16 @@ class ShopController extends Controller
                 $messageType = 'error';
             }
         }
-
-        // Get all items
-        $items = $this->shopRepo->getAllItems();
         
-        // Re-fetch player to get updated currency
-        $this->player = $this->playerRepo->findBySid($sid);
+        $items = $this->shopRepo->getAllItems();
+        $mode = ($canshu1 === 'gogoumai1') ? 'mathach' : 'linhthach';
 
-        $data = [
+        $this->render('shop/index', [
             'items' => $items,
+            'mode' => $mode,
             'message' => $message,
             'messageType' => $messageType,
-            'canshu' => $canshu,
-            'canshu1' => $canshu1
-        ];
-
-        $this->render('shangdian', $data);
+            'player' => $this->player
+        ]);
     }
 }

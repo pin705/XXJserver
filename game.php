@@ -100,7 +100,7 @@ if (isset($cmd)){
     $router->add('pvegj', [\XXJ\Controllers\CombatController::class, 'pve']);
     
     // Tasks
-    $router->add('task', [\XXJ\Controllers\TaskController::class, 'index']);
+    $router->add('task', [\XXJ\Controllers\TaskController::class, 'npcTask']);
     $router->add('mytask', [\XXJ\Controllers\TaskController::class, 'myTasks']);
     $router->add('mytaskinfo', [\XXJ\Controllers\TaskController::class, 'taskInfo']);
     $router->add('npctask', [\XXJ\Controllers\TaskController::class, 'npcTask']);
@@ -133,7 +133,6 @@ if (isset($cmd)){
     $router->add('clubinfo', [\XXJ\Controllers\ClubController::class, 'info']);
     $router->add('joinclub', [\XXJ\Controllers\ClubController::class, 'join']);
     $router->add('outclub', [\XXJ\Controllers\ClubController::class, 'leave']);
-    $router->add('clubshop', [\XXJ\Controllers\ClubController::class, 'shop']);
 
     // Ranking
     $router->add('paihang', [\XXJ\Controllers\RankingController::class, 'index']);
