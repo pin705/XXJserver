@@ -3,16 +3,16 @@
 namespace XXJ\Controllers;
 
 use XXJ\Core\Controller;
-use XXJ\Repositories\ShopRepository;
+use XXJ\Repositories\ItemRepository;
 
 class ShopController extends Controller
 {
-    private $shopRepo;
+    private $itemRepo;
 
     public function __construct()
     {
         parent::__construct();
-        $this->shopRepo = new ShopRepository();
+        $this->itemRepo = new ItemRepository();
     }
 
     public function index()
@@ -20,44 +20,68 @@ class ShopController extends Controller
         $sid = $this->sid;
         $player = $this->player;
         
-        // Handle buy actions if present
-        $canshu = $_GET['canshu'] ?? null;
-        $canshu1 = $_GET['canshu1'] ?? null;
-        $ydid = $_GET['ydid'] ?? null;
-        $ydcount = $_GET['ydcount'] ?? null;
+        // Handle buy actions
+        $cmd = $_GET['cmd'] ?? '';
+        $buyId = $_GET['buy_id'] ?? null;
+        $amount = intval($_GET['amount'] ?? 1);
+        $currency = $_GET['currency'] ?? 'uyxb'; // uyxb or uczb
         
         $message = '';
-        $messageType = ''; // success, error
-
-        if ($canshu === 'gogoumai' && $ydid && $ydcount) {
-            $result = $this->shopRepo->buyItem($sid, $ydid, $ydcount, 1); // 1 = uyxb
-            if ($result) {
-                $message = "Thao tác thành công";
-                $messageType = 'success';
+        
+        if ($buyId && $amount > 0) {
+            $item = $this->itemRepo->getShopItem($buyId);
+            
+            if (!$item) {
+                $message = "Vật phẩm không tồn tại!";
             } else {
-                $message = "Thao tác thất bại";
-                $messageType = 'error';
-            }
-                } elseif ($canshu1 === 'gogoumai1' && $ydid && $ydcount) {
-            $result = $this->shopRepo->buyItem($sid, $ydid, $ydcount, 2); // 2 = uczb
-            if ($result) {
-                $message = "Thao tác thành công";
-                $messageType = 'success';
-            } else {
-                $message = "Thao tác thất bại";
-                $messageType = 'error';
+                $cost = 0;
+                $canAfford = false;
+                
+                if ($currency === 'uyxb') {
+                    $cost = $item['jiage'] * $amount;
+                    if ($player->uyxb >= $cost) {
+                        $canAfford = true;
+                        // Deduct currency
+                        $player->uyxb -= $cost;
+                    } else {
+                        $message = "Bạn không đủ linh thạch!";
+                    }
+                } elseif ($currency === 'uczb') {
+                    $cost = $item['jiage'] * $amount; // Assuming same price for now, or check if there's a separate premium price field
+                    // Legacy code usually has different logic or price for premium currency, 
+                    // but based on shangdian.php, it seems to use 'jiage' for both but different buy actions.
+                    // Let's assume standard price for now.
+                    if ($player->uczb >= $cost) {
+                        $canAfford = true;
+                        $player->uczb -= $cost;
+                    } else {
+                        $message = "Bạn không đủ tiên thạch!";
+                    }
+                }
+                
+                if ($canAfford) {
+                    // Update player currency in DB
+                    $stmt = $this->db->prepare("UPDATE game1 SET uyxb = ?, uczb = ? WHERE sid = ?");
+                    $stmt->execute([$player->uyxb, $player->uczb, $sid]);
+                    
+                    // Add item to inventory
+                    $this->itemRepo->addPlayerShopItem($sid, $item, $amount);
+                    
+                    $message = "Mua thành công {$amount} {$item['ydname']}!";
+                }
             }
         }
-        
-        $items = $this->shopRepo->getAllItems();
-        $mode = ($canshu1 === 'gogoumai1') ? 'mathach' : 'linhthach';
 
-        $this->render('shop/index', [
+        // Get shop items
+        $items = $this->itemRepo->getAllShopItems();
+
+        $data = [
+            'player' => $player,
             'items' => $items,
-            'mode' => $mode,
             'message' => $message,
-            'messageType' => $messageType,
-            'player' => $this->player
-        ]);
+            'sid' => $sid
+        ];
+
+        $this->render('shop/index', $data);
     }
 }
