@@ -5,11 +5,11 @@ $sid = $_GET['sid'];
 $backLink = $encoder->encode("cmd=gomid&newmid={$player->nowmid}&sid=$sid");
 ?>
 <div class="boss-win">
-    <h3>Victory!</h3>
-    <p>You have defeated <?= $boss->bossname ?>!</p>
+    <h3>Chiến thắng!</h3>
+    <p>Bạn đã đánh bại <?= $boss->bossname ?>!</p>
     
     <div class="rewards">
-        <h4>Rewards:</h4>
+        <h4>Phần thưởng:</h4>
         <ul>
             <?php foreach ($drops as $drop): ?>
                 <li><?= $drop ?></li>
@@ -17,7 +17,8 @@ $backLink = $encoder->encode("cmd=gomid&newmid={$player->nowmid}&sid=$sid");
         </ul>
     </div>
     
-    <p>The boss has grown stronger...</p>
+    <p>Boss đã trở nên mạnh mẽ hơn...</p>
     
-    <a href="?cmd=<?= $backLink ?>">Return to Map</a>
+    <a href="?cmd=<?= $backLink ?>">Quay lại bản đồ</a>
 </div>
+

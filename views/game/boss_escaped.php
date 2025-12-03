@@ -4,9 +4,10 @@ $sid = $_GET['sid'];
 $backLink = $encoder->encode("cmd=gomid&newmid={$player->nowmid}&sid=$sid");
 ?>
 <div class="boss-escaped">
-    <h3>Boss Escaped!</h3>
-    <p><?= $boss->bossname ?> has already been defeated or escaped.</p>
-    <p>It has grown stronger and is waiting for the next challenge.</p>
+    <h3>Boss đã bỏ chạy!</h3>
+    <p><?= $boss->bossname ?> đã bị đánh bại hoặc bỏ chạy.</p>
+    <p>Nó đã trở nên mạnh mẽ hơn và đang chờ đợi thử thách tiếp theo.</p>
     
-    <a href="?cmd=<?= $backLink ?>">Return to Map</a>
+    <a href="?cmd=<?= $backLink ?>">Quay lại bản đồ</a>
 </div>
+

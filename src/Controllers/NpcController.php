@@ -31,11 +31,12 @@ class NpcController extends Controller
         $npc = $this->npcRepo->findById($nid);
         
         if (!$npc) {
-            echo "NPC not found.";
+            echo "Không tìm thấy NPC.";
             return;
         }
         
         // Task Logic
+
         $taskHtml = $this->generateTaskHtml($npc, $player);
         
         // Template Logic

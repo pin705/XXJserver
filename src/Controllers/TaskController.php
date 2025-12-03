@@ -44,7 +44,7 @@ class TaskController extends Controller
     {
         $task = $this->taskRepo->findById($rwid);
         if (!$task) {
-            echo "Task not found.";
+            echo "Không tìm thấy nhiệm vụ.";
             return;
         }
         
@@ -53,10 +53,10 @@ class TaskController extends Controller
         
         if ($canshu == 'jieshou') {
             if ($playerTask) {
-                $msg = "You have already accepted this task.";
+                $msg = "Bạn đã nhận nhiệm vụ này rồi.";
             } else {
                 $this->taskRepo->acceptTask($sid, $task);
-                $msg = "Task accepted!";
+                $msg = "Đã nhận nhiệm vụ!";
                 $playerTask = $this->taskRepo->getPlayerTask($sid, $rwid); // Refresh
             }
         } elseif ($canshu == 'tijiao') {
@@ -65,9 +65,10 @@ class TaskController extends Controller
                 $msg = $res;
                 $playerTask = $this->taskRepo->getPlayerTask($sid, $rwid); // Refresh
             } else {
-                $msg = "Task not ready to submit.";
+                $msg = "Nhiệm vụ chưa hoàn thành.";
             }
         }
+
         
         $this->render('task/index', [
             'task' => $task,

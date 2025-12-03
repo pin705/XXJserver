@@ -82,7 +82,7 @@ class BossController extends Controller
         $boss = $this->bossRepo->findById($bossid);
         
         if (!$boss) {
-            echo "Boss not found.";
+            echo "Không tìm thấy Boss.";
             return;
         }
         
@@ -100,7 +100,7 @@ class BossController extends Controller
             if ($ypid) {
                 $res = $this->itemRepo->usePotion($sid, $ypid);
                 if ($res) {
-                    $msg .= "Used potion.<br>";
+                    $msg .= "Đã sử dụng dược phẩm.<br>";
                     $player = $this->playerRepo->findById($sid); // Refresh player
                 }
             }
@@ -114,7 +114,7 @@ class BossController extends Controller
             $playerDamage = $this->calculatePlayerDamage($player, $boss);
             $this->bossRepo->decreaseHp($bossid, $playerDamage);
             $boss->bosshp -= $playerDamage;
-            $combatLog[] = "You attacked {$boss->bossname} for {$playerDamage} damage.";
+            $combatLog[] = "Bạn tấn công {$boss->bossname} gây {$playerDamage} sát thương.";
 
             // Check Boss Death
             if ($boss->bosshp <= 0) {
@@ -135,13 +135,14 @@ class BossController extends Controller
             $player->uhp -= $bossDamage;
             if ($player->uhp < 0) $player->uhp = 0;
             $this->playerRepo->update($player);
-            $combatLog[] = "{$boss->bossname} attacked you for {$bossDamage} damage.";
+            $combatLog[] = "{$boss->bossname} tấn công bạn gây {$bossDamage} sát thương.";
 
             if ($player->uhp <= 0) {
                 $this->render('game/boss_lose', ['boss' => $boss]);
                 return;
             }
         }
+
 
 
         // Render Combat View
@@ -202,7 +203,7 @@ class BossController extends Controller
         // Currency
         $yxb = round($boss->bosslv * mt_rand(1, 5) * 30) + 100;
         $this->playerRepo->addCurrency($sid, 'uyxb', $yxb);
-        $drops[] = "Received $yxb Spirit Stones.";
+        $drops[] = "Nhận được $yxb Linh thạch.";
         
         // Equipment
         if ($boss->bosszb) {
@@ -215,13 +216,14 @@ class BossController extends Controller
                     // Add equipment to player
                     // Need ItemRepo->addEquipment($sid, $zbid)
                     // For now, just log it
-                    $drops[] = "Dropped Equipment ID: $zbid (Not added to inventory yet)";
+                    $drops[] = "Rơi trang bị ID: $zbid (Chưa thêm vào túi)";
                 }
             }
         }
         
         return $drops;
     }
+
 
 
 }

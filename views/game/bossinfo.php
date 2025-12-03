@@ -16,7 +16,7 @@ $backLink = $encoder->encode("cmd=gomid&newmid={$player->nowmid}&sid=$sid");
     </div>
 
     <div class="drops">
-        <h4>Possible Drops:</h4>
+        <h4>Vật phẩm có thể rơi:</h4>
         <ul>
             <?php foreach ($drops as $drop): ?>
                 <li>
@@ -33,7 +33,8 @@ $backLink = $encoder->encode("cmd=gomid&newmid={$player->nowmid}&sid=$sid");
     </div>
 
     <div class="actions">
-        <a href="?cmd=<?= $fightLink ?>">Fight!</a><br>
-        <a href="?cmd=<?= $backLink ?>">Return</a>
+        <a href="?cmd=<?= $fightLink ?>">Tấn công!</a><br>
+        <a href="?cmd=<?= $backLink ?>">Quay lại</a>
     </div>
 </div>
+

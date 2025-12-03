@@ -17,6 +17,7 @@ $gonowmid = $data['gonowmid'];
     </div>
     
     <div class="npc-actions">
-        <a href="?cmd=<?= $gonowmid ?>">Return to Map</a>
+        <a href="?cmd=<?= $gonowmid ?>">Quay lại bản đồ</a>
     </div>
 </div>
+

@@ -225,4 +225,45 @@ class ItemRepository
         
         return true;
     }
+
+    public function getAllShopItems()
+    {
+        $stmt = $this->db->query("SELECT * FROM yaodan");
+        return $stmt->fetchAll(PDO::FETCH_OBJ);
+    }
+
+    public function getShopItem($id)
+    {
+        $stmt = $this->db->prepare("SELECT * FROM yaodan WHERE ydid = ?");
+        $stmt->execute([$id]);
+        return $stmt->fetch(PDO::FETCH_OBJ);
+    }
+
+    public function addPlayerShopItem($sid, $item, $count)
+    {
+        // Check if player already has this item
+        $stmt = $this->db->prepare("SELECT * FROM playeryaodan WHERE sid = ? AND ydid = ?");
+        $stmt->execute([$sid, $item->ydid]);
+        $existing = $stmt->fetch(PDO::FETCH_OBJ);
+
+        if ($existing) {
+            $stmt = $this->db->prepare("UPDATE playeryaodan SET ydsum = ydsum + ? WHERE sid = ? AND ydid = ?");
+            $stmt->execute([$count, $sid, $item->ydid]);
+        } else {
+            $stmt = $this->db->prepare("INSERT INTO playeryaodan (ydname, ydhp, ydgj, ydfy, ydbj, ydxx, ydid, ydjg, ydsum, sid, ydjgm) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            $stmt->execute([
+                $item->ydname,
+                $item->ydhp,
+                $item->ydgj,
+                $item->ydfy,
+                $item->ydbj,
+                $item->ydxx,
+                $item->ydid,
+                $item->ydjg,
+                $count,
+                $sid,
+                $item->ydjgm ?? 0
+            ]);
+        }
+    }
 }
