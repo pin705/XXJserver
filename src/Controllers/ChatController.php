@@ -2,53 +2,47 @@
 
 namespace XXJ\Controllers;
 
-use XXJ\Core\View;
-use XXJ\Utils\Encoder;
-use XXJ\Repositories\PlayerRepository;
-use XXJ\Core\Database;
+use XXJ\Core\Controller;
+use XXJ\Repositories\ChatRepository;
 
-class ChatController
+class ChatController extends Controller
 {
-    private PlayerRepository $playerRepo;
-    private Encoder $encoder;
-    private $db;
+    private ChatRepository $chatRepo;
 
     public function __construct()
     {
-        $this->playerRepo = new PlayerRepository();
-        $this->encoder = new Encoder();
-        $this->db = Database::getInstance()->getConnection();
+        parent::__construct();
+        $this->chatRepo = new ChatRepository();
     }
 
-    public function showChat($params)
+    public function index()
     {
-        $sid = $params['sid'];
-        $ltlx = $params['ltlx'] ?? 'all';
-        $player = $this->playerRepo->findBySid($sid);
-
-        // Handle Send Message
-        if (isset($params['cmd']) && $params['cmd'] == 'sendliaotian' && isset($params['ltmsg'])) {
-            $msg = htmlspecialchars($params['ltmsg']);
-            if ($ltlx == 'all') {
-                $stmt = $this->db->prepare("INSERT INTO ggliaotian(name, msg, uid) VALUES (?, ?, ?)");
-                $stmt->execute([$player->uname, $msg, $player->uid]);
-            }
-            // Handle IM logic if needed
-        }
-
-        // Fetch Messages
+        $ltlx = $_GET['ltlx'] ?? 'all';
+        
         $messages = [];
         if ($ltlx == 'all') {
-            $stmt = $this->db->query("SELECT * FROM ggliaotian ORDER BY id DESC LIMIT 10");
-            $messages = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+            $messages = $this->chatRepo->getGlobalMessages();
         }
 
-        View::render('liaotian', [
-            'player' => $player,
+        $this->render('liaotian', [
             'messages' => $messages,
-            'ltlx' => $ltlx,
-            'encoder' => $this->encoder,
-            'sid' => $sid
+            'ltlx' => $ltlx
         ]);
     }
+
+    public function send()
+    {
+        $ltlx = $_GET['ltlx'] ?? 'all';
+        $msg = $_GET['ltmsg'] ?? '';
+        
+        if ($msg && $this->player) {
+            $msg = htmlspecialchars($msg);
+            if ($ltlx == 'all') {
+                $this->chatRepo->addMessage($this->player->uid, $this->player->uname, $msg);
+            }
+        }
+        
+        $this->redirect('liaotian', ['ltlx' => $ltlx]);
+    }
 }
+

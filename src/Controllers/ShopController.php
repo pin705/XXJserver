@@ -3,27 +3,22 @@
 namespace XXJ\Controllers;
 
 use XXJ\Core\Controller;
-use XXJ\Repositories\PlayerRepository;
 use XXJ\Repositories\ShopRepository;
-use XXJ\Utils\Encoder;
 
 class ShopController extends Controller
 {
-    private $playerRepo;
     private $shopRepo;
-    private $encoder;
 
     public function __construct()
     {
-        $this->playerRepo = new PlayerRepository();
+        parent::__construct();
         $this->shopRepo = new ShopRepository();
-        $this->encoder = new Encoder();
     }
 
     public function index()
     {
-        $sid = $_GET['sid'];
-        $player = $this->playerRepo->findBySid($sid);
+        $sid = $this->sid;
+        $player = $this->player;
         
         // Handle buy actions if present
         $canshu = $_GET['canshu'] ?? null;
@@ -58,13 +53,10 @@ class ShopController extends Controller
         $items = $this->shopRepo->getAllItems();
         
         // Re-fetch player to get updated currency
-        $player = $this->playerRepo->findBySid($sid);
+        $this->player = $this->playerRepo->findBySid($sid);
 
         $data = [
-            'player' => $player,
-            'sid' => $sid,
             'items' => $items,
-            'encode' => $this->encoder,
             'message' => $message,
             'messageType' => $messageType,
             'canshu' => $canshu,

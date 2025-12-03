@@ -3,27 +3,22 @@
 namespace XXJ\Controllers;
 
 use XXJ\Core\Controller;
-use XXJ\Repositories\PlayerRepository;
 use XXJ\Repositories\SkillRepository;
-use XXJ\Utils\Encoder;
 
 class SkillController extends Controller
 {
-    private $playerRepo;
     private $skillRepo;
-    private $encoder;
 
     public function __construct()
     {
-        $this->playerRepo = new PlayerRepository();
+        parent::__construct();
         $this->skillRepo = new SkillRepository();
-        $this->encoder = new Encoder();
     }
 
     public function index()
     {
-        $sid = $_GET['sid'];
-        $player = $this->playerRepo->findBySid($sid);
+        $sid = $this->sid;
+        $player = $this->player;
         $wgid = $player->wugong;
         
         $skill = $this->skillRepo->getSkill($sid, $wgid);
