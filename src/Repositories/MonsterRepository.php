@@ -17,9 +17,21 @@ class MonsterRepository
 
     public function findById($id): ?Monster
     {
-        $stmt = $this->db->prepare("SELECT * FROM midguaiwu WHERE id = ?");
+        // Join with template table 'guaiwu' to get base stats
+        // midguaiwu: id, mid, gyid, sid, ghp (current hp)
+        // guaiwu: id, gname, glv, ghp (max hp), ggj, gfy, ...
+        
+        $sql = "SELECT m.*, 
+                       y.gname, y.glv, y.gexp, y.ghp as gmaxhp, 
+                       y.ggj, y.gfy, y.gbj, y.gxx, 
+                       y.gdj, y.gzb, y.gyp 
+                FROM midguaiwu m 
+                LEFT JOIN guaiwu y ON m.gyid = y.id 
+                WHERE m.id = ?";
+                
+        $stmt = $this->db->prepare($sql);
         $stmt->execute([$id]);
-        $data = $stmt->fetch();
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($data) {
             return new Monster($data);

@@ -78,7 +78,6 @@ class BossController extends Controller
         $bossid = $_GET['bossid'] ?? 0;
         $cmd = $_GET['cmd'] ?? '';
         $canshu = $_GET['canshu'] ?? null;
-        $nowmid = $_GET['nowmid'] ?? $player->nowmid;
         
         $boss = $this->bossRepo->findById($bossid);
         
@@ -87,115 +86,142 @@ class BossController extends Controller
             return;
         }
         
+        // Check if boss is already dead/escaped
         if ($boss->bosshp <= 0) {
             $this->bossRepo->upgradeBoss($bossid);
-            $this->render('boss_escaped', ['boss' => $boss, 'nowmid' => $nowmid]);
+            $this->render('game/boss_escaped', ['boss' => $boss]);
             return;
         }
-        
-        if ($nowmid && $player->nowmid != $nowmid) {
-             $backLink = $this->encoder->encode("cmd=gomid&newmid=$player->nowmid&sid=$sid");
-             echo "Map mismatch. <a href='?cmd=$backLink'>Return</a>";
-             return;
+
+        $msg = '';
+        // Handle Potion Usage
+        if ($canshu == 'useyp') {
+            $ypid = $_GET['ypid'] ?? 0;
+            if ($ypid) {
+                $res = $this->itemRepo->usePotion($sid, $ypid);
+                if ($res) {
+                    $msg .= "Used potion.<br>";
+                    $player = $this->playerRepo->findById($sid); // Refresh player
+                }
+            }
         }
-        
-        if (($boss->sid != $sid && $boss->sid != '') || ($boss->bossid == '')) {
-            $backLink = $this->encoder->encode("cmd=gomid&newmid=$player->nowmid&sid=$sid");
-            echo "Boss is fighting someone else! <a href='?cmd=$backLink'>Return</a>";
-            return;
-        }
-        
-        if ($boss->sid == '') {
-            $boss->sid = $sid;
-            $this->bossRepo->update($boss);
-        }
-        
-        if ($canshu == 'useyp' && isset($_GET['ypid'])) {
-            $this->playerRepo->usePotion($sid, $_GET['ypid']);
-            // Refresh player
-            $player = $this->playerRepo->findBySid($sid);
-            $this->player = $player;
-        }
-        
-        $combatLog = "";
+
+        // Combat Logic
+        $combatLog = [];
         
         if ($cmd == 'pvbgj') {
-            $gj = $player->ugj;
-            
-            $damageToBoss = round(($gj - $boss->bossfy) * (rand(90, 110) / 100));
-            if ($damageToBoss <= 0) $damageToBoss = 1;
-            
-            if ($player->ubj > rand(0, 100)) {
-                $damageToBoss = round($damageToBoss * 1.5);
-                $combatLog .= "Bạn tấn công Boss gây <font color='red'>$damageToBoss</font> sát thương (Bạo kích!).<br>";
-            } else {
-                $combatLog .= "Bạn tấn công Boss gây $damageToBoss sát thương.<br>";
-            }
-            
-            $boss->bosshp -= $damageToBoss;
-            
-            if ($player->uxx > 0) {
-                $heal = round($damageToBoss * ($player->uxx / 100));
-                if ($heal > 0) {
-                    $player->uhp += $heal;
-                    if ($player->uhp > $player->umaxhp) $player->uhp = $player->umaxhp;
-                    $this->playerRepo->updateHp($sid, $player->uhp);
-                    $combatLog .= "Bạn hút <font color='green'>$heal</font> máu.<br>";
-                }
-            }
-            
+            // 1. Player attacks Boss
+            $playerDamage = $this->calculatePlayerDamage($player, $boss);
+            $this->bossRepo->decreaseHp($bossid, $playerDamage);
+            $boss->bosshp -= $playerDamage;
+            $combatLog[] = "You attacked {$boss->bossname} for {$playerDamage} damage.";
+
+            // Check Boss Death
             if ($boss->bosshp <= 0) {
-                $boss->bosshp = 0;
-                $this->bossRepo->update($boss);
+                $drops = $this->handleBossDrops($boss, $player);
                 
-                $droppedItems = [];
-                // Drops logic placeholder
-                if ($boss->bosszb && rand(1, $boss->dljv ?? 100) == 1) {
-                    $droppedItems[] = "Trang bị";
+                if ($boss->sid == $player->sid) {
+                     $this->bossRepo->upgradeBoss($bossid);
+                } else {
+                     $this->bossRepo->upgradeBoss($bossid);
                 }
                 
-                $this->bossRepo->upgradeBoss($bossid);
-                $this->bossRepo->clearBossOwner($sid);
-                
-                $this->render('boss_win', [
-                    'boss' => $boss, 
-                    'drops' => $droppedItems, 
-                    'nowmid' => $nowmid
-                ]);
+                $this->render('game/boss_win', ['boss' => $boss, 'drops' => $drops]);
                 return;
             }
-            
-            $damageToPlayer = round(($boss->bossgj - $player->ufy) * (rand(90, 110) / 100));
-            if ($damageToPlayer <= 0) $damageToPlayer = 1;
-            
-            $player->uhp -= $damageToPlayer;
-            $combatLog .= "Boss tấn công bạn gây <font color='red'>$damageToPlayer</font> sát thương.<br>";
-            
-            $this->bossRepo->update($boss);
-            $this->playerRepo->updateHp($sid, $player->uhp);
-            
+
+            // 2. Boss attacks Player
+            $bossDamage = $this->calculateBossDamage($boss, $player);
+            $player->uhp -= $bossDamage;
+            if ($player->uhp < 0) $player->uhp = 0;
+            $this->playerRepo->update($player);
+            $combatLog[] = "{$boss->bossname} attacked you for {$bossDamage} damage.";
+
             if ($player->uhp <= 0) {
-                $this->bossRepo->clearBossOwner($sid);
-                $this->render('boss_lose', ['boss' => $boss, 'nowmid' => $nowmid]);
+                $this->render('game/boss_lose', ['boss' => $boss]);
                 return;
             }
         }
-        
-        $potions = [];
-        foreach (['yp1', 'yp2', 'yp3'] as $slot) {
-            if ($player->$slot) {
-                $p = $this->itemRepo->getPlayerPotion($sid, $player->$slot);
-                if ($p) {
-                    $potions[$slot] = $p;
-                }
-            }
-        }
-        
-        $this->render('boss', [
+
+
+        // Render Combat View
+        $this->render('game/boss_combat', [
             'boss' => $boss,
+            'player' => $player,
             'combatLog' => $combatLog,
-            'nowmid' => $nowmid,
-            'potions' => $potions
+            'msg' => $msg,
+            'potions' => $this->itemRepo->getPlayerPotions($sid),
+            'skills' => $this->skillRepo->getPlayerConsumableSkills($sid)
         ]);
     }
+
+    private function calculatePlayerDamage($player, $boss)
+    {
+        // Formula: Player Attack + Pet Attack - (Boss Defense * 0.75)
+        // Simplified for now (ignoring pets as I don't have PetRepo yet)
+        $petDamage = 0; 
+        $damage = round($petDamage + $player->ugj - ($boss->bossfy * 0.75));
+        
+        // Min damage check
+        if ($damage < $player->ugj * 0.15) {
+            $damage = round($player->ugj * 0.15);
+        }
+        
+        // Crits
+        $critChance = mt_rand(1, 200);
+        if ($player->ubj >= $critChance) {
+            $damage = round($damage * 1.5); // 1.5x crit
+        }
+        
+        return max(1, $damage);
+    }
+
+    private function calculateBossDamage($boss, $player)
+    {
+        // Formula: Boss Attack - (Player Defense * 0.75)
+        $damage = round($boss->bossgj - ($player->ufy * 0.75));
+        
+        if ($damage < $boss->bossgj * 0.15) {
+            $damage = round($boss->bossgj * 0.15);
+        }
+        
+        // Boss Crits
+        $critChance = mt_rand(1, 100);
+        if ($boss->bossbj >= $critChance) {
+            $damage = round($damage * 2.25);
+        }
+        
+        return max(1, $damage);
+    }
+
+    private function handleBossDrops($boss, $player)
+    {
+        $drops = [];
+        $sid = $player->sid;
+        
+        // Currency
+        $yxb = round($boss->bosslv * mt_rand(1, 5) * 30) + 100;
+        $this->playerRepo->addCurrency($sid, 'uyxb', $yxb);
+        $drops[] = "Received $yxb Spirit Stones.";
+        
+        // Equipment
+        if ($boss->bosszb) {
+            $ids = explode(',', $boss->bosszb);
+            if (!empty($ids)) {
+                $chance = mt_rand(1, 100);
+                // Use boss drop chance if available, else 20%
+                if ($chance <= 20) {
+                    $zbid = $ids[array_rand($ids)];
+                    // Add equipment to player
+                    // Need ItemRepo->addEquipment($sid, $zbid)
+                    // For now, just log it
+                    $drops[] = "Dropped Equipment ID: $zbid (Not added to inventory yet)";
+                }
+            }
+        }
+        
+        return $drops;
+    }
+
+
 }

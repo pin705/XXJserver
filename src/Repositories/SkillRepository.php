@@ -97,4 +97,30 @@ class SkillRepository
         $stmt->execute([$sid]);
         return $stmt->fetchAll(PDO::FETCH_OBJ);
     }
+
+    public function getPlayerConsumableSkills($sid)
+    {
+        $stmt = $this->db->prepare("SELECT * FROM playerjineng WHERE sid = ? AND jncount > 0");
+        $stmt->execute([$sid]);
+        return $stmt->fetchAll(PDO::FETCH_OBJ);
+    }
+
+    public function useConsumableSkill($sid, $jnid)
+    {
+        $stmt = $this->db->prepare("SELECT * FROM playerjineng WHERE sid = ? AND jnid = ?");
+        $stmt->execute([$sid, $jnid]);
+        $skill = $stmt->fetch(PDO::FETCH_OBJ);
+        
+        if (!$skill || $skill->jncount <= 0) return null;
+        
+        if ($skill->jncount > 1) {
+            $stmt = $this->db->prepare("UPDATE playerjineng SET jncount = jncount - 1 WHERE sid = ? AND jnid = ?");
+            $stmt->execute([$sid, $jnid]);
+        } else {
+            $stmt = $this->db->prepare("DELETE FROM playerjineng WHERE sid = ? AND jnid = ?");
+            $stmt->execute([$sid, $jnid]);
+        }
+        
+        return $skill;
+    }
 }

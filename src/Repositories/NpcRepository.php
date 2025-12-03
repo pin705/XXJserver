@@ -20,4 +20,11 @@ class NpcRepository
         $stmt->execute([$mid]);
         return $stmt->fetchAll(PDO::FETCH_OBJ);
     }
+
+    public function findById($nid)
+    {
+        $stmt = $this->db->prepare("SELECT * FROM npc WHERE id = ?");
+        $stmt->execute([$nid]);
+        return $stmt->fetch(PDO::FETCH_OBJ);
+    }
 }

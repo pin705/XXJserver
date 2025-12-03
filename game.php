@@ -99,11 +99,18 @@ if (isset($cmd)){
     $router->add('pve', [\XXJ\Controllers\CombatController::class, 'pve']);
     $router->add('pvegj', [\XXJ\Controllers\CombatController::class, 'pve']);
     
-    // Tasks
-    $router->add('task', [\XXJ\Controllers\TaskController::class, 'npcTask']);
+    // Boss
+    $router->add('pvb', [\XXJ\Controllers\BossController::class, 'fight']);
+    $router->add('pvbgj', [\XXJ\Controllers\BossController::class, 'fight']);
+    $router->add('bossinfo', [\XXJ\Controllers\BossController::class, 'info']);
+
+    // NPC
+    $router->add('npc', [\XXJ\Controllers\NpcController::class, 'index']);
+
+    // Task
+    $router->add('task', [\XXJ\Controllers\TaskController::class, 'index']);
     $router->add('mytask', [\XXJ\Controllers\TaskController::class, 'myTasks']);
     $router->add('mytaskinfo', [\XXJ\Controllers\TaskController::class, 'taskInfo']);
-    $router->add('npctask', [\XXJ\Controllers\TaskController::class, 'npcTask']);
     $router->add('taskteleport', [\XXJ\Controllers\TaskController::class, 'teleport']);
     
     // Chat
@@ -118,16 +125,12 @@ if (isset($cmd)){
     $router->add('wgxl', [\XXJ\Controllers\SkillController::class, 'index']);
     $router->add('jswg', [\XXJ\Controllers\SkillController::class, 'index']);
 
-    // Boss
-    $router->add('boss', [\XXJ\Controllers\BossController::class, 'index']);
-    $router->add('pvbgj', [\XXJ\Controllers\BossController::class, 'combat']);
-    $router->add('pvb', [\XXJ\Controllers\BossController::class, 'combat']);
-
     // Pet
     $router->add('chongwu', [\XXJ\Controllers\PetController::class, 'index']);
 
     // Club
     $router->add('club', [\XXJ\Controllers\ClubController::class, 'index']);
+
     $router->add('clublist', [\XXJ\Controllers\ClubController::class, 'list']);
     $router->add('cjclub', [\XXJ\Controllers\ClubController::class, 'create']);
     $router->add('clubinfo', [\XXJ\Controllers\ClubController::class, 'info']);

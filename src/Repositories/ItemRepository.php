@@ -52,7 +52,7 @@ class ItemRepository
 
     public function getPlayerPotions($sid)
     {
-        $stmt = $this->db->prepare("SELECT * FROM playeryaopin WHERE sid = ? AND ypsum > 0");
+        $stmt = $this->db->prepare("SELECT p.*, y.ypname, y.yphp, y.ypmp FROM playeryaopin p LEFT JOIN yaopin y ON p.ypid = y.ypid WHERE p.sid = ? AND p.djsum > 0");
         $stmt->execute([$sid]);
         return $stmt->fetchAll(PDO::FETCH_OBJ);
     }
@@ -189,19 +189,40 @@ class ItemRepository
 
     public function usePotion($sid, $ypid)
     {
-        // Decrease count
-        $stmt = $this->db->prepare("UPDATE playeryaopin SET ypsum = ypsum - 1 WHERE sid = ? AND ypid = ? AND ypsum > 0");
-        $stmt->execute([$sid, $ypid]);
-        
-        if ($stmt->rowCount() > 0) {
-            // Apply effect (Heal HP for now)
-            $template = $this->getPotionTemplate($ypid);
-            if ($template && $template->yphp > 0) {
-                $stmt = $this->db->prepare("UPDATE game1 SET uhp = LEAST(umaxhp, uhp + ?) WHERE sid = ?");
-                $stmt->execute([$template->yphp, $sid]);
-            }
-            return true;
+        $potion = $this->getPlayerPotion($sid, $ypid);
+        if (!$potion || $potion->djsum <= 0) {
+            return false;
         }
-        return false;
+
+        // Get template for effect
+        $template = $this->getPotionTemplate($ypid);
+        if (!$template) return false;
+
+        // Deduct count
+        if ($potion->djsum > 1) {
+            $stmt = $this->db->prepare("UPDATE playeryaopin SET djsum = djsum - 1 WHERE sid = ? AND ypid = ?");
+            $stmt->execute([$sid, $ypid]);
+        } else {
+            $stmt = $this->db->prepare("DELETE FROM playeryaopin WHERE sid = ? AND ypid = ?");
+            $stmt->execute([$sid, $ypid]);
+        }
+
+        // Apply Effect (HP)
+        // Need PlayerRepository to update HP. 
+        // But Repositories shouldn't depend on each other circularly if possible.
+        // Ideally Controller handles the effect application, or we use a Service.
+        // But for now, I'll just update HP directly here or return the effect to Controller.
+        // Returning effect is better.
+        
+        // Actually, let's update HP here using direct SQL to avoid circular dependency with PlayerRepo if it uses ItemRepo.
+        // Or just instantiate PlayerRepo inside method if needed, or pass it.
+        // Let's do direct SQL for simplicity and speed.
+        
+        if ($template->yphp > 0) {
+            $stmt = $this->db->prepare("UPDATE game1 SET uhp = LEAST(umaxhp, uhp + ?) WHERE sid = ?");
+            $stmt->execute([$template->yphp, $sid]);
+        }
+        
+        return true;
     }
 }

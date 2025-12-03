@@ -24,6 +24,14 @@ class TaskController extends Controller
     public function index()
     {
         $sid = $this->player->sid;
+        $rwid = $_GET['rwid'] ?? 0;
+        $canshu = $_GET['canshu'] ?? '';
+        
+        if ($rwid) {
+            $this->handleTaskInteraction($sid, $rwid, $canshu);
+            return;
+        }
+
         $tasks = $this->taskRepo->getPlayerTasks($sid);
         
         $this->render('task/list', [
@@ -31,6 +39,43 @@ class TaskController extends Controller
             'player' => $this->player
         ]);
     }
+
+    private function handleTaskInteraction($sid, $rwid, $canshu)
+    {
+        $task = $this->taskRepo->findById($rwid);
+        if (!$task) {
+            echo "Task not found.";
+            return;
+        }
+        
+        $playerTask = $this->taskRepo->getPlayerTask($sid, $rwid);
+        $msg = '';
+        
+        if ($canshu == 'jieshou') {
+            if ($playerTask) {
+                $msg = "You have already accepted this task.";
+            } else {
+                $this->taskRepo->acceptTask($sid, $task);
+                $msg = "Task accepted!";
+                $playerTask = $this->taskRepo->getPlayerTask($sid, $rwid); // Refresh
+            }
+        } elseif ($canshu == 'tijiao') {
+            if ($playerTask && $playerTask->rwzt == 2) {
+                $res = $this->taskRepo->submitTask($sid, $rwid);
+                $msg = $res;
+                $playerTask = $this->taskRepo->getPlayerTask($sid, $rwid); // Refresh
+            } else {
+                $msg = "Task not ready to submit.";
+            }
+        }
+        
+        $this->render('task/index', [
+            'task' => $task,
+            'playerTask' => $playerTask,
+            'msg' => $msg
+        ]);
+    }
+
 
     public function myTasks()
     {
