@@ -83,4 +83,68 @@ class ItemRepository
         $stmt->execute([$sid, $ypid]);
         return $stmt->fetch(PDO::FETCH_OBJ);
     }
+
+    public function addEquipment($sid, $zbid)
+    {
+        $template = $this->getEquipmentTemplate($zbid);
+        if (!$template) return false;
+        
+        $sql = "INSERT INTO playerzhuangbei (zbname, zbinfo, zbgj, zbfy, zbbj, zbxx, zbid, zbhp, sid, zblv, zbqianghua) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0)";
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute([
+            $template->zbname, $template->zbinfo, $template->zbgj, $template->zbfy, 
+            $template->zbbj, $template->zbxx, $zbid, $template->zbhp, $sid, $template->zblv
+        ]);
+    }
+
+    public function addItem($sid, $djid, $amount)
+    {
+        // Check if exists
+        $stmt = $this->db->prepare("SELECT * FROM playerdaoju WHERE sid = ? AND djid = ?");
+        $stmt->execute([$sid, $djid]);
+        $existing = $stmt->fetch(PDO::FETCH_OBJ);
+        
+        if ($existing) {
+            $stmt = $this->db->prepare("UPDATE playerdaoju SET djsum = djsum + ? WHERE sid = ? AND djid = ?");
+            return $stmt->execute([$amount, $sid, $djid]);
+        } else {
+            $template = $this->getItemTemplate($djid);
+            if (!$template) return false;
+            
+            $sql = "INSERT INTO playerdaoju (djname, djinfo, djsum, djid, sid) VALUES (?, ?, ?, ?, ?)";
+            $stmt = $this->db->prepare($sql);
+            return $stmt->execute([$template->djname, $template->djinfo, $amount, $djid, $sid]);
+        }
+    }
+
+    public function removeItem($sid, $djid, $amount)
+    {
+        $stmt = $this->db->prepare("UPDATE playerdaoju SET djsum = djsum - ? WHERE sid = ? AND djid = ? AND djsum >= ?");
+        return $stmt->execute([$amount, $sid, $djid, $amount]);
+    }
+
+    public function addPotion($sid, $ypid, $amount)
+    {
+        // Similar to addItem but for playeryaopin
+        $stmt = $this->db->prepare("SELECT * FROM playeryaopin WHERE sid = ? AND ypid = ?");
+        $stmt->execute([$sid, $ypid]);
+        $existing = $stmt->fetch(PDO::FETCH_OBJ);
+        
+        if ($existing) {
+            $stmt = $this->db->prepare("UPDATE playeryaopin SET ypsum = ypsum + ? WHERE sid = ? AND ypid = ?");
+            return $stmt->execute([$amount, $sid, $ypid]);
+        } else {
+            $template = $this->getPotionTemplate($ypid);
+            if (!$template) return false;
+            
+            $sql = "INSERT INTO playeryaopin (ypname, yphp, ypgj, ypfy, ypbj, ypxx, ypid, ypsum, sid) 
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            $stmt = $this->db->prepare($sql);
+            return $stmt->execute([
+                $template->ypname, $template->yphp, $template->ypgj, $template->ypfy, 
+                $template->ypbj, $template->ypxx, $ypid, $amount, $sid
+            ]);
+        }
+    }
 }

@@ -100,9 +100,11 @@ if (isset($cmd)){
     $router->add('pvegj', [\XXJ\Controllers\CombatController::class, 'pve']);
     
     // Tasks
-    // $router->add('task', [\XXJ\Controllers\TaskController::class, 'index']);
-    // $router->add('mytask', [\XXJ\Controllers\TaskController::class, 'myTasks']);
-    // $router->add('mytaskinfo', [\XXJ\Controllers\TaskController::class, 'taskInfo']);
+    $router->add('task', [\XXJ\Controllers\TaskController::class, 'index']);
+    $router->add('mytask', [\XXJ\Controllers\TaskController::class, 'myTasks']);
+    $router->add('mytaskinfo', [\XXJ\Controllers\TaskController::class, 'taskInfo']);
+    $router->add('npctask', [\XXJ\Controllers\TaskController::class, 'npcTask']);
+    $router->add('taskteleport', [\XXJ\Controllers\TaskController::class, 'teleport']);
     
     // Chat
     $router->add('liaotian', [\XXJ\Controllers\ChatController::class, 'index']);
@@ -125,9 +127,21 @@ if (isset($cmd)){
 
     // Club
     $router->add('club', [\XXJ\Controllers\ClubController::class, 'index']);
+    $router->add('clublist', [\XXJ\Controllers\ClubController::class, 'list']);
+    $router->add('cjclub', [\XXJ\Controllers\ClubController::class, 'create']);
+    $router->add('clubinfo', [\XXJ\Controllers\ClubController::class, 'info']);
+    $router->add('joinclub', [\XXJ\Controllers\ClubController::class, 'join']);
+    $router->add('outclub', [\XXJ\Controllers\ClubController::class, 'leave']);
+    $router->add('clubshop', [\XXJ\Controllers\ClubController::class, 'shop']);
 
     // Ranking
     $router->add('paihang', [\XXJ\Controllers\RankingController::class, 'index']);
+
+    // Task System
+    $router->add('mytask', [\XXJ\Controllers\TaskController::class, 'myTasks']);
+    $router->add('mytaskinfo', [\XXJ\Controllers\TaskController::class, 'taskInfo']);
+    $router->add('npctask', [\XXJ\Controllers\TaskController::class, 'npcTask']);
+    $router->add('taskteleport', [\XXJ\Controllers\TaskController::class, 'teleport']);
 
     try {
         if (isset($params['cmd'])) {

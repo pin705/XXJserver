@@ -189,4 +189,23 @@ class PlayerRepository
         $stmt = $this->db->prepare($sql);
         $stmt->execute([$amount, $sid]);
     }
+
+    public function updateExp($sid, $exp)
+    {
+        $stmt = $this->db->prepare("UPDATE game1 SET uexp = uexp + ? WHERE sid = ?");
+        $stmt->execute([$exp, $sid]);
+        
+        // Check for level up
+        $player = $this->findBySid($sid);
+        if ($player) {
+            $maxExp = $player->ulv * ($player->ulv + round($player->ulv/2)) * 100 + $player->ulv; // Legacy formula approximation?
+            // Legacy formula in class/player.php: $maxexp = $ulv *($ulv+round($ulv/2))*100+$ulv;
+            
+            if ($player->uexp >= $maxExp) {
+                // Level up
+                $stmt = $this->db->prepare("UPDATE game1 SET ulv = ulv + 1, uexp = uexp - ?, uhp = umaxhp WHERE sid = ?");
+                $stmt->execute([$maxExp, $sid]);
+            }
+        }
+    }
 }

@@ -98,7 +98,7 @@ if ($npc->taskid!=''){
                 }
             }
         }
-        $rwcmd = $encode->encode("cmd=task&nid=$nid&rwid=$taskarr[$i]&sid=$sid");
+        $rwcmd = $encode->encode("cmd=npctask&nid=$nid&rwid=$taskarr[$i]&sid=$sid");
         $taskhtml .=<<<HTML
         <a href="?cmd=$rwcmd">$task->rwname</a>$rwztt<br/>
 HTML;
