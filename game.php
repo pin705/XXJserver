@@ -120,6 +120,20 @@ if (isset($cmd)){
     // Shop
     $router->add('shangdian', [\XXJ\Controllers\ShopController::class, 'index']);
 
+    // Market (Fangshi)
+    $router->add('fangshi', [\XXJ\Controllers\MarketController::class, 'index']);
+    $router->add('fangshi_buy', [\XXJ\Controllers\MarketController::class, 'buy']);
+
+    // Gift Code
+    $router->add('duihuan', function() {
+        $controller = new \XXJ\Controllers\GiftCodeController();
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' || isset($_GET['dhm'])) {
+            $controller->redeem();
+        } else {
+            $controller->index();
+        }
+    });
+
     // Skills
     $router->add('wgxiulian', [\XXJ\Controllers\SkillController::class, 'train']);
     $router->add('wgxl', [\XXJ\Controllers\SkillController::class, 'train']);

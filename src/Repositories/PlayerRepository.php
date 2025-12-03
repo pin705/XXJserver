@@ -103,6 +103,22 @@ class PlayerRepository
         $stmt->execute([$mid, $sid]);
     }
 
+    public function deductCurrency($sid, $type, $amount)
+    {
+        // type: uyxb (ling shi), uczb (xian yu)
+        $sql = "UPDATE game1 SET $type = $type - :amount WHERE sid = :sid AND $type >= :amount";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([':amount' => $amount, ':sid' => $sid]);
+        return $stmt->rowCount() > 0;
+    }
+
+    public function addCurrencyByUid($uid, $type, $amount)
+    {
+        $sql = "UPDATE game1 SET $type = $type + :amount WHERE uid = :uid";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([':amount' => $amount, ':uid' => $uid]);
+    }
+
     public function unequipItem($sid, $slot)
     {
         // Validate slot to prevent SQL injection if not using prepared statement for column name
